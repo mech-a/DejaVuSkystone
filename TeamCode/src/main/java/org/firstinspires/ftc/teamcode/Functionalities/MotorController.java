@@ -38,9 +38,11 @@ public class MotorController extends LinearOpMode {
         while(opModeIsActive()) {
             a.setPower(-gamepad1.left_stick_y);
             b.setPower(-gamepad1.left_stick_y);
-            c.setPower(-gamepad1.left_stick_y);
-            d.setPower(-gamepad1.left_stick_y);
-            telemetry.addData("Joystick Y", -gamepad1.left_stick_y);
+            c.setPower(-gamepad1.right_stick_y);
+            d.setPower(-gamepad1.right_stick_y);
+            telemetry.addData("Joystick Left", -gamepad1.left_stick_y);
+            telemetry.addData("Joystick Right", -gamepad1.right_stick_y);
+
             telemetry.update();
         }
     }
