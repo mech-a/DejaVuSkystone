@@ -70,6 +70,20 @@ public class MecanumTeleOp extends LinearOpMode {
             sFrontIntake.setPosition(sFrontIntake.getPosition()-0.01);
         }
 
+        if(gamepad1.dpad_up) {
+            mtrVertical.setPower(0.25);
+        }
+        else if (gamepad1.dpad_down) {
+            mtrVertical.setPower(-0.25);
+        }
+
+        if(gamepad1.dpad_left) {
+            mtrHorizontal.setPower(0.25);
+        }
+        else if(gamepad1.dpad_right) {
+            mtrHorizontal.setPower(-0.25);
+        }
+
         g1[0] = gamepad1.left_stick_x;
         g1[1] = -gamepad1.left_stick_y;
         g1[2] = gamepad1.right_stick_x;
@@ -84,7 +98,9 @@ public class MecanumTeleOp extends LinearOpMode {
         powBL = g1[1] + g1[2] - g1[0];
         powBR = g1[1] - g1[2] + g1[0];
 
-        telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR + " ");
+        telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
+                mtrHorizontal.getPower() + mtrVertical.getPower() +" ");
+        telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
         telemetry.addData("Front Roller Forward", frontRollerDirection);
         telemetry.addData("Middle Roller Forward", middleRollerDirection);
         telemetry.update();
