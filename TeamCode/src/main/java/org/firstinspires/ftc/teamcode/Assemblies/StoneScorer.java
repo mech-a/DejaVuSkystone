@@ -14,6 +14,7 @@ public class StoneScorer implements Subassembly {
     LinearOpMode caller;
     Telemetry telemetry;
     int speedH;
+    public static final int distanceExtend = 4;
     public static final int rotateAmt = 3;
 
     @Override
@@ -121,10 +122,12 @@ public class StoneScorer implements Subassembly {
     }
 
     public void hookFoundation(int hookDir) {
+        extendH(distanceExtend);
         if(hookDir == 1) {
             rotateH(rotateAmt);
         } else {
             rotateH(-rotateAmt);
         }
+        extendH(-distanceExtend);
     }
 }

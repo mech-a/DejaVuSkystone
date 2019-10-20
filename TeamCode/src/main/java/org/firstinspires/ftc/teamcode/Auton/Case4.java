@@ -50,21 +50,6 @@ public class Case4 extends LinearOpMode {
 
         waitForStart();
 
-        // findSkystone();
-        ss.intake(1, 1, 1);
-
-        d.translate(Drivetrain.Direction.LEFT, 400, 0.75);
-        ss.extake();
-
-        // move right to position robot in front of second skystone
-        d.translate(Drivetrain.Direction.RIGHT, 400, 0.75);
-        ss.intake(1, 1, 1);
-
-        // move left all the way into build zone
-        d.translate(Drivetrain.Direction.LEFT, 400, 0.75);
-        ss.extake();
-
-        // move right to park under bridge
-        d.translate(Drivetrain.Direction.RIGHT, 400, 0.75);
+        d.translate(Drivetrain.Direction.RIGHT, 30, 0.75);
     }
 }

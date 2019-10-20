@@ -55,7 +55,6 @@ public class Case2 extends LinearOpMode {
         d.translate(Drivetrain.Direction.LEFT, 36, 0.75);
         // releaseStone();
         d.translate(Drivetrain.Direction.RIGHT, 36, 0.75);
-        // intake()
         ss.intake(1, 1);
         d.translate(Drivetrain.Direction.LEFT, 36, 0.75);
         ss.extake(1,1);
