@@ -25,6 +25,8 @@ public class MotorController extends LinearOpMode {
         c.setDirection(DcMotorSimple.Direction.FORWARD);
         d.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        d.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         a.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         b.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         c.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -42,6 +44,11 @@ public class MotorController extends LinearOpMode {
             d.setPower(-gamepad1.right_stick_y);
             telemetry.addData("Joystick Left", -gamepad1.left_stick_y);
             telemetry.addData("Joystick Right", -gamepad1.right_stick_y);
+            telemetry.addData("mtr d encoder", d.getCurrentPosition());
+
+            //vertical zero: 201
+            //vertical max: 3330
+
 
             telemetry.update();
         }

@@ -175,10 +175,10 @@ public class MecanumTeleOp extends LinearOpMode {
 
             mtrHorizontal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             mtrVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            mtrFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // 0 br
             // 1 bl
