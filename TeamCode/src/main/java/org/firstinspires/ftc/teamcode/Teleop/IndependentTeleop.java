@@ -54,7 +54,7 @@ public class IndependentTeleop extends LinearOpMode{
 
             mtrFL.setPower(v1);
             mtrFR.setPower(v2);
-            mtrBL.setPower(v3)
+            mtrBL.setPower(v3);
             mtrBR.setPower(v4);
 
             sleep(50);
