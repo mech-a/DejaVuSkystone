@@ -35,12 +35,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
+import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
 @Autonomous(name = "Case 1 Blue", group = "Auton")
 public class Case1 extends LinearOpMode {
 
-    Drivetrain d = new Drivetrain(this, Drivetrain.OpModeType.AUTON);
+    Drivetrain d = new Drivetrain(this);
+    StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
@@ -49,22 +51,20 @@ public class Case1 extends LinearOpMode {
         waitForStart();
 
         // findSkystone();
-        // intake();
+        ss.intake(1, 1);
 
-        d.translate(Drivetrain.Direction.LEFT, 400, 0.75);
-        // releaseStone();
+        d.translate(Drivetrain.Direction.LEFT, 36, 0.75);
+        ss.extake(1, 1);
 
         // move right to position robot in front of second skystone
-        d.translate(Drivetrain.Direction.RIGHT, 400, 0.75);
-        // intake();
+        d.translate(Drivetrain.Direction.RIGHT, 36, 0.75);
+        ss.intake(1, 1);
 
         // move left all the way into build zone
-        d.translate(Drivetrain.Direction.LEFT, 400, 0.75);
-        // releaseStone();
+        d.translate(Drivetrain.Direction.LEFT, 36, 0.75);
+        ss.extake(1, 1);
 
         // move right to park under bridge
-        d.translate(Drivetrain.Direction.RIGHT, 400, 0.75);
-
+        d.translate(Drivetrain.Direction.RIGHT, 36, 0.75);
     }
-
 }
