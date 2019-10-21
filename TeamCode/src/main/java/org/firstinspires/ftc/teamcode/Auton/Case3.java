@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
-@Autonomous(name = "Case 1 Blue", group = "Auton")
+@Autonomous(name = "Case 3", group = "Auton")
 public class Case3 extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);

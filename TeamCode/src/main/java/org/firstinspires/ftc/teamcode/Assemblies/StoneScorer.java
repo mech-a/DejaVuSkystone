@@ -39,6 +39,7 @@ public class StoneScorer implements Subassembly {
 
     public StoneScorer(LinearOpMode caller) {
         this.caller = caller;
+        telemetry = caller.telemetry;
     }
 
     public void intake(int distExtendH, int dirRoll) {
