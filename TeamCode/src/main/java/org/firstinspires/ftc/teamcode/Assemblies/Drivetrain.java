@@ -89,8 +89,8 @@ public class Drivetrain implements Subassembly {
 
             mtrFL.setTargetPosition(a * driveMtrTarget);
             mtrFR.setTargetPosition(b * driveMtrTarget);
-            mtrBL.setTargetPosition(a * driveMtrTarget);
-            mtrBR.setTargetPosition(b * driveMtrTarget);
+            mtrBL.setTargetPosition(b * driveMtrTarget);
+            mtrBR.setTargetPosition(a * driveMtrTarget);
 
             mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

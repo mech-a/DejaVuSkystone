@@ -51,5 +51,8 @@ public class Case4 extends LinearOpMode {
         waitForStart();
 
         d.translate(Drivetrain.Direction.RIGHT, 30, 0.35);
+        d.translate(Drivetrain.Direction.LEFT, 30, 0.35);
+        d.translate(Drivetrain.Direction.FWD, 30, 0.35);
+        d.translate(Drivetrain.Direction.BACK, 30, 0.35);
     }
 }

@@ -50,18 +50,18 @@ public class Case3 extends LinearOpMode {
 
         waitForStart();
 
-        d.translate(Drivetrain.Direction.FWD, 30, 0.75);
-        d.translate(Drivetrain.Direction.LEFT, 12, 0.75);
+        d.translate(Drivetrain.Direction.FWD, 24, 0.25);
+        d.translate(Drivetrain.Direction.LEFT, 16, 0.25);
 
         //hook onto foundation
-        ss.hookFoundation(1);
+        //ss.hookFoundation(1);
 
-        d.translate(Drivetrain.Direction.BACK, 28, 0.75);
-        ss.hookFoundation(-1);
+        d.translate(Drivetrain.Direction.BACK, 24, 0.25);
+        //ss.hookFoundation(-1);
 
-        d.translate(Drivetrain.Direction.RIGHT, 30, 0.75);
-        d.translate(Drivetrain.Direction.FWD, 30, 0.75);
-        d.translate(Drivetrain.Direction.RIGHT, 30, 0.75);
+        d.translate(Drivetrain.Direction.RIGHT, 24, 0.25);
+        d.translate(Drivetrain.Direction.FWD, 18, 0.25);
+        d.translate(Drivetrain.Direction.RIGHT, 28, 0.25);
 
     }
 }
