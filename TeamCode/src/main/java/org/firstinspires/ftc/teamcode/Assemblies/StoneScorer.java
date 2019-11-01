@@ -14,7 +14,7 @@ public class StoneScorer implements Subassembly {
     Servo flipper, grabber;
     LinearOpMode caller;
     Telemetry telemetry;
-    int speedH;
+    public static double speedH = 0.5;
     public static final int distanceExtend = 4;
 
     @Override
@@ -34,6 +34,10 @@ public class StoneScorer implements Subassembly {
         mtrV.setDirection(DcMotorSimple.Direction.FORWARD);
         linrA.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRoller.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        mtrH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linrA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -48,8 +52,8 @@ public class StoneScorer implements Subassembly {
 
     // extend the horizontal to parameter value, lower the horizontal slide to parameter value
     public void setBlock(int extendHVal, int liftVal) {
-        extendH(extendHVal);
-        liftH(liftVal);
+        extendH(-5400);
+        liftH(2260);
     }
 
     // start rolling the first two intake wheels, retract the horizontal,
@@ -68,7 +72,7 @@ public class StoneScorer implements Subassembly {
 
     // used for both extending and retracting the horizontal slides
     public void extendH(int distance) {
-        mtrH.setTargetPosition(distance);
+        mtrH.setTargetPosition(20);
         mtrH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 

@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 @Autonomous(name = "Case 1", group = "Auton")
 public class Case1 extends LinearOpMode {
     int liftValueA = -5400;
-    int extendValueA = 2400;
+    int extendValueA = 2260;
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
@@ -55,7 +55,10 @@ public class Case1 extends LinearOpMode {
         // findSkystone();
 
         // obtain skystone
-        ss.setBlock(liftValueA, extendValueA);
+        //ss.setBlock(-5400, 2260);
+        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
+        ss.extendH(20);
+        ss.liftH(2260);
         d.translate(Drivetrain.Direction.BACK, 12, 0.25);
         ss.intake(1, 1);
 
