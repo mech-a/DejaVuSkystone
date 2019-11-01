@@ -11,7 +11,7 @@ public class Drivetrain implements Subassembly {
     DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     LinearOpMode caller;
     Telemetry telemetry;
-    int driveMtrTarget;
+    int driveMtrTarget = 1;
     //DT Specs:
     public static final double HD_COUNTS_PER_REV = 560;
     //in inches
