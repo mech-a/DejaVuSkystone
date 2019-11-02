@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name="Mecanum Non-dependency", group="Functionality")
 public class MecanumTeleOp extends LinearOpMode {
 
+    GenericDetector x = new GenericDetector();
+
     DcMotor mtrHorizontal, mtrVertical;
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
     CRServo sFrontRoller, sMiddleRoller;
