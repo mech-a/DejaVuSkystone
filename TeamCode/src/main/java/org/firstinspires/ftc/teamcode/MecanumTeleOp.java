@@ -69,13 +69,13 @@ public class MecanumTeleOp extends LinearOpMode {
 
             // set vertical lift to -360
             if (gamepad2.dpad_down) {
-                servoArm.setPosition(0.17);
+                servoArm.setPosition(0.20);
                 ss.liftV(0);
             } else if (gamepad2.dpad_up) {
-                servoArm.setPosition(0.23);
                 ss.liftV(-700);
+                servoArm.setPosition(0.25);
             } else if (gamepad2.dpad_right) {
-                servoArm.setPosition(0.55);
+                servoArm.setPosition(0.59);
             }
 
 //            if (gamepad2.a){
@@ -91,7 +91,7 @@ public class MecanumTeleOp extends LinearOpMode {
 //            }
 
             if (gamepad2.right_trigger > 0.2) {
-                servoHand.setPosition(0.22); //in
+                servoHand.setPosition(0.20); //in
             } else if (gamepad2.left_trigger > 0.2) {
                 servoHand.setPosition(0); //out
             }
@@ -156,16 +156,10 @@ public class MecanumTeleOp extends LinearOpMode {
 
             if(gamepad2.left_stick_y > 0.1 && mtrArmLift.getCurrentPosition() < ARMLIFT_MAX) {
                 mtrArmLift.setPower(gamepad2.left_stick_y / 2);
-                telemetry.addData("lin act", "1");
-                telemetry.update();
             } else if (gamepad2.left_stick_y < -0.1 && mtrArmLift.getCurrentPosition() > ARMLIFT_MIN) {
                 mtrArmLift.setPower(gamepad2.left_stick_y / 2);
-                telemetry.addData("lin act", "2");
-                telemetry.update();
             } else {
                 mtrArmLift.setPower(0);
-                telemetry.addData("lin act", "0");
-                telemetry.update();
             }
 
 //            if((gamepad2.left_stick_y > 0.1) || (gamepad2.left_stick_y < -0.1)) {
@@ -189,12 +183,8 @@ public class MecanumTeleOp extends LinearOpMode {
             if((gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) ||
                     (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN)) {
                 mtrVertical.setPower(gamepad2.right_stick_y/1.5);
-                telemetry.addData("vert", "1");
-                telemetry.update();
             } else {
                 mtrVertical.setPower(0);
-                telemetry.addData("vert", "1");
-                telemetry.update();
             }
 
             //3 fl
@@ -227,7 +217,7 @@ public class MecanumTeleOp extends LinearOpMode {
         // initialize servo hand position
         servoHand.setPosition(0);
         // initialize arm servo position
-        servoArm.setPosition(0.17);
+        servoArm.setPosition(0.20);
 
 
         //sFrontIntake.setDirection(Servo.Direction.FORWARD);
