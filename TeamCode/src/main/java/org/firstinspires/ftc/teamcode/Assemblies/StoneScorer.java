@@ -134,6 +134,27 @@ public class StoneScorer implements Subassembly {
         }
     }
 
+    public void liftV(int distance) {
+        mtrV.setTargetPosition(distance);
+        mtrV.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrV.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if (!caller.isStopRequested()) {
+            mtrV.setPower(speedH);
+        }
+
+        while (!caller.isStopRequested() && (linrA.isBusy())) {
+            //TODO change telemetry name to enum
+            telemetry.addData("mtrHorizontal", "%7d : %7d",
+                    mtrV.getCurrentPosition(), distance);
+        }
+
+        if (!caller.isStopRequested()) {
+            mtrV.setPower(0);
+            mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
     public void hookFoundation(int hookDir, int liftVal) {
         extendH(distanceExtend);
         if(hookDir == 1) {

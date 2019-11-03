@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
+
 /***
  *
  */
@@ -21,13 +23,12 @@ public class MecanumTeleOp extends LinearOpMode {
     //Servo sFrontIntake;  < this servo was replaced by the DCMotor mtrIntake
 
     boolean gripper = false;
-    boolean arm;
     double[] g1 = new double[4];
 
     double powFL, powFR, powBL, powBR;
 
 
-    final double HORIZONTAL_MAX = 1800;
+    final double HORIZONTAL_MAX = 2600;
     final double HORIZONTAL_MIN = 0;
 
     //top is -2332
@@ -35,8 +36,8 @@ public class MecanumTeleOp extends LinearOpMode {
     final double ARMLIFT_MIN = -1900;
     final double ARMLIFT_MAX = 1500;
 
-    final double VERTICAL_MAX = -5000;
-    final double VERTICAL_MIN = 5000;
+    final double VERTICAL_MIN = -2900;
+    final double VERTICAL_MAX = 0;
 
 
     // arm 5773 horiontal
@@ -47,10 +48,13 @@ public class MecanumTeleOp extends LinearOpMode {
     boolean frontRollerDirection = false,
             middleRollerDirection = false;
 
+    StoneScorer ss = new StoneScorer(this);
+
     @Override
     public void runOpMode() {
         initMotors();
         initServos();
+        ss.init();
 
         telemetry.addData("Stat", "Init!");
         telemetry.update();
@@ -59,20 +63,19 @@ public class MecanumTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (gamepad2.b){
-                if (arm){
-                    arm = false;
-                    servoArm.setPosition(0.55);
-                }
-                else if (arm==false){
-                    arm = true;
-                    //sleep(50);
-                    servoArm.setPosition(0.23);
-                }
-                else {
-                    arm = true;
-                    servoArm.setPosition(0.23);
-                }
+            // all the way out is 0.55
+            // middle position is 0.23
+            // all the one down is 0.17
+
+            // set vertical lift to -360
+            if (gamepad2.dpad_down) {
+                servoArm.setPosition(0.17);
+                ss.liftV(0);
+            } else if (gamepad2.dpad_up) {
+                servoArm.setPosition(0.23);
+                ss.liftV(-700);
+            } else if (gamepad2.dpad_right) {
+                servoArm.setPosition(0.55);
             }
 
             if (gamepad2.a){
@@ -215,7 +218,9 @@ public class MecanumTeleOp extends LinearOpMode {
         sMiddleRoller = hardwareMap.get(CRServo.class, "middleRoller");
         servoArm = hardwareMap.get(Servo.class, "arm_servo");
         servoHand = hardwareMap.get(Servo.class, "gripper_servo");
+        // initialize servo hand position
         servoHand.setPosition(0);
+        // initialize arm servo position
         servoArm.setPosition(0.17);
 
 
