@@ -7,4 +7,5 @@ dependencies {
     implementation (name: 'tfod-release', ext:'aar')
     implementation 'com.github.dogecv:dogecv:2020.4-alpha'
     implementation (name: 'tensorflow-lite-0.0.0-nightly', ext:'aar')
+    implementation 'com.github.dogecv:dogecv:2020.4-alpha'
 }

@@ -14,16 +14,27 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name="Mecanum Non-dependency", group="Functionality")
 public class MecanumTeleOp extends LinearOpMode {
 
+<<<<<<< HEAD
     GenericDetector x = new GenericDetector();
 
     DcMotor mtrHorizontal, mtrVertical;
+=======
+    DcMotor mtrHorizontal, mtrVertical, mtrIntake, mtrArmLift;
+>>>>>>> master
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
     CRServo sFrontRoller, sMiddleRoller;
-    Servo sFrontIntake;
+    //Servo sFrontIntake;  < this servo was replaced by the DCMotor mtrIntake
 
     double[] g1 = new double[4];
 
     double powFL, powFR, powBL, powBR;
+
+    final double HORIZONTAL_MAX = 2300; //2407 for auton
+    final double HORIZONTAL_MIN = 0;
+    final double ARMLIFE_MAX = -3951; //-5302, -5491 for auon
+    final double ARMLIFT_MIN = -7500;
+    final double VERTICAL_MIN = -3050;
+    final double VERTICAL_MAX = -150;
 
     boolean frontRollerDirection = false,
             middleRollerDirection = false;
@@ -43,55 +54,18 @@ public class MecanumTeleOp extends LinearOpMode {
 
             telemetry.addData("Controls", "x");
 
-//            if (gamepad1.x) {
-//                frontRollerDirection = !frontRollerDirection;
-//                telemetry.addData("Loop", "in g1x");
-//                sleep(200);
-//            }
-//
-//            if (frontRollerDirection = false) {
-//                sFrontRoller.setPower(1);
-//            } else if (frontRollerDirection = true) {
-//                sFrontRoller.setPower(-1);
-//            }
-
-//            if (gamepad1.y) {
-//                middleRollerDirection = !middleRollerDirection;
-//                telemetry.addData("Loop", "in g1y");
-//                sleep(200);
-//            }
-//
-//            if (middleRollerDirection = false) {
-//                sMiddleRoller.setPower(1);
-//            } else if(middleRollerDirection = true){
-//                sMiddleRoller.setPower(-1);
-//            }
-
-            if (gamepad1.a) {
-                sFrontIntake.setPosition(sFrontIntake.getPosition() + 0.01);
-            } else if (gamepad1.b) {
-                sFrontIntake.setPosition(sFrontIntake.getPosition() - 0.01);
+            if (gamepad1.x) {
+                mtrIntake.setPower(1);
+                sFrontRoller.setPower(-1);
+                sMiddleRoller.setPower(1);
+            } else if (gamepad1.y) {
+                mtrIntake.setPower(0);
+                sFrontRoller.setPower(0);
+                sMiddleRoller.setPower(0);
             }
             else {
 
 
-            }
-
-            if (gamepad1.dpad_up) {
-                mtrVertical.setPower(0.25);
-            } else if (gamepad1.dpad_down) {
-                mtrVertical.setPower(-0.25);
-            } else {
-                mtrVertical.setPower(0);
-            }
-
-            if (gamepad1.dpad_left) {
-                mtrHorizontal.setPower(0.25);
-            } else if (gamepad1.dpad_right) {
-                mtrHorizontal.setPower(-0.25);
-            }
-            else {
-                mtrHorizontal.setPower(0);
             }
 
             g1[0] = gamepad1.left_stick_x;
@@ -116,10 +90,33 @@ public class MecanumTeleOp extends LinearOpMode {
                 powBR = 1;
             }
 
+            //TODO make speed switches
+
             mtrFL.setPower(powFL);
             mtrFR.setPower(powFR);
             mtrBL.setPower(powBL);
             mtrBR.setPower(powBR);
+
+            if((gamepad2.left_stick_y > 0.1 && mtrArmLift.getCurrentPosition() < ARMLIFE_MAX) ||
+                    (gamepad2.left_stick_y < -0.1 && mtrArmLift.getCurrentPosition() > ARMLIFT_MIN)) {
+                mtrArmLift.setPower(gamepad2.left_stick_y/2);
+            } else {
+                mtrArmLift.setPower(0);
+            }
+
+            if((gamepad2.left_stick_x > 0.1 && mtrHorizontal.getCurrentPosition() < HORIZONTAL_MAX) ||
+                    (gamepad2.left_stick_x < -0.1 && mtrHorizontal.getCurrentPosition() > HORIZONTAL_MIN)) {
+                mtrHorizontal.setPower(gamepad2.left_stick_x/2);
+            } else {
+                mtrHorizontal.setPower(0);
+            }
+            if((gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) ||
+                    (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN)) {
+                mtrVertical.setPower(gamepad2.right_stick_y/1.5);
+            } else {
+                mtrVertical.setPower(0);
+            }
+
 
             //3 fl
             //2 fr
@@ -130,25 +127,28 @@ public class MecanumTeleOp extends LinearOpMode {
 
             telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
                     mtrHorizontal.getPower() + mtrVertical.getPower() + " ");
-            telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
-            telemetry.addData("Front Roller Forward", frontRollerDirection);
-            telemetry.addData("Middle Roller Forward", middleRollerDirection);
+            //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
+//            telemetry.addData("Front Roller Forward", frontRollerDirection);
+//            telemetry.addData("Middle Roller Forward", middleRollerDirection);
+            telemetry.addData("vertical lift", mtrVertical.getCurrentPosition());
+            telemetry.addData("horizontal arm", mtrHorizontal.getCurrentPosition());
+            telemetry.addData("arm lift", mtrArmLift.getCurrentPosition());
             telemetry.update();
             sleep(50);
         }
     }
 
     public void initServos() {
-        sFrontIntake = hardwareMap.get(Servo.class, "frontIntake");
+        //sFrontIntake = hardwareMap.get(Servo.class, "frontIntake");
         sFrontRoller = hardwareMap.get(CRServo.class, "frontRoller");
         sMiddleRoller = hardwareMap.get(CRServo.class, "middleRoller");
 
-        sFrontIntake.setDirection(Servo.Direction.FORWARD);
-        sFrontRoller.setDirection(CRServo.Direction.FORWARD);
+        //sFrontIntake.setDirection(Servo.Direction.FORWARD);
+        sFrontRoller.setDirection(CRServo.Direction.REVERSE);
         sMiddleRoller.setDirection(CRServo.Direction.FORWARD);
 
-        sFrontRoller.setPower(-1);
-        sMiddleRoller.setPower(1);
+//        sFrontRoller.setPower(-1);
+//        sMiddleRoller.setPower(1);
 
         //sFrontIntake.setPosition(0);
     }
@@ -156,6 +156,8 @@ public class MecanumTeleOp extends LinearOpMode {
     public void initMotors() {
             mtrHorizontal = hardwareMap.get(DcMotor.class, "horizontal");
             mtrVertical = hardwareMap.get(DcMotor.class, "vertical");
+            mtrArmLift = hardwareMap.get(DcMotor.class, "linearActuator");
+            mtrIntake = hardwareMap.get(DcMotor.class, "intake");
             mtrFL = hardwareMap.get(DcMotor.class, "fl");
             mtrFR = hardwareMap.get(DcMotor.class, "fr");
             mtrBL = hardwareMap.get(DcMotor.class, "bl");
@@ -163,6 +165,8 @@ public class MecanumTeleOp extends LinearOpMode {
 
             mtrHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
             mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+            mtrArmLift.setDirection(DcMotorSimple.Direction.FORWARD );
+            mtrIntake.setDirection(DcMotorSimple.Direction.REVERSE);
             mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
             mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
             mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -170,13 +174,17 @@ public class MecanumTeleOp extends LinearOpMode {
 
             mtrHorizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             mtrVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            mtrIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            mtrArmLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            mtrHorizontal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            mtrVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            mtrHorizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrArmLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             mtrFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
