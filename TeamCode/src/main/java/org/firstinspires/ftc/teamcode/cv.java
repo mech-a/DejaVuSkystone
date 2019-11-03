@@ -13,7 +13,7 @@ import java.util.Locale;
 @TeleOp(name="cvt", group="DogeCV")
 public class cv extends LinearOpMode {
     private OpenCvCamera phoneCam;
-    private SkystoneDetector skyStoneDetector;
+    private DejaDogeSkystoneDetector skyStoneDetector;
 
     @Override
     public void runOpMode() {
@@ -35,7 +35,7 @@ public class cv extends LinearOpMode {
          * of a frame from the camera. Note that switching pipelines on-the-fly
          * (while a streaming session is in flight) *IS* supported.
          */
-        skyStoneDetector = new SkystoneDetector();
+        skyStoneDetector = new DejaDogeSkystoneDetector();
         phoneCam.setPipeline(skyStoneDetector);
 
         /*

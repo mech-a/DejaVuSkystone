@@ -19,10 +19,7 @@ public class MecanumTeleOp extends LinearOpMode {
     DcMotor mtrHorizontal, mtrVertical, mtrIntake, mtrArmLift;
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
     CRServo sFrontRoller, sMiddleRoller;
-<<<<<<< HEAD
-=======
     Servo servoHand, servoArm;
->>>>>>> autonomous
     //Servo sFrontIntake;  < this servo was replaced by the DCMotor mtrIntake
 
     boolean gripper = false;
@@ -30,14 +27,6 @@ public class MecanumTeleOp extends LinearOpMode {
 
     double powFL, powFR, powBL, powBR;
 
-<<<<<<< HEAD
-    final double HORIZONTAL_MAX = 2300; //2407 for auton
-    final double HORIZONTAL_MIN = 0;
-    final double ARMLIFE_MAX = -3951; //-5302, -5491 for auon
-    final double ARMLIFT_MIN = -7500;
-    final double VERTICAL_MIN = -3050;
-    final double VERTICAL_MAX = -150;
-=======
 
     final double HORIZONTAL_MAX = 2600;
     final double HORIZONTAL_MIN = 0;
@@ -55,7 +44,6 @@ public class MecanumTeleOp extends LinearOpMode {
     // lift 953
 
     // lift max is -827
->>>>>>> autonomous
 
     boolean frontRollerDirection = false,
             middleRollerDirection = false;
@@ -75,19 +63,6 @@ public class MecanumTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-<<<<<<< HEAD
-
-            telemetry.addData("Controls", "x");
-
-            if (gamepad1.x) {
-                mtrIntake.setPower(1);
-                sFrontRoller.setPower(-1);
-                sMiddleRoller.setPower(1);
-            } else if (gamepad1.y) {
-                mtrIntake.setPower(0);
-                sFrontRoller.setPower(0);
-                sMiddleRoller.setPower(0);
-=======
             // all the way out is 0.55
             // middle position is 0.23
             // all the one down is 0.17
@@ -101,7 +76,6 @@ public class MecanumTeleOp extends LinearOpMode {
                 ss.liftV(-700);
             } else if (gamepad2.dpad_right) {
                 servoArm.setPosition(0.55);
->>>>>>> autonomous
             }
 
             if (gamepad2.a){
@@ -116,8 +90,6 @@ public class MecanumTeleOp extends LinearOpMode {
                 }
             }
 
-<<<<<<< HEAD
-=======
             if(gamepad2.dpad_down) {
                 //servoArm.setPosition(0); //move the arm all the way down
                 servoArm.setPosition(servoArm.getPosition()-0.01);
@@ -148,7 +120,6 @@ public class MecanumTeleOp extends LinearOpMode {
 
             }
 
->>>>>>> autonomous
             g1[0] = gamepad1.left_stick_x;
             g1[1] = -gamepad1.left_stick_y;
             g1[2] = gamepad1.right_stick_x;
@@ -177,15 +148,6 @@ public class MecanumTeleOp extends LinearOpMode {
             mtrBL.setPower(powBL);
             mtrBR.setPower(powBR);
 
-<<<<<<< HEAD
-            if((gamepad2.left_stick_y > 0.1 && mtrArmLift.getCurrentPosition() < ARMLIFE_MAX) ||
-                    (gamepad2.left_stick_y < -0.1 && mtrArmLift.getCurrentPosition() > ARMLIFT_MIN)) {
-                mtrArmLift.setPower(gamepad2.left_stick_y/2);
-            } else {
-                mtrArmLift.setPower(0);
-            }
-
-=======
             if(gamepad2.left_stick_y > 0.1 && mtrArmLift.getCurrentPosition() < ARMLIFT_MAX) {
                 mtrArmLift.setPower(gamepad2.left_stick_y / 2);
                 telemetry.addData("lin act", "1");
@@ -212,7 +174,6 @@ public class MecanumTeleOp extends LinearOpMode {
 
             //////////////
 
->>>>>>> autonomous
             if((gamepad2.left_stick_x > 0.1 && mtrHorizontal.getCurrentPosition() < HORIZONTAL_MAX) ||
                     (gamepad2.left_stick_x < -0.1 && mtrHorizontal.getCurrentPosition() > HORIZONTAL_MIN)) {
                 mtrHorizontal.setPower(gamepad2.left_stick_x/2);
@@ -222,13 +183,6 @@ public class MecanumTeleOp extends LinearOpMode {
             if((gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) ||
                     (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN)) {
                 mtrVertical.setPower(gamepad2.right_stick_y/1.5);
-<<<<<<< HEAD
-            } else {
-                mtrVertical.setPower(0);
-            }
-
-
-=======
                 telemetry.addData("vert", "1");
                 telemetry.update();
             } else {
@@ -237,7 +191,6 @@ public class MecanumTeleOp extends LinearOpMode {
                 telemetry.update();
             }
 
->>>>>>> autonomous
             //3 fl
             //2 fr
             //1 bl
@@ -251,21 +204,15 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("vertical lift", mtrVertical.getCurrentPosition());
             telemetry.addData("horizontal arm", mtrHorizontal.getCurrentPosition());
             telemetry.addData("arm lift", mtrArmLift.getCurrentPosition());
-<<<<<<< HEAD
-=======
             telemetry.addData("grippy man:", servoHand.getPosition());
             telemetry.addData("big arm dude: ", servoArm.getPosition());
->>>>>>> autonomous
             telemetry.update();
             sleep(50);
         }
     }
 
     public void initServos() {
-<<<<<<< HEAD
-=======
 
->>>>>>> autonomous
         //sFrontIntake = hardwareMap.get(Servo.class, "frontIntake");
         sFrontRoller = hardwareMap.get(CRServo.class, "frontRoller");
         sMiddleRoller = hardwareMap.get(CRServo.class, "middleRoller");
@@ -276,67 +223,15 @@ public class MecanumTeleOp extends LinearOpMode {
         // initialize arm servo position
         servoArm.setPosition(0.17);
 
-<<<<<<< HEAD
-        //sFrontIntake.setDirection(Servo.Direction.FORWARD);
-        sFrontRoller.setDirection(CRServo.Direction.REVERSE);
-        sMiddleRoller.setDirection(CRServo.Direction.FORWARD);
-
-//        sFrontRoller.setPower(-1);
-//        sMiddleRoller.setPower(1);
-=======
 
         //sFrontIntake.setDirection(Servo.Direction.FORWARD);
         sFrontRoller.setDirection(CRServo.Direction.REVERSE);
         sMiddleRoller.setDirection(CRServo.Direction.FORWARD);
->>>>>>> autonomous
 
         //sFrontIntake.setPosition(0);
     }
 
     public void initMotors() {
-<<<<<<< HEAD
-            mtrHorizontal = hardwareMap.get(DcMotor.class, "horizontal");
-            mtrVertical = hardwareMap.get(DcMotor.class, "vertical");
-            mtrArmLift = hardwareMap.get(DcMotor.class, "linearActuator");
-            mtrIntake = hardwareMap.get(DcMotor.class, "intake");
-            mtrFL = hardwareMap.get(DcMotor.class, "fl");
-            mtrFR = hardwareMap.get(DcMotor.class, "fr");
-            mtrBL = hardwareMap.get(DcMotor.class, "bl");
-            mtrBR = hardwareMap.get(DcMotor.class, "br");
-
-            mtrHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
-            mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
-            mtrArmLift.setDirection(DcMotorSimple.Direction.FORWARD );
-            mtrIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-            mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
-            mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
-            mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
-            mtrBR.setDirection(DcMotorSimple.Direction.FORWARD);
-
-            mtrHorizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            mtrVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            mtrIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            mtrArmLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-            mtrHorizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mtrArmLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mtrIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mtrFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            // 0 br
-            // 1 bl
-            // 2 fr
-            // 3 fl
-        }
-=======
         mtrHorizontal = hardwareMap.get(DcMotor.class, "horizontal");
         mtrVertical = hardwareMap.get(DcMotor.class, "vertical");
         mtrArmLift = hardwareMap.get(DcMotor.class, "linearActuator");
@@ -388,6 +283,5 @@ public class MecanumTeleOp extends LinearOpMode {
         // 1 bl
         // 2 fr
         // 3 fl
->>>>>>> autonomous
     }
 }
