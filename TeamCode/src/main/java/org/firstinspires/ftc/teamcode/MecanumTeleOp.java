@@ -78,16 +78,22 @@ public class MecanumTeleOp extends LinearOpMode {
                 servoArm.setPosition(0.55);
             }
 
-            if (gamepad2.a){
-                if (gripper){
-                    gripper = false;
-                    servoHand.setPosition(0);
-                }
-                else {
-                    gripper = true;
-                    //sleep(50);
-                    servoHand.setPosition(0.25);
-                }
+//            if (gamepad2.a){
+//                if (gripper){
+//                    gripper = false;
+//                    servoHand.setPosition(0);
+//                }
+//                else {
+//                    gripper = true;
+//                    //sleep(50);
+//                    servoHand.setPosition(0.25);
+//                }
+//            }
+
+            if (gamepad2.right_trigger > 0.2) {
+                servoHand.setPosition(0.22); //in
+            } else if (gamepad2.left_trigger > 0.2) {
+                servoHand.setPosition(0); //out
             }
 
             if(gamepad2.dpad_down) {
