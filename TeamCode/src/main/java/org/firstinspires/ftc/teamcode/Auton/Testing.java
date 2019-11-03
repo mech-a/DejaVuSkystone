@@ -38,8 +38,10 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
-@Autonomous(name = "Case 3", group = "Auton")
-public class Case3 extends LinearOpMode {
+@Autonomous(name = "Test Case", group = "Auton")
+public class Testing extends LinearOpMode {
+    int liftValueA = -5400;
+    int extendValueA = 2260;
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
@@ -47,21 +49,12 @@ public class Case3 extends LinearOpMode {
     @Override
     public void runOpMode() {
         d.init();
+        ss.init();
 
         waitForStart();
 
-        d.translate(Drivetrain.Direction.FWD, 24, 0.25);
-        d.translate(Drivetrain.Direction.LEFT, 16, 0.25);
-
-        //hook onto foundation
-        //ss.hookFoundation(1);
-
-        d.translate(Drivetrain.Direction.BACK, 24, 0.25);
-        //ss.hookFoundation(-1);
-
-        d.translate(Drivetrain.Direction.RIGHT, 24, 0.25);
-        d.translate(Drivetrain.Direction.FWD, 18, 0.25);
-        d.translate(Drivetrain.Direction.RIGHT, 28, 0.25);
+        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
+        ss.extendH(600);
 
     }
 }

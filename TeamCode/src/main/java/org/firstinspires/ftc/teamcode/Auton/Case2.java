@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
-@Autonomous(name = "Case 1 Blue", group = "Auton")
+@Autonomous(name = "Case 2", group = "Auton")
 public class Case2 extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
@@ -51,31 +51,30 @@ public class Case2 extends LinearOpMode {
         waitForStart();
 
         // findSkystone();
-        ss.intake(1,1);
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.75);
+        //ss.intake(1,1);
+        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
         // releaseStone();
-        d.translate(Drivetrain.Direction.RIGHT, 36, 0.75);
-        // intake()
-        ss.intake(1, 1);
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.75);
-        ss.extake(1,1);
+        d.translate(Drivetrain.Direction.RIGHT, 36, 0.25);
+        //ss.intake(1, 1);
+        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
+        //ss.extake(1,1);
 
         // move left to be aligned to the foundation
-        d.translate(Drivetrain.Direction.LEFT, 30, 0.75);
-        ss.hookFoundation(1);
+        d.translate(Drivetrain.Direction.LEFT, 30, 0.25);
+        //ss.hookFoundation(1);
 
         // back up to the wall with the foundation
-        d.translate(Drivetrain.Direction.BACK, 30, 0.75);
-        ss.hookFoundation(-1);
+        d.translate(Drivetrain.Direction.BACK, 30, 0.25);
+        //ss.hookFoundation(-1);
 
         // move right out from behind the foundation
-        d.translate(Drivetrain.Direction.RIGHT, 30, 0.75);
+        d.translate(Drivetrain.Direction.RIGHT, 30, 0.25);
 
         // move forward to avoid other robot
-        d.translate(Drivetrain.Direction.FWD, 24, 0.75);
+        d.translate(Drivetrain.Direction.FWD, 24, 0.25);
 
         // move right to park under the bridge
-        d.translate(Drivetrain.Direction.RIGHT, 18, 0.75);
+        d.translate(Drivetrain.Direction.RIGHT, 18, 0.25);
 
     }
 }

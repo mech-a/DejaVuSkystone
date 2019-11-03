@@ -38,8 +38,10 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
-@Autonomous(name = "Case 1 Blue", group = "Auton")
+@Autonomous(name = "Case 1", group = "Auton")
 public class Case1 extends LinearOpMode {
+    int liftValueA = -5400;
+    int extendValueA = 2260;
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
@@ -47,24 +49,36 @@ public class Case1 extends LinearOpMode {
     @Override
     public void runOpMode() {
         d.init();
+        ss.init();
 
         waitForStart();
 
         // findSkystone();
+
+        // obtain skystone
+        ss.setBlock(-1000, 1800, 1000);
+        ss.setBlock(0, 0,0);
+        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
+
+        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
         ss.intake(1, 1);
 
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.75);
-        ss.extake(1, 1);
+        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
+        ss.extake(1, extendValueA, -1,1);
 
         // move right to position robot in front of second skystone
-        d.translate(Drivetrain.Direction.RIGHT, 36, 0.75);
+        d.translate(Drivetrain.Direction.RIGHT, 36, 0.25);
+
+        // obtain skystone
+        ss.setBlock(liftValueA, extendValueA, 0);
+        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
         ss.intake(1, 1);
 
         // move left all the way into build zone
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.75);
-        ss.extake(1, 1);
+        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
+        ss.extake(1, extendValueA, -1,1);
 
         // move right to park under bridge
-        d.translate(Drivetrain.Direction.RIGHT, 36, 0.75);
+        d.translate(Drivetrain.Direction.RIGHT, 36, 0.25);
     }
 }

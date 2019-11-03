@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Assemblies;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -10,7 +11,7 @@ public class Drivetrain implements Subassembly {
     DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     LinearOpMode caller;
     Telemetry telemetry;
-    int driveMtrTarget;
+    int driveMtrTarget = 1;
     //DT Specs:
     public static final double HD_COUNTS_PER_REV = 560;
     //in inches
@@ -22,6 +23,7 @@ public class Drivetrain implements Subassembly {
 
     public Drivetrain(LinearOpMode caller) {
         this.caller = caller;
+        telemetry = caller.telemetry;
     }
 
     @Override
@@ -30,6 +32,11 @@ public class Drivetrain implements Subassembly {
         mtrFR = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[1]);
         mtrBL = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[2]);
         mtrBR = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[3]);
+
+        mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
+        mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrBR.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     @Override
@@ -82,8 +89,8 @@ public class Drivetrain implements Subassembly {
 
             mtrFL.setTargetPosition(a * driveMtrTarget);
             mtrFR.setTargetPosition(b * driveMtrTarget);
-            mtrBL.setTargetPosition(a * driveMtrTarget);
-            mtrBR.setTargetPosition(b * driveMtrTarget);
+            mtrBL.setTargetPosition(b * driveMtrTarget);
+            mtrBR.setTargetPosition(a * driveMtrTarget);
 
             mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

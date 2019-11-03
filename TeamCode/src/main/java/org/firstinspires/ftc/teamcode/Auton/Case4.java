@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
-@Autonomous(name = "Case 1 Blue", group = "Auton")
+@Autonomous(name = "Case 4", group = "Auton")
 public class Case4 extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
@@ -50,21 +50,9 @@ public class Case4 extends LinearOpMode {
 
         waitForStart();
 
-        // findSkystone();
-        ss.intake(1, 1, 1);
-
-        d.translate(Drivetrain.Direction.LEFT, 400, 0.75);
-        ss.extake();
-
-        // move right to position robot in front of second skystone
-        d.translate(Drivetrain.Direction.RIGHT, 400, 0.75);
-        ss.intake(1, 1, 1);
-
-        // move left all the way into build zone
-        d.translate(Drivetrain.Direction.LEFT, 400, 0.75);
-        ss.extake();
-
-        // move right to park under bridge
-        d.translate(Drivetrain.Direction.RIGHT, 400, 0.75);
+        d.translate(Drivetrain.Direction.RIGHT, 30, 0.35);
+        d.translate(Drivetrain.Direction.LEFT, 30, 0.35);
+        d.translate(Drivetrain.Direction.FWD, 30, 0.35);
+        d.translate(Drivetrain.Direction.BACK, 30, 0.35);
     }
 }

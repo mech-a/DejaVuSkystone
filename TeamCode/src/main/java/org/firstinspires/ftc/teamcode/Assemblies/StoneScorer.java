@@ -3,32 +3,40 @@ package org.firstinspires.ftc.teamcode.Assemblies;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class StoneScorer implements Subassembly {
-    DcMotor mtrH, mtrV, linrA;
-    CRServo frontRoller, roll1, roll2, roll3;
+    DcMotor mtrH, mtrV, linrA, frontRoller;
+    CRServo roll1, roll2, roll3;
     Servo flipper, grabber;
     LinearOpMode caller;
     Telemetry telemetry;
-    int speedH;
-    public static final int rotateAmt = 3;
+    public static double speedH = 0.5;
+    public static final int distanceExtend = 4;
 
     @Override
     public void init() {
         mtrH = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[0]);
         mtrV = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[1]);
         linrA = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[2]);
+        frontRoller = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[3]);
 
-        frontRoller = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[0]);
-        roll1 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[1]);
-        roll2 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[2]);
-        roll3 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[3]);
-        flipper = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[5]);
-        grabber = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[6]);
+        roll1 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[0]);
+        roll2 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[1]);
+        //flipper = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[2]);
+        //grabber = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[3]);
 
+        mtrH.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrV.setDirection(DcMotorSimple.Direction.REVERSE);
+        linrA.setDirection(DcMotorSimple.Direction.FORWARD );
+        frontRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        mtrH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linrA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -38,23 +46,28 @@ public class StoneScorer implements Subassembly {
 
     public StoneScorer(LinearOpMode caller) {
         this.caller = caller;
+        telemetry = caller.telemetry;
     }
 
-    public void intake(int distExtendH, int dirRoll) {
-        rotateH(rotateAmt);
-        extendH(distExtendH);
-        rotateH(-rotateAmt);
+    // extend the horizontal to parameter value, lower the horizontal slide to parameter value
+    public void setBlock(int liftVal, int extendHVal, int dropVal) {
+        liftH(liftVal);
+        extendH(extendHVal);
+        liftH(dropVal);
+    }
+
+    // start rolling the first two intake wheels, retract the horizontal,
+    public void intake(int dirRoll, int retractHVal) {
         roll2(dirRoll);
-        extendH(-distExtendH);
+        extendH(retractHVal);
     }
 
-    public void extake(int distExtendH, int dirRoll) {
-        rotateH(rotateAmt);
-        extendH(distExtendH);
+    public void extake(int liftVal, int extendHVal, int dirRoll, int retractHVal) {
+        liftH(liftVal);
+        extendH(extendHVal);
         // negative value entered here for dirRoll
         roll2(dirRoll);
-        extendH(-distExtendH);
-        rotateH(-rotateAmt);
+        extendH(retractHVal);
     }
 
     // used for both extending and retracting the horizontal slides
@@ -71,6 +84,7 @@ public class StoneScorer implements Subassembly {
             //TODO change telemetry name to enum
             telemetry.addData("mtrHorizontal", "%7d : %7d",
                     mtrH.getCurrentPosition(), distance);
+            telemetry.update();
         }
 
         if (!caller.isStopRequested()) {
@@ -80,26 +94,26 @@ public class StoneScorer implements Subassembly {
     }
 
     public void roll2(int direction) {
-        frontRoller.setDirection(CRServo.Direction.FORWARD);
+        frontRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         roll1.setDirection(CRServo.Direction.FORWARD);
 
-        frontRoller.setPower(direction);
+        frontRoller.setPower(direction * 0.50);
         roll1.setPower(direction);
     }
 
     public void roll4(int direction) {
-        frontRoller.setDirection(CRServo.Direction.FORWARD);
+        frontRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         roll1.setDirection(CRServo.Direction.FORWARD);
         roll2.setDirection(CRServo.Direction.FORWARD);
         roll3.setDirection(CRServo.Direction.FORWARD);
 
-        frontRoller.setPower(direction);
+        frontRoller.setPower(direction * 0.50);
         roll1.setPower(direction);
         roll2.setPower(direction);
         roll3.setPower(direction);
     }
 
-    public void rotateH(int distance) {
+    public void liftH(int distance) {
         linrA.setTargetPosition(distance);
         linrA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linrA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -120,11 +134,34 @@ public class StoneScorer implements Subassembly {
         }
     }
 
-    public void hookFoundation(int hookDir) {
-        if(hookDir == 1) {
-            rotateH(rotateAmt);
-        } else {
-            rotateH(-rotateAmt);
+    public void liftV(int distance) {
+        mtrV.setTargetPosition(distance);
+        mtrV.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrV.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if (!caller.isStopRequested()) {
+            mtrV.setPower(speedH);
         }
+
+        while (!caller.isStopRequested() && (linrA.isBusy())) {
+            //TODO change telemetry name to enum
+            telemetry.addData("mtrHorizontal", "%7d : %7d",
+                    mtrV.getCurrentPosition(), distance);
+        }
+
+        if (!caller.isStopRequested()) {
+            mtrV.setPower(0);
+            mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void hookFoundation(int hookDir, int liftVal) {
+        extendH(distanceExtend);
+        if(hookDir == 1) {
+            liftH(liftVal);
+        } else {
+            liftH(-liftVal);
+        }
+        extendH(-distanceExtend);
     }
 }

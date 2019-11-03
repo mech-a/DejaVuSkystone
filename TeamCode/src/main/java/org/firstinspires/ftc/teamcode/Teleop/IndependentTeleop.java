@@ -26,19 +26,19 @@ public class IndependentTeleop extends LinearOpMode{
 
     public void runOpMode(){
 
-        mtrFL = hardwareMap.dcMotor.get("motor_fl");
+        mtrFL = hardwareMap.dcMotor.get("fl");
         mtrFL.setDirection(DcMotor.Direction.FORWARD);
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        mtrFR = hardwareMap.dcMotor.get("motor_fr");
+        mtrFR = hardwareMap.dcMotor.get("fr");
         mtrFR.setDirection(DcMotor.Direction.REVERSE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        mtrBR = hardwareMap.dcMotor.get("motor_br");
+        mtrBR = hardwareMap.dcMotor.get("br");
         mtrBR.setDirection(DcMotor.Direction.REVERSE);
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        mtrBL = hardwareMap.dcMotor.get("motor_bl");
+        mtrBL = hardwareMap.dcMotor.get("bl");
         mtrBL.setDirection(DcMotor.Direction.FORWARD);
         mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

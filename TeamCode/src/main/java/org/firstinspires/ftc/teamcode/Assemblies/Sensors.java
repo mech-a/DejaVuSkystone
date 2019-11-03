@@ -10,4 +10,8 @@ public class Sensors implements Subassembly {
     public void status() {
 
     }
+
+    public void findSkystone() {
+
+    }
 }
