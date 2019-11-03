@@ -24,16 +24,15 @@ public class StoneScorer implements Subassembly {
         linrA = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[2]);
         frontRoller = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[3]);
 
-        roll1 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[1]);
-        roll2 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[2]);
-        roll3 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[3]);
-        flipper = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[5]);
-        grabber = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[6]);
+        roll1 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[0]);
+        roll2 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[1]);
+        //flipper = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[2]);
+        //grabber = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[3]);
 
-        mtrH.setDirection(DcMotorSimple.Direction.FORWARD);
-        mtrV.setDirection(DcMotorSimple.Direction.FORWARD);
-        linrA.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRoller.setDirection(DcMotorSimple.Direction.FORWARD);
+        mtrH.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrV.setDirection(DcMotorSimple.Direction.REVERSE);
+        linrA.setDirection(DcMotorSimple.Direction.FORWARD );
+        frontRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
         mtrH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -51,9 +50,10 @@ public class StoneScorer implements Subassembly {
     }
 
     // extend the horizontal to parameter value, lower the horizontal slide to parameter value
-    public void setBlock(int extendHVal, int liftVal) {
-        extendH(-5400);
-        liftH(2260);
+    public void setBlock(int liftVal, int extendHVal, int dropVal) {
+        liftH(liftVal);
+        extendH(extendHVal);
+        liftH(dropVal);
     }
 
     // start rolling the first two intake wheels, retract the horizontal,
@@ -72,7 +72,7 @@ public class StoneScorer implements Subassembly {
 
     // used for both extending and retracting the horizontal slides
     public void extendH(int distance) {
-        mtrH.setTargetPosition(20);
+        mtrH.setTargetPosition(distance);
         mtrH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -84,6 +84,7 @@ public class StoneScorer implements Subassembly {
             //TODO change telemetry name to enum
             telemetry.addData("mtrHorizontal", "%7d : %7d",
                     mtrH.getCurrentPosition(), distance);
+            telemetry.update();
         }
 
         if (!caller.isStopRequested()) {

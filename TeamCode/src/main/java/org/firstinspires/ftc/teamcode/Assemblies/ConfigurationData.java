@@ -6,7 +6,6 @@ public class ConfigurationData {
 
     public final static String[] BLOCK_MANIPULATOR_MOTOR_NAMES = {"horizontal", "vertical", "linearActuator", "intake"};
 
-    public final static String[] BLOCK_MANIPULATOR_SERVO_NAMES = {"frontRoller", "roll1", "roll2",
-            "roll3", "scooper", "flipper", "grabber"};
+    public final static String[] BLOCK_MANIPULATOR_SERVO_NAMES = {"frontRoller", "middleRoller", "flipper", "grabber"};
 
 }
