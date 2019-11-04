@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -7,6 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 /***
@@ -21,6 +26,26 @@ public class MecanumTeleOp extends LinearOpMode {
     CRServo sFrontRoller, sMiddleRoller;
     Servo servoHand, servoArm;
     //Servo sFrontIntake;  < this servo was replaced by the DCMotor mtrIntake
+
+    double fwd, strafe, rotate;
+
+    public enum DriveMode {
+        FIELD, CARTESIAN
+    }
+
+    double[] speedSwitch = {0.05,0.375};
+    boolean runFast = true, runSlow = false;
+    double modifier = speedSwitch[1];
+    static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
+
+    //Keep default as field or cartesian?
+    DriveMode driveMode = DriveMode.FIELD;
+
+    private BNO055IMU imu;
+    private BNO055IMU.Parameters gyroParameters;
+    private double heading;
+
+    private Orientation angles;
 
     boolean gripper = false;
     double[] g1 = new double[4];
@@ -55,6 +80,7 @@ public class MecanumTeleOp extends LinearOpMode {
         initMotors();
         initServos();
         ss.init();
+        imuInit();
 
         telemetry.addData("Stat", "Init!");
         telemetry.update();
@@ -126,26 +152,45 @@ public class MecanumTeleOp extends LinearOpMode {
 
             }
 
+            if(gamepad1.dpad_up) {
+                //todo figure out reset angle
+                imuInit();
+            }
+
             g1[0] = gamepad1.left_stick_x;
             g1[1] = -gamepad1.left_stick_y;
             g1[2] = gamepad1.right_stick_x;
             g1[3] = -gamepad1.right_stick_y;
 
-            for (int i = 0; i < 4; i++) {
-                g1[i] /= 2;
+            for(int i = 0; i < g1.length; i++)
+                g1[i] = (Math.abs(g1[i]) > DEADZONE ? g1[i] : 0) * modifier;
+
+            if(gamepad1.y) {
+                driveMode = DriveMode.CARTESIAN;
+            }
+            else if (gamepad1.a) {
+                driveMode = DriveMode.FIELD;
             }
 
-            powFL = g1[1] + g1[2] + g1[0];
-            powFR = g1[1] - g1[2] - g1[0];
-            powBL = g1[1] + g1[2] - g1[0];
-            powBR = g1[1] - g1[2] + g1[0];
 
-            if(gamepad1.right_trigger > 0.2) {
-                powFL = 1;
-                powFR = 1;
-                powBL = 1;
-                powBR = 1;
-            }
+            driverControl();
+
+
+//            for (int i = 0; i < 4; i++) {
+//                g1[i] /= 2;
+//            }
+
+//            powFL = g1[1] + g1[2] + g1[0];
+//            powFR = g1[1] - g1[2] - g1[0];
+//            powBL = g1[1] + g1[2] - g1[0];
+//            powBR = g1[1] - g1[2] + g1[0];
+//
+//            if(gamepad1.right_trigger > 0.2) {
+//                powFL = 1;
+//                powFR = 1;
+//                powBL = 1;
+//                powBR = 1;
+//            }
 
             //TODO make speed switches
 
@@ -162,6 +207,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 mtrArmLift.setPower(0);
             }
 
+
 //            if((gamepad2.left_stick_y > 0.1) || (gamepad2.left_stick_y < -0.1)) {
 //                mtrArmLift.setPower(gamepad2.left_stick_y/2);
 //                telemetry.addData("lin act", "1");
@@ -173,6 +219,8 @@ public class MecanumTeleOp extends LinearOpMode {
 //            }
 
             //////////////
+
+
 
             if((gamepad2.left_stick_x > 0.1 && mtrHorizontal.getCurrentPosition() < HORIZONTAL_MAX) ||
                     (gamepad2.left_stick_x < -0.1 && mtrHorizontal.getCurrentPosition() > HORIZONTAL_MIN)) {
@@ -205,6 +253,94 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.update();
             sleep(50);
         }
+    }
+
+    private void speedSwitch() {
+        if(gamepad1.right_trigger>TRIGGER_DEADZONE){
+            runFast = true;
+            runSlow = false;
+        }
+        else if(gamepad1.left_trigger>TRIGGER_DEADZONE){
+            runFast = false;
+            runSlow = true;
+        }
+        if(runFast){
+            modifier = speedSwitch[1];
+        }
+        if(runSlow){
+            modifier = speedSwitch[0];
+        }
+    }
+
+    private void imuInit() {
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        gyroParameters = new BNO055IMU.Parameters();
+        gyroParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        gyroParameters.loggingEnabled      = true;
+        gyroParameters.loggingTag          = "IMU";
+
+        //Default is 32
+        //TODO check powerdrain
+        gyroParameters.gyroBandwidth = BNO055IMU.GyroBandwidth.HZ523;
+
+        imu.initialize(gyroParameters);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+    }
+
+    public void refreshAngle() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+
+        heading = AngleUnit.DEGREES.normalize(heading);
+
+
+//        heading = Math.floor(heading);
+//        heading = Range.clip(heading, -180.0, 180.0);
+    }
+
+    public double getHeading() {
+        refreshAngle();
+        return heading;
+    }
+
+    public void driverControl() {
+        if(driveMode == DriveMode.FIELD) {
+            double heading = getHeading();
+            telemetry.addData("Heading", heading);
+
+            heading = Math.toRadians(heading);
+
+
+            if(heading > 0) {
+                //ccw
+                fwd = g1[1] * Math.cos(Math.abs(heading)) - g1[0] * Math.sin(Math.abs(heading));
+                strafe = g1[1] * Math.sin(Math.abs(heading)) + g1[0] * Math.cos(Math.abs(heading));
+            }
+            else {
+                //cw
+                fwd = g1[1] * Math.cos(Math.abs(heading)) + g1[0] * Math.sin(Math.abs(heading));
+                strafe = -g1[1] * Math.sin(Math.abs(heading)) + g1[0] * Math.cos(Math.abs(heading));
+            }
+
+            rotate = g1[2];
+
+            powFL = fwd + rotate + strafe;
+            powFR = fwd - rotate - strafe;
+            powBL = fwd + rotate - strafe;
+            powBR = fwd - rotate + strafe;
+
+        }
+        else {
+            //If the drive mode is Cartesian, we run the standard mecanum drive drive system
+
+            powFL = g1[1] + g1[2] + g1[0];
+            powFR = g1[1] - g1[2] - g1[0];
+            powBL = g1[1] + g1[2] - g1[0];
+            powBR = g1[1] - g1[2] + g1[0];
+
+        }
+
     }
 
     public void initServos() {
