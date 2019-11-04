@@ -33,8 +33,8 @@ public class MecanumTeleOp extends LinearOpMode {
 
     //top is -2332
     // bottom is 800
-    final double ARMLIFT_MIN = -1900;
-    final double ARMLIFT_MAX = 1500;
+    final double ARMLIFT_MIN = 0; //top
+    final double ARMLIFT_MAX = 4000; //bottom
 
     final double VERTICAL_MIN = -2900;
     final double VERTICAL_MAX = 0;
@@ -73,22 +73,19 @@ public class MecanumTeleOp extends LinearOpMode {
                 ss.liftV(0);
             } else if (gamepad2.dpad_up) {
                 ss.liftV(-700);
-                servoArm.setPosition(0.25);
+                servoArm.setPosition(0.23);
             } else if (gamepad2.dpad_right) {
                 servoArm.setPosition(0.59);
             }
 
-//            if (gamepad2.a){
-//                if (gripper){
-//                    gripper = false;
-//                    servoHand.setPosition(0);
-//                }
-//                else {
-//                    gripper = true;
-//                    //sleep(50);
-//                    servoHand.setPosition(0.25);
-//                }
-//            }
+            if (gamepad2.x && (servoArm.getPosition() > 0)) {
+                // when x is hit, then the gripper clamp moves in more (tigher grip)
+                servoArm.setPosition(servoArm.getPosition() - 0.005);
+            } else if (gamepad2.y && (servoArm.getPosition() < 1)) {
+                // when y is hit, then the gripper clamp moves out more (looser grip)
+                servoArm.setPosition(servoArm.getPosition() + 0.005);
+            }
+
 
             if (gamepad2.right_trigger > 0.2) {
                 servoHand.setPosition(0.20); //in
@@ -203,7 +200,6 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("grippy man:", servoHand.getPosition());
             telemetry.addData("big arm dude: ", servoArm.getPosition());
             telemetry.update();
-            sleep(50);
         }
     }
 
