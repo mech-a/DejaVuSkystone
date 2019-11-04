@@ -165,7 +165,7 @@ public class MecanumTeleOp extends LinearOpMode {
             for(int i = 0; i < g1.length; i++)
                 g1[i] = (Math.abs(g1[i]) > DEADZONE ? g1[i] : 0) * modifier;
 
-            if(gamepad1.y) {
+            if(gamepad1.b) {
                 driveMode = DriveMode.CARTESIAN;
             }
             else if (gamepad1.a) {
