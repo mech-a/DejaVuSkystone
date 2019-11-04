@@ -54,7 +54,7 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
     final double HORIZONTAL_MAX = 2600;
-    final double HORIZONTAL_MIN = 0;
+    final double HORIZONTAL_MIN = 100;
 
     //top is -2332
     // bottom is 800
@@ -95,12 +95,15 @@ public class MecanumTeleOp extends LinearOpMode {
 
             // set vertical lift to -360
             if (gamepad2.dpad_down) {
+                // pos 1
                 servoArm.setPosition(0.20);
                 ss.liftV(0);
             } else if (gamepad2.dpad_up) {
+                // pos 2
                 ss.liftV(-700);
                 servoArm.setPosition(0.23);
             } else if (gamepad2.dpad_right) {
+                // pos 3
                 servoArm.setPosition(0.59);
             }
 
@@ -145,8 +148,10 @@ public class MecanumTeleOp extends LinearOpMode {
                 sFrontRoller.setPower(0);
                 sMiddleRoller.setPower(0);
             }
-            else {
-
+            else if (gamepad1.dpad_down){
+                mtrIntake.setPower(-1);
+                sFrontRoller.setPower(1);
+                sMiddleRoller.setPower(-1);
             }
 
             if(gamepad1.dpad_up) {
@@ -247,6 +252,8 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("arm lift", mtrArmLift.getCurrentPosition());
             telemetry.addData("grippy man:", servoHand.getPosition());
             telemetry.addData("big arm dude: ", servoArm.getPosition());
+            telemetry.addData("imu angle", getHeading());
+            telemetry.addData("drive mode", driveMode);
             telemetry.update();
         }
     }
