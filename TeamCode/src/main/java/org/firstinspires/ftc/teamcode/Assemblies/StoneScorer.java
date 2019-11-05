@@ -34,6 +34,11 @@ public class StoneScorer implements Subassembly {
         linrA.setDirection(DcMotorSimple.Direction.FORWARD );
         frontRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        mtrH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrV.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linrA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRoller.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         mtrH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         linrA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -74,6 +79,7 @@ public class StoneScorer implements Subassembly {
     public void extendH(int distance) {
         mtrH.setTargetPosition(distance);
         mtrH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrH.setTargetPosition(distance);
         mtrH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (!caller.isStopRequested()) {

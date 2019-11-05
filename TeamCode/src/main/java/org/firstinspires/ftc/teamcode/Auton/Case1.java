@@ -56,11 +56,21 @@ public class Case1 extends LinearOpMode {
         // findSkystone();
 
         // obtain skystone
-        ss.setBlock(-1000, 1800, 1000);
-        ss.setBlock(0, 0,0);
+        ss.setBlock(10, 2400, 1500);
+        telemetry.addData("status:", "set block");
+        telemetry.update();
         d.translate(Drivetrain.Direction.BACK, 12, 0.25);
+        ss.intake(1, 10);
+        telemetry.addData("status:", "set block");
+        telemetry.update();
 
-        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
+        d.translate(Drivetrain.Direction.LEFT, 12, 0.25);
+
+        ss.setBlock(0, 0, 0);
+        telemetry.addData("status:", "reset to 0");
+        telemetry.update();
+        ss.intake(1, 10);
+
         ss.intake(1, 1);
 
         d.translate(Drivetrain.Direction.LEFT, 36, 0.25);

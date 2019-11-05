@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
  *
  */
 
-@TeleOp(name="Mecanum Non-dependency", group="Functionality")
-public class MecanumTeleOp extends LinearOpMode {
+@TeleOp(name="Teleop Reset", group="Functionality")
+public class ResetTeleOp extends LinearOpMode {
 
     DcMotor mtrHorizontal, mtrVertical, mtrIntake, mtrArmLift;
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
@@ -55,17 +55,17 @@ public class MecanumTeleOp extends LinearOpMode {
 
     // max out is 2400
     // in is 0, which is starting
-    final double HORIZONTAL_MAX = 2400;
-    final double HORIZONTAL_MIN = 0;
+    final double HORIZONTAL_MAX = 5000;
+    final double HORIZONTAL_MIN = -5000;
 
 
-    final double ARMLIFT_MIN = 0; //top
-    final double ARMLIFT_MAX = 1500; //bottom
+    final double ARMLIFT_MIN = -5000; //top
+    final double ARMLIFT_MAX = 5000; //bottom
 
     // top is -2700
     // bottom is starting, which is 0
-    final double VERTICAL_MIN = -2900;
-    final double VERTICAL_MAX = 0;
+    final double VERTICAL_MIN = -5000;
+    final double VERTICAL_MAX = 5000;
 
     boolean frontRollerDirection = false,
             middleRollerDirection = false;
