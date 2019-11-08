@@ -14,4 +14,13 @@ public class Sensors implements Subassembly {
     public void findSkystone() {
 
     }
+
+    public enum SkyStoneLocation {
+
+        LEFT,
+
+        MIDDLE,
+
+        CENTER
+    }
 }
