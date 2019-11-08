@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 
 import java.util.List;
 
@@ -20,13 +21,15 @@ public class TeleopCVAlg extends LinearOpMode {
     private static final String VUFORIA_KEY = "ASLOtt3/////AAABmbzx65TV2UrVqNnUS424xZpOs/Vw2BUdY1equY69euPD199BJxppV5RLjqwvUYyCtWjtNqI1CTL6Vlp5RvY5Cimm92p/ML2lDhM0GR/f2feDTFMgXLGPiEs7qStp839UrN8YNxDHbOdQHMCIlJeouhxOh9Y87rubm14L7RwrdvOyfo9v8o5ZyFqH33ap58P9xdmhIitqvU2nmVjieMZoTfGLuu0Fmuls+u3bHv5OfEcj8cEUlJ02sui0qdjfNcJIOPkNZUh822tYespPWEqEOLeOf3wXvy5skSQplg/1JOxPXdq8HUcCqeo25hL8iXkg1tlw12aCTLNkQli80Hw8Jiddnl1oKQe7cBziTEIXKmBW";
     private List<Recognition> recognitions;
 
-    private static final int LOWER_X_BOUNDARY = 0;
+    private static final int LOWER_X_BOUNDARY = 0; //temporary values
     private static final int UPPER_X_BOUNDARY = 1;
     private static final int LOWER_Y_BOUNDARY = 0;
     private static final int UPPER_Y_BOUNDARY = 1;
-    private SkystoneLocation location;
+    private static final int MIDDLE_BOUNDARY = 1;
 
-    private VuforiaLocalizer vuf;
+    private Sensors.SkyStoneLocation location;
+
+    private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
     @Override
@@ -61,7 +64,9 @@ public class TeleopCVAlg extends LinearOpMode {
                     recognitions = tfod.getRecognitions();
                     sleep(100);
                 }
-                //pruning recognitions that are outside of focus area
+
+                //This loop prunes recognitions that are outside of viewing window, which is limited
+                //to the area around the first two stones.
                 for (Recognition recognition : recognitions) {
                     if (recognition.getLeft() > UPPER_X_BOUNDARY ||
                             recognition.getLeft() < LOWER_X_BOUNDARY) {
@@ -72,10 +77,29 @@ public class TeleopCVAlg extends LinearOpMode {
                     }
                 }
 
+                //If there is more than one stone recognized, the skystone must be on the right.
                 if (recognitions.size() > 1) {
-
+                    location = Sensors.SkyStoneLocation.RIGHT;
+                } else if (recognitions.get(0).getLeft() < MIDDLE_BOUNDARY) {
+                    location = Sensors.SkyStoneLocation.LEFT;
+                } else {
+                    location = Sensors.SkyStoneLocation.CENTER;
                 }
             }
+
+            switch (location) {
+                case LEFT:
+                    telemetry.addData("SkyStone Location:", "LEFT");
+                    break;
+                case RIGHT:
+                    telemetry.addData("SkyStone Location:", "RIGHT");
+                    break;
+                case CENTER:
+                    telemetry.addData("SkyStone Location:", "CENTER");
+                    break;
+            }
+
+            telemetry.update();
         }
     }
 

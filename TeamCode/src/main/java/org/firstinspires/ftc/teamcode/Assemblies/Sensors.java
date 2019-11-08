@@ -19,8 +19,8 @@ public class Sensors implements Subassembly {
 
         LEFT,
 
-        MIDDLE,
+        CENTER,
 
-        CENTER
+        RIGHT
     }
 }
