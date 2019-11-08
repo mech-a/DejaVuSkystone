@@ -32,55 +32,40 @@ package org.firstinspires.ftc.teamcode.Auton;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-
-@Autonomous(name = "Case 2", group = "Auton")
-public class Case2 extends LinearOpMode {
+// CASE A: Next to wall
+@Autonomous(name = "Case 3 A", group = "Auton")
+public class Case3A extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
+        // initialize drivetrain and stone scoring subassemblies
         d.init();
         ss.init();
 
         waitForStart();
 
-        // findSkystone();
-        ss.setBlock(2200,1800);
-
-        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
-        ss.intake(1,-2000);
-
-
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
-        // releaseStone();
-        d.translate(Drivetrain.Direction.RIGHT, 36, 0.25);
-        //ss.intake(1, 1);
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
-        //ss.extake(1,1);
-
-        // move left to be aligned to the foundation
-        d.translate(Drivetrain.Direction.LEFT, 30, 0.25);
-        //ss.hookFoundation(1);
-
-        // back up to the wall with the foundation
-        d.translate(Drivetrain.Direction.BACK, 30, 0.25);
-        //ss.hookFoundation(-1);
-
-        // move right out from behind the foundation
-        d.translate(Drivetrain.Direction.RIGHT, 30, 0.25);
-
-        // move forward to avoid other robot
+        // move forward up to the foundation
         d.translate(Drivetrain.Direction.FWD, 24, 0.25);
+        // translate left to align with foundation, 4th nub
+        d.translate(Drivetrain.Direction.LEFT, 20, 0.25);
 
-        // move right to park under the bridge
-        d.translate(Drivetrain.Direction.RIGHT, 18, 0.25);
+        // hook onto foundation
+        ss.hookFoundation(1, 2300);
 
+        // drag foundation back
+        d.translate(Drivetrain.Direction.BACK, 26, 0.25);
+
+        // unhook the foundation
+        ss.hookFoundation(0, 2200);
+
+        // CASE A: translate right park to under bridge
+        d.translate(Drivetrain.Direction.RIGHT, 54, 0.25);
     }
 }

@@ -15,7 +15,7 @@ public class StoneScorer implements Subassembly {
     LinearOpMode caller;
     Telemetry telemetry;
     public static double speedH = 0.5;
-    public static final int distanceExtend = 4;
+    public static final int distanceExtend = 1900;
 
     @Override
     public void init() {
@@ -42,6 +42,8 @@ public class StoneScorer implements Subassembly {
         mtrH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         linrA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        setPosition(0.21);
     }
 
     @Override
@@ -55,8 +57,7 @@ public class StoneScorer implements Subassembly {
     }
 
     // extend the horizontal to parameter value, lower the horizontal slide to parameter value
-    public void setBlock(int liftVal, int extendHVal, int dropVal) {
-        liftH(liftVal);
+    public void setBlock(int extendHVal, int dropVal) {
         extendH(extendHVal);
         liftH(dropVal);
     }
@@ -64,7 +65,10 @@ public class StoneScorer implements Subassembly {
     // start rolling the first two intake wheels, retract the horizontal,
     public void intake(int dirRoll, int retractHVal) {
         roll2(dirRoll);
-        extendH(retractHVal);
+        extendH(retractHVal / 2);
+        liftH(-900);
+        extendH(retractHVal / 4);
+        liftH(-500);
     }
 
     public void extake(int liftVal, int extendHVal, int dirRoll, int retractHVal) {
@@ -79,7 +83,6 @@ public class StoneScorer implements Subassembly {
     public void extendH(int distance) {
         mtrH.setTargetPosition(distance);
         mtrH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrH.setTargetPosition(distance);
         mtrH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (!caller.isStopRequested()) {
@@ -119,8 +122,9 @@ public class StoneScorer implements Subassembly {
         roll3.setPower(direction);
     }
 
-    public void liftH(int distance) {
-        linrA.setTargetPosition(distance);
+    // resets linear actuator motor position to 0, runs to position
+    public void liftH(int position) {
+        linrA.setTargetPosition(position);
         linrA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linrA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -131,7 +135,7 @@ public class StoneScorer implements Subassembly {
         while (!caller.isStopRequested() && (linrA.isBusy())) {
             //TODO change telemetry name to enum
             telemetry.addData("mtrHorizontal", "%7d : %7d",
-                    linrA.getCurrentPosition(), distance);
+                    linrA.getCurrentPosition(), position);
         }
 
         if (!caller.isStopRequested()) {
@@ -162,12 +166,17 @@ public class StoneScorer implements Subassembly {
     }
 
     public void hookFoundation(int hookDir, int liftVal) {
-        extendH(distanceExtend);
+        // 1 if it is hooking on
+        // anything but 1 if it is releasing the foundation
         if(hookDir == 1) {
+            // extend the horizontal slide to 2400
+            extendH(distanceExtend);
             liftH(liftVal);
         } else {
             liftH(-liftVal);
+            // bring in the horizontal slide
+            extendH(-distanceExtend + 200);
         }
-        extendH(-distanceExtend);
+
     }
 }

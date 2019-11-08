@@ -32,36 +32,44 @@ package org.firstinspires.ftc.teamcode.Auton;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-
-@Autonomous(name = "Case 3", group = "Auton")
-public class Case3 extends LinearOpMode {
+// CASE B: Away from wall
+@Autonomous(name = "Case 3 B", group = "Auton")
+public class Case3B extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
+        // initialize drivetrain and stone scoring subassemblies
         d.init();
+        ss.init();
 
         waitForStart();
 
+        // move forward up to the foundation
         d.translate(Drivetrain.Direction.FWD, 24, 0.25);
-        d.translate(Drivetrain.Direction.LEFT, 16, 0.25);
+        // translate left to align with foundation, 4th nub
+        d.translate(Drivetrain.Direction.LEFT, 20, 0.25);
 
-        //hook onto foundation
-        //ss.hookFoundation(1);
+        // hook onto foundation
+        ss.hookFoundation(1, 2300);
 
-        d.translate(Drivetrain.Direction.BACK, 24, 0.25);
-        //ss.hookFoundation(-1);
+        // drag foundation back
+        d.translate(Drivetrain.Direction.BACK, 26, 0.25);
 
-        d.translate(Drivetrain.Direction.RIGHT, 24, 0.25);
-        d.translate(Drivetrain.Direction.FWD, 18, 0.25);
-        d.translate(Drivetrain.Direction.RIGHT, 28, 0.25);
+        // unhook the foundation
+        ss.hookFoundation(0, 2200);
 
+        // translate right to be out of the way of the foundation
+        d.translate(Drivetrain.Direction.RIGHT, 32, 0.25);
+        // CASE B: move forward to be away from wall
+        d.translate(Drivetrain.Direction.FWD, 21, 0.25);
+        // move right to park
+        d.translate(Drivetrain.Direction.RIGHT, 21, 0.25);
     }
 }
