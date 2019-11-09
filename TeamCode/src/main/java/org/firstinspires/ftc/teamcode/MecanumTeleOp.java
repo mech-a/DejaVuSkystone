@@ -158,6 +158,8 @@ public class MecanumTeleOp extends LinearOpMode {
             g1[2] = gamepad1.right_stick_x;
             g1[3] = -gamepad1.right_stick_y;
 
+            speedSwitch();
+
             for(int i = 0; i < g1.length; i++)
                 g1[i] = (Math.abs(g1[i]) > DEADZONE ? g1[i] : 0) * modifier;
 
@@ -250,6 +252,7 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("arm lift", mtrArmLift.getCurrentPosition());
             telemetry.addData("grippy man:", servoHand.getPosition());
             telemetry.addData("big arm dude: ", servoArm.getPosition());
+            telemetry.addData("modifier", modifier);
             telemetry.addData("imu angle", getHeading());
             telemetry.addData("drive mode", driveMode);
             telemetry.addData("horizontal arm", mtrHorizontal.getCurrentPosition());
