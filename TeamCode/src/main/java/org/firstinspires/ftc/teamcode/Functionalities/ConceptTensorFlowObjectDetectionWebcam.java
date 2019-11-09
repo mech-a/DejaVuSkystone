@@ -58,6 +58,11 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
+    private static final int LOWER_X_BOUNDARY = 100; //temporary values
+    private static final int UPPER_X_BOUNDARY = 625;
+    private static final int LOWER_Y_BOUNDARY = 225;
+    private static final int UPPER_Y_BOUNDARY = 385;
+
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
@@ -102,6 +107,8 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
         if (tfod != null) {
+            //tfod.setClippingMargins(50, 100, 999999, 999999999);
+
             tfod.activate();
         }
 

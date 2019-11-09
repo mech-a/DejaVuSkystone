@@ -20,14 +20,22 @@ public class TeleopCVAlg extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String VUFORIA_KEY = "ASLOtt3/////AAABmbzx65TV2UrVqNnUS424xZpOs/Vw2BUdY1equY69euPD199BJxppV5RLjqwvUYyCtWjtNqI1CTL6Vlp5RvY5Cimm92p/ML2lDhM0GR/f2feDTFMgXLGPiEs7qStp839UrN8YNxDHbOdQHMCIlJeouhxOh9Y87rubm14L7RwrdvOyfo9v8o5ZyFqH33ap58P9xdmhIitqvU2nmVjieMZoTfGLuu0Fmuls+u3bHv5OfEcj8cEUlJ02sui0qdjfNcJIOPkNZUh822tYespPWEqEOLeOf3wXvy5skSQplg/1JOxPXdq8HUcCqeo25hL8iXkg1tlw12aCTLNkQli80Hw8Jiddnl1oKQe7cBziTEIXKmBW";
-    private List<Recognition> finalRecognitions;
+    private List<Recognition> finalRecognitions = new ArrayList<>();
     private List<Recognition> recognitions;
 
-    private static final int LOWER_X_BOUNDARY = 0; //temporary values
-    private static final int UPPER_X_BOUNDARY = 300;
-    private static final int LOWER_Y_BOUNDARY = 250;
-    private static final int UPPER_Y_BOUNDARY = 390;
-    private static final int MIDDLE_BOUNDARY = 135; // 50 and 215
+    //left 100
+    //right 625
+    //top 225
+    //bottom 385
+
+    private static final int LOWER_X_BOUNDARY = 100; //temporary values
+    private static final int UPPER_X_BOUNDARY = 625;
+    private static final int LOWER_Y_BOUNDARY = 225;
+    private static final int UPPER_Y_BOUNDARY = 385;
+    private static final int MIDDLE_BOUNDARY = 220; // 50 and 215
+
+    //
+
 
     private Sensors.SkyStoneLocation location;
 
@@ -38,8 +46,8 @@ public class TeleopCVAlg extends LinearOpMode {
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
-        //initVuforiaWC();
-        initVuforia();
+        initVuforiaWC();
+        //initVuforia();
 
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -56,8 +64,6 @@ public class TeleopCVAlg extends LinearOpMode {
             tfod.activate();
         }
 
-        List<Recognition> x = new ArrayList<>();
-
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
@@ -70,7 +76,7 @@ public class TeleopCVAlg extends LinearOpMode {
                 if (true //gamepad1.a
                 ) {
                     //TODO blocking out the pixels
-                    //tfod.setClippingMargins();
+                    //tfod.setClippingMargins(LOWER_X_BOUNDARY, UPPER_X_BOUNDARY, LOWER_Y_BOUNDARY, UPPER_Y_BOUNDARY);
                     for (int i = 0; i < 5; i++) {
                         recognitions = tfod.getRecognitions();
                         sleep(100);
@@ -82,13 +88,17 @@ public class TeleopCVAlg extends LinearOpMode {
                     //This loop prunes recognitions that are outside of viewing window, which is limited
                     //to the area around the first two stones.
                     for (int i = 0; i<recognitions.size(); i++) {
-                        if (
-                                !((recognitions.get(i).getLeft() > UPPER_X_BOUNDARY || recognitions.get(i).getLeft() < LOWER_X_BOUNDARY)
-                                        && (recognitions.get(i).getBottom() > UPPER_Y_BOUNDARY || recognitions.get(i).getBottom() < LOWER_Y_BOUNDARY))) {
+                        if ( true
+//                                !((recognitions.get(i).getLeft() > UPPER_X_BOUNDARY || recognitions.get(i).getLeft() < LOWER_X_BOUNDARY)
+//                                        && (recognitions.get(i).getBottom() > UPPER_Y_BOUNDARY || recognitions.get(i).getBottom() < LOWER_Y_BOUNDARY))
+//
+                        )
+                        {
                             //recognitions.remove(recognition);
                             finalRecognitions.add(recognitions.get(i));
                         }
                     }
+
 
 
 
@@ -121,8 +131,9 @@ public class TeleopCVAlg extends LinearOpMode {
                             break;
                     }
                 }
+                finalRecognitions.clear();
                 telemetry.update();
-                sleep(500);
+                sleep(1000);
             }
         }
     }
