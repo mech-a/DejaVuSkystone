@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.LABEL_STONE;
@@ -17,7 +18,7 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.TFOD_MO
 import static org.firstinspires.ftc.teamcode.Assemblies.ConfigurationData.VUFORIA_KEY;
 
 public class Sensors implements Subassembly {
-    private List<Recognition> finalRecognitions;
+    private List<Recognition> finalRecognitions = new ArrayList<>();
     private List<Recognition> recognitions;
     private LinearOpMode caller;
     private Telemetry telemetry;
@@ -70,6 +71,8 @@ public class Sensors implements Subassembly {
         );
 
         tfod.activate();
+        telemetry.addData("Subassembly", "Sensors initialized!");
+
     }
 
     @Override
@@ -78,42 +81,77 @@ public class Sensors implements Subassembly {
     }
 
     public SkyStoneLocation findSkystone() {
+        //tfod.activate();
         if (tfod != null) {
             //poll recognitions 5 times with break in between for lighting
-            //TODO blocking out the pixels
-            //tfod.setClippingMargins();
-            for (int i = 0; i < 5; i++) {
-                recognitions = tfod.getRecognitions();
-                caller.sleep(100);
-            }
+            if (true //gamepad1.a
+            ) {
+                //TODO blocking out the pixels
+                //tfod.setClippingMargins(LOWER_X_BOUNDARY, UPPER_X_BOUNDARY, LOWER_Y_BOUNDARY, UPPER_Y_BOUNDARY);
+                for (int i = 0; i < 5; i++) {
+                    recognitions = tfod.getRecognitions();
+                    caller.sleep(100);
+                }
 
-            //This loop prunes recognitions that are outside of viewing window, which is limited
-            //to the area around the first two stones.
-            for (Recognition recognition : recognitions) {
-                if (
-                        !((recognition.getLeft() > UPPER_X_BOUNDARY || recognition.getLeft() < LOWER_X_BOUNDARY)
-                                && (recognition.getBottom() > UPPER_Y_BOUNDARY || recognition.getBottom() < LOWER_Y_BOUNDARY))) {
-                    //recognitions.remove(recognition);
-                    finalRecognitions.add(recognition);
+                telemetry.addData("recognitions", recognitions.toString());
+                telemetry.update();
+
+                //This loop prunes recognitions that are outside of viewing window, which is limited
+                //to the area around the first two stones.
+                if(recognitions.size() != 0) {
+                    for (int i = 0; i<recognitions.size(); i++) {
+                        if ( true
+//                                !((recognitions.get(i).getLeft() > UPPER_X_BOUNDARY || recognitions.get(i).getLeft() < LOWER_X_BOUNDARY)
+//                                        && (recognitions.get(i).getBottom() > UPPER_Y_BOUNDARY || recognitions.get(i).getBottom() < LOWER_Y_BOUNDARY))
+//
+                        )
+                        {
+                            //recognitions.remove(recognition);
+                            finalRecognitions.add(recognitions.get(i));
+                        }
+                    }
+                }
+                else {
+                    //DEFAULT CASE
+                    return SkyStoneLocation.LEFT;
+                }
+
+
+
+
+
+                //If there is more than one stone recognized, the skystone must be on the right.
+                // s s k
+                if (finalRecognitions.size() > 1) {
+                    location = Sensors.SkyStoneLocation.RIGHT;
+                }
+                // s k s
+                // this must return center, as if the get left boundary is less than the middle,
+                // since we are detecting stones, it is center
+                //now we are using the average
+                else if ((finalRecognitions.get(0).getLeft() + finalRecognitions.get(0).getRight()) / 2 < MIDDLE_BOUNDARY) {
+                    location = Sensors.SkyStoneLocation.CENTER;
+                }
+                // k s s
+                else {
+                    location = Sensors.SkyStoneLocation.LEFT;
+                }
+                //TODO swap with return
+                switch (location) {
+                    case LEFT:
+                        telemetry.addData("SkyStone Location:", "LEFT");
+                        break;
+                    case RIGHT:
+                        telemetry.addData("SkyStone Location:", "RIGHT");
+                        break;
+                    case CENTER:
+                        telemetry.addData("SkyStone Location:", "CENTER");
+                        break;
                 }
             }
-
-            //If there is more than one stone recognized, the skystone must be on the right.
-            // s s k
-            if (finalRecognitions.size() > 1) {
-                location = Sensors.SkyStoneLocation.RIGHT;
-            }
-            // k s s
-            // this must return center, as if the get left boundary is less than the middle,
-            // since we are detecting stones, it is center
-            //now we are using the average
-            else if ((finalRecognitions.get(0).getLeft() + finalRecognitions.get(0).getRight()) / 2 < MIDDLE_BOUNDARY) {
-                location = Sensors.SkyStoneLocation.CENTER;
-            }
-            // s k s
-            else {
-                location = Sensors.SkyStoneLocation.LEFT;
-            }
+            finalRecognitions.clear();
+            telemetry.update();
+            tfod.deactivate();
         }
         return location;
     }
