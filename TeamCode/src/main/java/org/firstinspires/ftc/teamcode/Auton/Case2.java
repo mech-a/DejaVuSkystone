@@ -52,13 +52,24 @@ public class Case2 extends LinearOpMode {
         waitForStart();
 
         // findSkystone();
-        ss.setBlock(2200,1800);
 
-        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
-        ss.intake(1,-2000);
+        // extend it 2300 (this is max, dont go farther)
+        // lower to 1800 (should not need to go lower than this at any point
+        ss.setBlock(2400,2100);
 
+        d.translate(Drivetrain.Direction.BACK, 18, 0.25);
+        // 1 means rolled in, is the power set
+        // retracted by 1050
+        // lift it 900, halfway up
+        // retracted by 525
+        ss.intake(1,-1800);
+        ss.roll2(0);
 
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
+        d.translate(Drivetrain.Direction.LEFT, 12, 0.25);
+
+        // can extend up to 725, 700 for now
+        ss.extake(900, -1000, -1, -1800);
+
         // releaseStone();
         d.translate(Drivetrain.Direction.RIGHT, 36, 0.25);
         //ss.intake(1, 1);

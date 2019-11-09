@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import static java.lang.Thread.sleep;
+
 public class StoneScorer implements Subassembly {
     DcMotor mtrH, mtrV, linrA, frontRoller;
     CRServo roll1, roll2, roll3;
@@ -43,7 +45,10 @@ public class StoneScorer implements Subassembly {
         mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         linrA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        setPosition(0.21);
+        flipper = caller.hardwareMap.get(Servo.class, "arm_servo");
+        grabber = caller.hardwareMap.get(Servo.class, "gripper_servo");
+
+        flipper.setPosition(0.21);
     }
 
     @Override
@@ -66,16 +71,27 @@ public class StoneScorer implements Subassembly {
     public void intake(int dirRoll, int retractHVal) {
         roll2(dirRoll);
         extendH(retractHVal / 2);
-        liftH(-900);
+        liftH(-800);
         extendH(retractHVal / 4);
-        liftH(-500);
+        liftH(-300);
+        try {
+            sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void extake(int liftVal, int extendHVal, int dirRoll, int retractHVal) {
-        liftH(liftVal);
+    public void extake(int extendHVal, int liftVal, int dirRoll, int retractHVal) {
         extendH(extendHVal);
+        liftH(liftVal);
+
         // negative value entered here for dirRoll
         roll2(dirRoll);
+        try {
+            sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         extendH(retractHVal);
     }
 
@@ -106,8 +122,19 @@ public class StoneScorer implements Subassembly {
         frontRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         roll1.setDirection(CRServo.Direction.FORWARD);
 
-        frontRoller.setPower(direction * 0.50);
-        roll1.setPower(direction);
+        if (direction == 1) {
+            frontRoller.setPower(direction * 0.50);
+            roll1.setPower(direction);
+        } else if (direction == -1) {
+            frontRoller.setPower(direction);
+            roll1.setDirection(CRServo.Direction.REVERSE);
+            roll1.setPower(1);
+        } else if (direction == 0) {
+            frontRoller.setPower(0);
+            roll1.setPower(0);
+        }
+
+
     }
 
     public void roll4(int direction) {

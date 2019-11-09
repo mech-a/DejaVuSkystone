@@ -226,9 +226,9 @@ public class MecanumTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 3);
+                mtrVertical.setPower(gamepad2.right_stick_y / 4);
             } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 3);
+                mtrVertical.setPower(gamepad2.right_stick_y / 4);
             } else if (gamepad2.right_stick_y < 0.1 && gamepad2.right_stick_y > -0.1) {
                 mtrVertical.setPower(0);
             } else {
