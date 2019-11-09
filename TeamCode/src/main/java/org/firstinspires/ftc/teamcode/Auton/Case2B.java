@@ -38,8 +38,8 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
-@Autonomous(name = "Case 2", group = "Auton")
-public class Case2 extends LinearOpMode {
+@Autonomous(name = "Case 2 B", group = "Auton")
+public class Case2B extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
@@ -55,9 +55,10 @@ public class Case2 extends LinearOpMode {
 
         // extend it 2300 (this is max, dont go farther)
         // lower to 1800 (should not need to go lower than this at any point
-        ss.setBlock(2400,2100);
-
-        d.translate(Drivetrain.Direction.BACK, 18, 0.25);
+        ss.setBlock(2400,1300);
+        d.translate(Drivetrain.Direction.BACK, 9, 0.25);
+        ss.setBlock(0,-300);
+        d.translate(Drivetrain.Direction.BACK, 9, 0.25);
         // 1 means rolled in, is the power set
         // retracted by 1050
         // lift it 900, halfway up
@@ -65,13 +66,14 @@ public class Case2 extends LinearOpMode {
         ss.intake(1,-1800);
         ss.roll2(0);
 
-        d.translate(Drivetrain.Direction.LEFT, 12, 0.25);
+        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
 
         // can extend up to 725, 700 for now
-        ss.extake(900, -1000, -1, -1800);
+        ss.extake(1000, -1000, -1, -1800);
 
-        // releaseStone();
-        d.translate(Drivetrain.Direction.RIGHT, 36, 0.25);
+        ss.roll2(0);
+        d.translate(Drivetrain.Direction.RIGHT, 44, 0.25);
+        d.translate(Drivetrain.Direction.FWD, 18,0.25);
         //ss.intake(1, 1);
         d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
         //ss.extake(1,1);

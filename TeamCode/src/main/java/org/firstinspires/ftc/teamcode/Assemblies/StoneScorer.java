@@ -71,9 +71,9 @@ public class StoneScorer implements Subassembly {
     public void intake(int dirRoll, int retractHVal) {
         roll2(dirRoll);
         extendH(retractHVal / 2);
-        liftH(-800);
-        extendH(retractHVal / 4);
         liftH(-300);
+        extendH(retractHVal / 4);
+        liftH(-200);
         try {
             sleep(2000);
         } catch (InterruptedException e) {
