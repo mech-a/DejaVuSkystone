@@ -55,12 +55,15 @@ public class Case3A extends LinearOpMode {
         d.translate(Drivetrain.Direction.FWD, 24, 0.25);
         // translate left to align with foundation, 4th nub
         d.translate(Drivetrain.Direction.LEFT, 20, 0.25);
+        d.translate(Drivetrain.Direction.FWD, 2, 0.25);
 
         // hook onto foundation
-        ss.hookFoundation(1, 2300);
+        ss.hookFoundation(1, 2400);
+        ss.extendH(-300);
 
         // drag foundation back
-        d.translate(Drivetrain.Direction.BACK, 26, 0.25);
+        d.translate(Drivetrain.Direction.BACK, 27, 0.25);
+
 
         // unhook the foundation
         ss.hookFoundation(0, 2200);

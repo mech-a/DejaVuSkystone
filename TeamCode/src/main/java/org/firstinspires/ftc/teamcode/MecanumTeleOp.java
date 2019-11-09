@@ -60,7 +60,7 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
     final double ARMLIFT_MIN = 0; //top
-    final double ARMLIFT_MAX = 1500; //bottom
+    final double ARMLIFT_MAX = 2000; //bottom
 
     // top is -2700
     // bottom is starting, which is 0

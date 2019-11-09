@@ -53,8 +53,8 @@ public class Case2A extends LinearOpMode {
 
         // findSkystone();
 
-        // extend it 2300 (this is max, dont go farther)
-        // lower to 1800 (should not need to go lower than this at any point
+        // extend it 2400 (this is max, dont go farther)
+        // lower to 2000 (should not need to go lower than this at any point
         ss.setBlock(2400,2000);
         d.translate(Drivetrain.Direction.BACK, 9, 0.25);
         ss.setBlock(0,-300);

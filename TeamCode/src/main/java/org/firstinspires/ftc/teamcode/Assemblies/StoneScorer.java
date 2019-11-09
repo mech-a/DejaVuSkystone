@@ -17,7 +17,7 @@ public class StoneScorer implements Subassembly {
     LinearOpMode caller;
     Telemetry telemetry;
     public static double speedH = 0.5;
-    public static final int distanceExtend = 1900;
+    public static final int distanceExtend = 1600;
 
     @Override
     public void init() {
@@ -75,7 +75,7 @@ public class StoneScorer implements Subassembly {
         extendH(retractHVal / 4);
         liftH(-200);
         try {
-            sleep(2000);
+            sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -202,7 +202,7 @@ public class StoneScorer implements Subassembly {
         } else {
             liftH(-liftVal);
             // bring in the horizontal slide
-            extendH(-distanceExtend + 200);
+            extendH(-distanceExtend + 500);
         }
 
     }
