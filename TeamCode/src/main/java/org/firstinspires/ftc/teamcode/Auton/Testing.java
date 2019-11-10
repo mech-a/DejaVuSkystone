@@ -57,9 +57,9 @@ public class Testing extends LinearOpMode {
         d.translate(Drivetrain.Direction.FWD, 24, 0.25);
         // first
         if (i == 1) {
-            d.translate(Drivetrain.Direction.LEFT, 8, 0.25);
+            d.translate(Drivetrain.Direction.LEFT, 5, 0.25);
         } else if (i == 2) {
-            d.translate(Drivetrain.Direction.RIGHT, 4, 0.25);
+            d.translate(Drivetrain.Direction.RIGHT, 6, 0.25);
         } else if (i == 3) {
             d.translate(Drivetrain.Direction.RIGHT, 12, 0.25);
         }
@@ -70,7 +70,7 @@ public class Testing extends LinearOpMode {
         d.translate(Drivetrain.Direction.BACK, 6, 0.25);
 
         // translate over to other side
-        d.translate(Drivetrain.Direction.LEFT, 40, 0.25);
+        d.translate(Drivetrain.Direction.LEFT, 44, 0.25);
         d.translate(Drivetrain.Direction.RIGHT, 64, 0.25);
         d.translate(Drivetrain.Direction.FWD, 18,0.25);
 
@@ -104,7 +104,5 @@ public class Testing extends LinearOpMode {
         d.translate(Drivetrain.Direction.RIGHT, 27, 0.25);
 
         //d.translate(Drivetrain.Direction.RIGHT, 54, 0.25);
-
-
     }
 }

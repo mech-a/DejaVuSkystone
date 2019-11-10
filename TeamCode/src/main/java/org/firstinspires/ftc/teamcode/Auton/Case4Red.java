@@ -38,8 +38,8 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
-@Autonomous(name = "Case 2 B", group = "Auton")
-public class Case2B extends LinearOpMode {
+@Autonomous(name = "Case 4 Red", group = "Auton")
+public class Case4Red extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
@@ -47,53 +47,9 @@ public class Case2B extends LinearOpMode {
     @Override
     public void runOpMode() {
         d.init();
-        ss.init();
 
         waitForStart();
 
-        // findSkystone();
-
-        ss.setBlock(930,900);
-        d.translate(Drivetrain.Direction.BACK, 10, 0.15);
-        ss.liftH(-750);
-        d.translate(Drivetrain.Direction.LEFT, 2, 0.15);
-        ss.setBlock(1170,1200);
-        d.translate(Drivetrain.Direction.BACK, 6, 0.25);
-        // 1 means rolled in, is the power set
-        // retracted by 1050
-        // lift it 900, halfway up
-        // retracted by 525
-        ss.intake(1,-1800);
-        ss.roll2(0);
-
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
-
-        // can extend up to 725, 700 for now
-        ss.extake(1000, -1000, -1, -1800);
-
-        ss.roll2(0);
-        d.translate(Drivetrain.Direction.RIGHT, 44, 0.25);
-        d.translate(Drivetrain.Direction.FWD, 18,0.25);
-        //ss.intake(1, 1);
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
-        //ss.extake(1,1);
-
-        // move left to be aligned to the foundation
-        d.translate(Drivetrain.Direction.LEFT, 30, 0.25);
-        //ss.hookFoundation(1);
-
-        // back up to the wall with the foundation
-        d.translate(Drivetrain.Direction.BACK, 30, 0.25);
-        //ss.hookFoundation(-1);
-
-        // move right out from behind the foundation
-        d.translate(Drivetrain.Direction.RIGHT, 30, 0.25);
-
-        // move forward to avoid other robot
-        d.translate(Drivetrain.Direction.FWD, 24, 0.25);
-
-        // move right to park under the bridge
-        d.translate(Drivetrain.Direction.RIGHT, 18, 0.25);
-
+        d.translate(Drivetrain.Direction.RIGHT, 30, 0.35);
     }
 }
