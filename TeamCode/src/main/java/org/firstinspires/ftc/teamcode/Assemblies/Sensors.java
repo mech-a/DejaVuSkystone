@@ -103,7 +103,7 @@ public class Sensors implements Subassembly {
 
                 //This loop prunes recognitions that are outside of viewing window, which is limited
                 //to the area around the first two stones.
-                if(recognitions.size() != 0) {
+                if(recognitions == null || recognitions.size() != 0) {
                     for (int i = 0; i<recognitions.size(); i++) {
                         if ( true
 //                                !((recognitions.get(i).getLeft() > UPPER_X_BOUNDARY || recognitions.get(i).getLeft() < LOWER_X_BOUNDARY)

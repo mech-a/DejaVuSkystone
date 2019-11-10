@@ -65,7 +65,7 @@ public class MecanumTeleOp extends LinearOpMode {
     // top is -2700
     // bottom is starting, which is 0
     final double VERTICAL_MIN = -2900;
-    final double VERTICAL_MAX = 0;
+    final double VERTICAL_MAX = -100;
 
     boolean frontRollerDirection = false,
             middleRollerDirection = false;
@@ -228,9 +228,14 @@ public class MecanumTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
-                mtrVertical.setPower(gamepad2.right_stick_y);
+                mtrVertical.setPower(gamepad2.right_stick_y/2);
             } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
-                mtrVertical.setPower(gamepad2.right_stick_y);
+                if(Math.abs(gamepad2.right_stick_y) > 0.5) {
+                    mtrVertical.setPower(gamepad2.right_stick_y);
+                }
+                else {
+                    mtrVertical.setPower(gamepad2.right_stick_y/2);
+                }
             } else if (gamepad2.right_stick_y < 0.1 && gamepad2.right_stick_y > -0.1) {
                 mtrVertical.setPower(0);
             } else {

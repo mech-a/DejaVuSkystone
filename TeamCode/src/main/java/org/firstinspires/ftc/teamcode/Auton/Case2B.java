@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
+import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
@@ -43,15 +44,20 @@ public class Case2B extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
+    Sensors s = new Sensors(this);
+    Sensors.SkyStoneLocation skyStoneLocation;
 
     @Override
     public void runOpMode() {
         d.init();
         ss.init();
+        s.init();
 
         waitForStart();
 
         // findSkystone();
+        skyStoneLocation = s.findSkystone();
+
 
         ss.setBlock(930,900);
         d.translate(Drivetrain.Direction.BACK, 10, 0.15);
@@ -95,5 +101,6 @@ public class Case2B extends LinearOpMode {
         // move right to park under the bridge
         d.translate(Drivetrain.Direction.RIGHT, 18, 0.25);
 
+        s.shutdown();
     }
 }
