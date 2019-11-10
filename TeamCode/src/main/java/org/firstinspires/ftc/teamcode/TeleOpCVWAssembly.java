@@ -21,5 +21,6 @@ public class TeleOpCVWAssembly extends LinearOpMode {
             }
             sleep(200);
         }
+        s.shutdown();
     }
 }

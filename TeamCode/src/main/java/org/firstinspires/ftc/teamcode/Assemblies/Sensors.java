@@ -29,11 +29,12 @@ public class Sensors implements Subassembly {
     private static final int LOWER_Y_BOUNDARY = 250;
     private static final int UPPER_Y_BOUNDARY = 390;
     private static final int MIDDLE_BOUNDARY = 200;
+    private int left = 0, top = 0, right = 200, bottom = 0;
 
     private SkyStoneLocation location;
 
     private VuforiaLocalizer vuforia;
-    private TFObjectDetector tfod;
+    public TFObjectDetector tfod;
 
     public Sensors(LinearOpMode caller) {
         this.caller = caller;
@@ -46,6 +47,8 @@ public class Sensors implements Subassembly {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
+        hardwareMap = caller.hardwareMap;
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -69,6 +72,8 @@ public class Sensors implements Subassembly {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE//,
                 //LABEL_SECOND_ELEMENT
         );
+
+        tfod.setClippingMargins(left,top,right,bottom);
 
         tfod.activate();
         telemetry.addData("Subassembly", "Sensors initialized!");
@@ -118,8 +123,6 @@ public class Sensors implements Subassembly {
 
 
 
-
-
                 //If there is more than one stone recognized, the skystone must be on the right.
                 // s s k
                 if (finalRecognitions.size() > 1) {
@@ -151,9 +154,12 @@ public class Sensors implements Subassembly {
             }
             finalRecognitions.clear();
             telemetry.update();
-            tfod.deactivate();
         }
         return location;
+    }
+
+    public void shutdown() {
+        tfod.shutdown();
     }
 
     public enum SkyStoneLocation {
