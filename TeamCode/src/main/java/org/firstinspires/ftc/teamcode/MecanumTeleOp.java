@@ -101,10 +101,10 @@ public class MecanumTeleOp extends LinearOpMode {
                 servoArm.setPosition(0.59);
             }
 
-            if (gamepad2.x && (servoArm.getPosition() > 0)) {
+            if (gamepad2.x) {
                 // when x is hit, then the gripper clamp moves in more (tigher grip)
                 servoArm.setPosition(servoArm.getPosition() - 0.005);
-            } else if (gamepad2.y && (servoArm.getPosition() < 1)) {
+            } else if (gamepad2.y) {
                 // when y is hit, then the gripper clamp moves out more (looser grip)
                 servoArm.setPosition(servoArm.getPosition() + 0.005);
             }
