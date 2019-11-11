@@ -60,7 +60,7 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
     final double ARMLIFT_MIN = 0; //top
-    final double ARMLIFT_MAX = 2000; //bottom
+    final double ARMLIFT_MAX = 5000; //bottom, was 2000
 
     // top is -2700
     // bottom is starting, which is 0
@@ -92,7 +92,7 @@ public class MecanumTeleOp extends LinearOpMode {
             // set vertical lift to -360
             if (gamepad2.dpad_down) {
                 // pos 1
-                servoArm.setPosition(0.20);
+                servoArm.setPosition(0.18);
             } else if (gamepad2.dpad_up) {
                 // pos 2
                 servoArm.setPosition(0.23);
@@ -134,7 +134,7 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("Controls", "x");
 
             if (gamepad1.x) {
-                mtrIntake.setPower(1);
+                mtrIntake.setPower(0.25);
                 sFrontRoller.setPower(-1);
                 sMiddleRoller.setPower(1);
             } else if (gamepad1.y) {
@@ -247,20 +247,23 @@ public class MecanumTeleOp extends LinearOpMode {
             //1 bl
             //0 br
 
-            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
-                    mtrHorizontal.getPower() + mtrVertical.getPower() + " ");
+//            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
+//                    mtrHorizontal.getPower() + mtrVertical.getPower() + " ");
             //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
 //            telemetry.addData("Front Roller Forward", frontRollerDirection);
 //            telemetry.addData("Middle Roller Forward", middleRollerDirection);
+            telemetry.addData("speed mod", modifier);
+            telemetry.addData("imu angle", getHeading());
+            telemetry.addData("drive mode", driveMode);
+            telemetry.addData("CLEAR", "-----------");
+            telemetry.addData("MTR_INTAKE PWR", mtrIntake.getPower());
             telemetry.addData("vertical lift", mtrVertical.getCurrentPosition());
             telemetry.addData("horizontal arm", mtrHorizontal.getCurrentPosition());
             telemetry.addData("arm lift", mtrArmLift.getCurrentPosition());
-            telemetry.addData("grippy man:", servoHand.getPosition());
-            telemetry.addData("big arm dude: ", servoArm.getPosition());
-            telemetry.addData("modifier", modifier);
-            telemetry.addData("imu angle", getHeading());
-            telemetry.addData("drive mode", driveMode);
-            telemetry.addData("horizontal arm", mtrHorizontal.getCurrentPosition());
+            telemetry.addData("hand servo pos", servoHand.getPosition());
+            telemetry.addData("arm servo pos", servoArm.getPosition());
+
+            //telemetry.addData("horizontal arm", mtrHorizontal.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -384,12 +387,12 @@ public class MecanumTeleOp extends LinearOpMode {
         mtrHorizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //mtrIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         mtrHorizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrArmLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mtrIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 

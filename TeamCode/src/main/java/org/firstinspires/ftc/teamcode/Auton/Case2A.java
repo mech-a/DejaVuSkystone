@@ -41,6 +41,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 @Autonomous(name = "Case 2 A", group = "Auton")
 public class Case2A extends LinearOpMode {
+    int leftCaseMovement = 5;
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
@@ -58,18 +59,32 @@ public class Case2A extends LinearOpMode {
         // findSkystone();
         skyStoneLocation = s.findSkystone();
 
-        // extend it 2400 (this is max, dont go farther)
-        // lower to 2000 (should not need to go lower than this at any point
-        ss.setBlock(2400,2000);
-        d.translate(Drivetrain.Direction.BACK, 9, 0.25);
-        ss.setBlock(0,-300);
-        d.translate(Drivetrain.Direction.BACK, 9, 0.25);
+
+        //perform all operations to find location from this
+        if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
+            d.translate(Drivetrain.Direction.RIGHT, leftCaseMovement, 0.5);
+        } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
+            d.translate(Drivetrain.Direction.LEFT, -leftCaseMovement + 8, 0.5);
+        } else if (skyStoneLocation == Sensors.SkyStoneLocation.RIGHT) {
+            d.translate(Drivetrain.Direction.LEFT, -leftCaseMovement + 16, 0.5);
+        }
+        d.translate(Drivetrain.Direction.FWD, 28, 0.25);
+
+        ss.setBlock(1200,1400);
+        d.translate(Drivetrain.Direction.BACK, 10, 0.15);
+        ss.liftH(-950);
+        d.translate(Drivetrain.Direction.LEFT, 2, 0.15);
+        ss.setBlock(1170,1400);
+        d.translate(Drivetrain.Direction.BACK, 16, 0.25);
         // 1 means rolled in, is the power set
         // retracted by 1050
         // lift it 900, halfway up
         // retracted by 525
         ss.intake(1,-1800);
         ss.roll2(0);
+
+        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
+
 
         d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
 

@@ -37,7 +37,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 // CASE A: Next to wall
-@Autonomous(name = "Case 3 A", group = "Auton")
+@Autonomous(name = "Case 3 A Blue", group = "Auton")
 public class Case3A extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
@@ -51,24 +51,25 @@ public class Case3A extends LinearOpMode {
 
         waitForStart();
 
-        // move forward up to the foundation
-        d.translate(Drivetrain.Direction.FWD, 24, 0.25);
-        // translate left to align with foundation, 4th nub
-        d.translate(Drivetrain.Direction.LEFT, 20, 0.25);
-        d.translate(Drivetrain.Direction.FWD, 2, 0.25);
 
+        // move forward up to the foundation
+        d.translate(Drivetrain.Direction.FWD, 24, 0.5);
+        // translate left to align with foundation, 4th nub
+        d.translate(Drivetrain.Direction.LEFT, 20, 0.5);
         // hook onto foundation
-        ss.hookFoundation(1, 2400);
-        ss.extendH(-300);
+        ss.hookFoundation(1, 3600);
 
         // drag foundation back
-        d.translate(Drivetrain.Direction.BACK, 27, 0.25);
+        d.translate(Drivetrain.Direction.BACK, 30, 0.25);
 
-
+        ss.extendH(-400);
         // unhook the foundation
-        ss.hookFoundation(0, 2200);
+        ss.hookFoundation(0, 3500);
+
 
         // CASE A: translate right park to under bridge
-        d.translate(Drivetrain.Direction.RIGHT, 54, 0.25);
+        d.translate(Drivetrain.Direction.RIGHT, 54, 0.75);
+        d.translate(Drivetrain.Direction.BACK, 4, 0.75);
+
     }
 }

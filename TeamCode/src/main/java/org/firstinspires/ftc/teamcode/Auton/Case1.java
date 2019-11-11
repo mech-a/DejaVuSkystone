@@ -46,10 +46,11 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 
 
-@Autonomous(name = "Case 1", group = "Auton")
+@Autonomous(name = "Case 1 A Blue", group = "Auton")
 public class Case1 extends LinearOpMode {
     int liftValueA = -5400;
     int extendValueA = 2260;
+    int leftCaseMovement = 5;
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
@@ -64,26 +65,44 @@ public class Case1 extends LinearOpMode {
         ss.init();
         s.init();
 
-
-
         waitForStart();
 
-        // findSkystone();
         skyStoneLocation = s.findSkystone();
+
         //perform all operations to find location from this
-
-
+        if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
+            d.translate(Drivetrain.Direction.LEFT, leftCaseMovement, 0.5);
+        } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
+            d.translate(Drivetrain.Direction.RIGHT, -leftCaseMovement + 8, 0.5);
+        } else if (skyStoneLocation == Sensors.SkyStoneLocation.RIGHT) {
+            d.translate(Drivetrain.Direction.RIGHT, -leftCaseMovement + 16, 0.5);
+        }
 
         //sleep(3000000);
 
         // obtain skystone
         ss.setBlock(10, 2400);
-        telemetry.addData("status:", "set block");
-        telemetry.update();
-        d.translate(Drivetrain.Direction.BACK, 12, 0.25);
-        ss.intake(1, 10);
-        telemetry.addData("status:", "set block");
-        telemetry.update();
+        d.translate(Drivetrain.Direction.BACK, 10, 0.15);
+        d.translate(Drivetrain.Direction.LEFT, 2, 0.15);
+        d.translate(Drivetrain.Direction.BACK, 6, 0.25);
+
+        ss.intake(1,-1800);
+        ss.roll2(0);
+
+        // left to other side
+        d.translate(Drivetrain.Direction.LEFT, 44, 0.5);
+        // extake the block
+        ss.extake(1000, -1000, -1, -1800);
+
+        // back over to the other side
+        d.translate(Drivetrain.Direction.RIGHT, 64, 0.25);
+        // approach next block
+        d.translate(Drivetrain.Direction.FWD, 18,0.25);
+
+        ss.intake(1,-1800);
+        ss.roll2(0);
+
+
 
         d.translate(Drivetrain.Direction.LEFT, 12, 0.25);
 

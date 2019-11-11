@@ -17,7 +17,7 @@ public class StoneScorer implements Subassembly {
     LinearOpMode caller;
     Telemetry telemetry;
     public static double speedH = 0.5;
-    public static final int distanceExtend = 1600;
+    public static final int distanceExtend = 2400; // was 1600
 
     @Override
     public void init() {
@@ -202,7 +202,7 @@ public class StoneScorer implements Subassembly {
         } else {
             liftH(-liftVal);
             // bring in the horizontal slide
-            extendH(-distanceExtend + 500);
+            extendH(-distanceExtend + 600);
         }
 
     }

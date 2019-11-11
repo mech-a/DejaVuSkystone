@@ -52,24 +52,24 @@ public class Case3BRed extends LinearOpMode {
         waitForStart();
 
         // move forward up to the foundation
-        d.translate(Drivetrain.Direction.FWD, 24, 0.25);
+        d.translate(Drivetrain.Direction.FWD, 24, 0.5);
         // translate right to align with foundation, 4th nub
-        d.translate(Drivetrain.Direction.RIGHT, 20, 0.25);
+        d.translate(Drivetrain.Direction.RIGHT, 24, 0.5);
 
         // hook onto foundation
-        ss.hookFoundation(1, 2300);
+        ss.hookFoundation(1, 3700);
 
         // drag foundation back
         d.translate(Drivetrain.Direction.BACK, 26, 0.25);
 
         // unhook the foundation
-        ss.hookFoundation(0, 2200);
+        ss.hookFoundation(0, 2800);
 
         // translate left to be out of the way of the foundation
-        d.translate(Drivetrain.Direction.LEFT, 32, 0.25);
+        d.translate(Drivetrain.Direction.LEFT, 32, 0.5);
         // CASE B: move forward to be away from wall
-        d.translate(Drivetrain.Direction.FWD, 21, 0.25);
+        d.translate(Drivetrain.Direction.FWD, 21, 0.5);
         // move left to park
-        d.translate(Drivetrain.Direction.LEFT, 21, 0.25);
+        d.translate(Drivetrain.Direction.LEFT, 21, 0.5);
     }
 }

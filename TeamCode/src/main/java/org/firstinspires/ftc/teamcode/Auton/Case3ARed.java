@@ -52,22 +52,21 @@ public class Case3ARed extends LinearOpMode {
         waitForStart();
 
         // move forward up to the foundation
-        d.translate(Drivetrain.Direction.FWD, 24, 0.25);
+        d.translate(Drivetrain.Direction.FWD, 24, 0.5);
         // translate right to align with foundation, 4th nub
-        d.translate(Drivetrain.Direction.RIGHT, 20, 0.25);
-        d.translate(Drivetrain.Direction.FWD, 2, 0.25);
+        d.translate(Drivetrain.Direction.RIGHT, 28, 0.5);
+        d.translate(Drivetrain.Direction.FWD, 1, 0.5);
 
         // hook onto foundation
-        ss.hookFoundation(1, 2400);
-        ss.extendH(-300);
+        ss.hookFoundation(1, 3700);
 
         // drag foundation back
-        d.translate(Drivetrain.Direction.BACK, 27, 0.25);
+        d.translate(Drivetrain.Direction.BACK, 29, 0.25);
 
         // unhook the foundation
-        ss.hookFoundation(0, 2200);
+        ss.hookFoundation(0, 2800);
 
         // CASE A: translate left park to under bridge
-        d.translate(Drivetrain.Direction.LEFT, 54, 0.25);
+        d.translate(Drivetrain.Direction.LEFT, 60, 0.5);
     }
 }
