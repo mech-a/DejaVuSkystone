@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Functionalities;
 
 import android.util.Log;
 import com.disnodeteam.dogecv.DogeCV;

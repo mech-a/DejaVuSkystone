@@ -29,10 +29,7 @@ public class Sensors implements Subassembly {
     private static final int LOWER_Y_BOUNDARY = 250;
     private static final int UPPER_Y_BOUNDARY = 390;
     private static final int MIDDLE_BOUNDARY = 200;
-    public static final int SIDE_CLIP_VALUE = 200;
-    private int left = 0, top = 0, right = SIDE_CLIP_VALUE, bottom = 0;
-
-    boolean areWeBlue = true;
+    private int left = 0, top = 0, right = 200, bottom = 0;
 
     private SkyStoneLocation location;
 
@@ -45,22 +42,11 @@ public class Sensors implements Subassembly {
         hardwareMap = caller.hardwareMap;
     }
 
-
-    //NOT NECESSARY, DO NOT USE
-    public Sensors(LinearOpMode caller, boolean areWeBlue) {
-        this.caller = caller;
-        telemetry = caller.telemetry;
-        hardwareMap = caller.hardwareMap;
-        this.areWeBlue = areWeBlue;
-    }
-
     @Override
     public void init() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
-
-
         hardwareMap = caller.hardwareMap;
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -70,10 +56,7 @@ public class Sensors implements Subassembly {
         parameters.cameraName = caller.hardwareMap.get(WebcamName.class, "C310");
 
         //  Instantiate the Vuforia engine
-        if(!caller.isStopRequested()) {
-            vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        }
-
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
 
@@ -82,24 +65,13 @@ public class Sensors implements Subassembly {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         //decrease conf o.8
         tfodParameters.minimumConfidence = 0.4;
-        if(!caller.isStopRequested()) {
-            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        }
-
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         //only detecting stones
 
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE//,
                 //LABEL_SECOND_ELEMENT
         );
-
-        if(areWeBlue) {
-            right = SIDE_CLIP_VALUE;
-            left = 0;
-        } else {
-            right = 0;
-            left = SIDE_CLIP_VALUE;
-        }
 
         tfod.setClippingMargins(left,top,right,bottom);
 
@@ -131,7 +103,7 @@ public class Sensors implements Subassembly {
 
                 //This loop prunes recognitions that are outside of viewing window, which is limited
                 //to the area around the first two stones.
-                if(recognitions == null || recognitions.size() != 0) {
+                if (recognitions.size() != 0) {
                     for (int i = 0; i<recognitions.size(); i++) {
                         if ( true
 //                                !((recognitions.get(i).getLeft() > UPPER_X_BOUNDARY || recognitions.get(i).getLeft() < LOWER_X_BOUNDARY)
