@@ -9,6 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
     }
+
     compileSdkVersion 28
 
     compileOptions {
