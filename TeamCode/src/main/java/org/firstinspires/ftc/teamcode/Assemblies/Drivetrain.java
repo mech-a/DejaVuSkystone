@@ -33,6 +33,11 @@ public class Drivetrain implements Subassembly {
         mtrBL = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[2]);
         mtrBR = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[3]);
 
+        mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
         mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
