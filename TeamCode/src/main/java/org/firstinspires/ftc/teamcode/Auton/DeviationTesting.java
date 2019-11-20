@@ -67,10 +67,10 @@ public class DeviationTesting extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        while (opModeIsActive()) {
+        int num = 0;
+        StringDouble current = control.get(num);
 
-            int num = 0;
-            StringDouble current = control.get(num);
+        while (opModeIsActive()) {
 
             if (gamepad1.dpad_up) {
                 current.dub++;
@@ -96,12 +96,15 @@ public class DeviationTesting extends LinearOpMode {
                 }
             }
 
-        }
+            telemetry.addData("Inches: ", control.get(0).dub);
+            telemetry.addData("Speed: ", control.get(1).dub);
+            telemetry.update();
 
-        if (gamepad1.a) {
-            d.translate(dir, control.get(0).dub, control.get(1).dub);
+            if (gamepad1.a) {
+                d.translate(dir, control.get(0).dub, control.get(1).dub);
+            }
+
         }
-        
     }
 }
 
