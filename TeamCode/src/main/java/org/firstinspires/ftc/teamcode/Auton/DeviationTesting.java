@@ -43,7 +43,7 @@ import java.util.ArrayList;
  */
 
 @TeleOp(name="DeviationTesting", group="Internal")
-@Disabled
+//@Disabled
 public class DeviationTesting extends LinearOpMode {
 
     // Declare OpMode members.
@@ -61,8 +61,8 @@ public class DeviationTesting extends LinearOpMode {
         d.init();
 
         //default values
-        control.add(new StringDouble("inches", 10));
-        control.add(new StringDouble("speed", 0.5));
+        control.add(new StringDouble("inches", 15, 0.5));
+        control.add(new StringDouble("speed", 0.3, 0.05));
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -73,11 +73,13 @@ public class DeviationTesting extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (gamepad1.dpad_up) {
-                current.dub++;
+                current.dub += current.increment;
+                sleep(200);
             }
 
             if (gamepad1.dpad_down) {
-                current.dub--;
+                current.dub -= current.increment;
+                sleep(200);
             }
 
             if (gamepad1.dpad_left) {
@@ -86,6 +88,7 @@ public class DeviationTesting extends LinearOpMode {
                 } else {
                     current = control.get(num--);
                 }
+                sleep(200);
             }
 
             if (gamepad1.dpad_right) {
@@ -94,10 +97,11 @@ public class DeviationTesting extends LinearOpMode {
                 } else {
                     current = control.get(num++);
                 }
+                sleep(200);
             }
 
             telemetry.addData("Inches: ", control.get(0).dub);
-            telemetry.addData("Speed: ", control.get(1).dub);
+            telemetry.addData("Speed: ", "%.2f", control.get(1).dub);
             telemetry.update();
 
             if (gamepad1.a) {
@@ -113,10 +117,12 @@ class StringDouble {
 
     String str;
     double dub;
+    double increment;
 
-    public StringDouble(String str, double dub) {
+    public StringDouble(String str, double dub, double increment) {
         this.str = str;
         this.dub = dub;
+        this.increment = increment;
     }
 
 
