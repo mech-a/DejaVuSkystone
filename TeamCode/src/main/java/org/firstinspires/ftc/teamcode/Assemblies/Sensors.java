@@ -18,13 +18,13 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.TFOD_MO
 import static org.firstinspires.ftc.teamcode.Assemblies.ConfigurationData.VUFORIA_KEY;
 
 public class Sensors implements Subassembly {
-    private List<Recognition> finalRecognitions = new ArrayList<>();
     private List<Recognition> recognitions;
+    private List<Recognition> finalRecognitions = new ArrayList<>();
     private LinearOpMode caller;
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
 
-    private static final int LOWER_X_BOUNDARY = 0; //temporary values
+    private static final int LOWER_X_BOUNDARY = 0;
     private static final int UPPER_X_BOUNDARY = 300;
     private static final int LOWER_Y_BOUNDARY = 250;
     private static final int UPPER_Y_BOUNDARY = 390;
@@ -36,6 +36,7 @@ public class Sensors implements Subassembly {
     private VuforiaLocalizer vuforia;
     public TFObjectDetector tfod;
 
+    //constructor
     public Sensors(LinearOpMode caller) {
         this.caller = caller;
         telemetry = caller.telemetry;
@@ -73,7 +74,7 @@ public class Sensors implements Subassembly {
                 //LABEL_SECOND_ELEMENT
         );
 
-        tfod.setClippingMargins(left,top,right,bottom);
+        tfod.setClippingMargins(left, top, right, bottom);
 
         tfod.activate();
         telemetry.addData("Subassembly", "Sensors initialized!");
@@ -85,12 +86,15 @@ public class Sensors implements Subassembly {
 
     }
 
+    /**
+     * Examines first three stones using TensorFlowObjectDetector and finds the skystone
+     * @return location of skystone
+     */
     public SkyStoneLocation findSkystone() {
         //tfod.activate();
         if (tfod != null) {
             //poll recognitions 5 times with break in between for lighting
-            if (true //gamepad1.a
-            ) {
+            if (true) {  //gamepad1.a
                 //TODO blocking out the pixels
                 //tfod.setClippingMargins(LOWER_X_BOUNDARY, UPPER_X_BOUNDARY, LOWER_Y_BOUNDARY, UPPER_Y_BOUNDARY);
                 for (int i = 0; i < 5; i++) {
@@ -104,23 +108,20 @@ public class Sensors implements Subassembly {
                 //This loop prunes recognitions that are outside of viewing window, which is limited
                 //to the area around the first two stones.
                 if (recognitions.size() != 0) {
-                    for (int i = 0; i<recognitions.size(); i++) {
-                        if ( true
+                    for (int i = 0; i < recognitions.size(); i++) {
+                        if (true
 //                                !((recognitions.get(i).getLeft() > UPPER_X_BOUNDARY || recognitions.get(i).getLeft() < LOWER_X_BOUNDARY)
 //                                        && (recognitions.get(i).getBottom() > UPPER_Y_BOUNDARY || recognitions.get(i).getBottom() < LOWER_Y_BOUNDARY))
 //
-                        )
-                        {
+                        ) {
                             //recognitions.remove(recognition);
                             finalRecognitions.add(recognitions.get(i));
                         }
                     }
-                }
-                else {
+                } else {
                     //DEFAULT CASE
                     return SkyStoneLocation.LEFT;
                 }
-
 
 
                 //If there is more than one stone recognized, the skystone must be on the right.
@@ -155,6 +156,7 @@ public class Sensors implements Subassembly {
             finalRecognitions.clear();
             telemetry.update();
         }
+
         return location;
     }
 
