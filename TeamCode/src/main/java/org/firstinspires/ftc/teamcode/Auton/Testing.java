@@ -37,6 +37,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
+/*
+Class used to test accuracy of values before finalizing into cases.
+ */
 
 @Autonomous(name = "Test Case", group = "Auton")
 public class Testing extends LinearOpMode {

@@ -38,6 +38,9 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
+/* Assumes that alliance partner does not foundation, either parks or doesn't park. Robot moves skystones, then hooks foundation
+to back up and move it into the building site. Unhooks from foundation, then parks near wall.
+ */
 
 @Autonomous(name = "Case 2 A", group = "Auton")
 public class Case2A extends LinearOpMode {
@@ -60,7 +63,7 @@ public class Case2A extends LinearOpMode {
         skyStoneLocation = s.findSkystone();
 
 
-        //perform all operations to find location from this
+        //based on enum return from CV, translates accordingly to relative position of skystone from starting position
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.translate(Drivetrain.Direction.RIGHT, leftCaseMovement, 0.5);
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
@@ -68,10 +71,14 @@ public class Case2A extends LinearOpMode {
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.RIGHT) {
             d.translate(Drivetrain.Direction.LEFT, -leftCaseMovement + 16, 0.5);
         }
+
+        //approach skystone
         d.translate(Drivetrain.Direction.FWD, 28, 0.25);
 
+        //extend and lower intake mechanism, pull skystone in
         ss.setBlock(1200,1400);
         d.translate(Drivetrain.Direction.BACK, 10, 0.15);
+        //intake mechanism raised, robot translate, mechanism extended and lowered again to keep block in position
         ss.liftH(-950);
         d.translate(Drivetrain.Direction.LEFT, 2, 0.15);
         ss.setBlock(1170,1400);
@@ -88,7 +95,7 @@ public class Case2A extends LinearOpMode {
 
         d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
 
-        // can extend up to 725, 700 for now
+        // can extend up to 725, but keeping the value as a safe 700 for now
         ss.extake(1000, -1000, -1, -1800);
 
         ss.roll2(0);
@@ -98,21 +105,21 @@ public class Case2A extends LinearOpMode {
         d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
         //ss.extake(1,1);
 
-        // move left to be aligned to the foundation
+        // translate left to be aligned to the foundation
         d.translate(Drivetrain.Direction.LEFT, 30, 0.25);
         //ss.hookFoundation(1);
 
-        // back up to the wall with the foundation
+        // back up to the wall with the foundation, pulling it into building site
         d.translate(Drivetrain.Direction.BACK, 30, 0.25);
         //ss.hookFoundation(-1);
 
-        // move right out from behind the foundation
+        // translate right out from behind the foundation
         d.translate(Drivetrain.Direction.RIGHT, 30, 0.25);
 
-        // move forward to avoid other robot
+        // translate forward to avoid parked alliance partner
         d.translate(Drivetrain.Direction.FWD, 24, 0.25);
 
-        // move right to park under the bridge
+        // translate right to park under the bridge
         d.translate(Drivetrain.Direction.RIGHT, 18, 0.25);
 
         s.shutdown();

@@ -45,6 +45,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
+/* Assumes that alliance partner moves foundation into building site and parks. Robot will intake first skystone,
+and bring it completely to building side. Repeated for second skystone. Robot parks.
+ */
 
 @Autonomous(name = "Case 1 A Blue", group = "Auton")
 public class Case1 extends LinearOpMode {
@@ -69,7 +72,7 @@ public class Case1 extends LinearOpMode {
 
         skyStoneLocation = s.findSkystone();
 
-        //perform all operations to find location from this
+        //based on enum return from CV, translates accordingly to relative position of skystone from starting position
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.translate(Drivetrain.Direction.LEFT, leftCaseMovement, 0.5);
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
@@ -80,7 +83,7 @@ public class Case1 extends LinearOpMode {
 
         //sleep(3000000);
 
-        // obtain skystone
+        // extend and lower intake mechanism, translate, intake skystone
         ss.setBlock(10, 2400);
         d.translate(Drivetrain.Direction.BACK, 10, 0.15);
         d.translate(Drivetrain.Direction.LEFT, 2, 0.15);
@@ -89,46 +92,30 @@ public class Case1 extends LinearOpMode {
         ss.intake(1,-1800);
         ss.roll2(0);
 
-        // left to other side
+        // translate to building side
         d.translate(Drivetrain.Direction.LEFT, 44, 0.5);
         // extake the block
         ss.extake(1000, -1000, -1, -1800);
 
-        // back over to the other side
+        // translate to foundation side
         d.translate(Drivetrain.Direction.RIGHT, 64, 0.25);
-        // approach next block
+
+        // translate forward
         d.translate(Drivetrain.Direction.FWD, 18,0.25);
-
-        ss.intake(1,-1800);
-        ss.roll2(0);
-
-
-
-        d.translate(Drivetrain.Direction.LEFT, 12, 0.25);
-
-        ss.setBlock(0, 0);
-        telemetry.addData("status:", "reset to 0");
-        telemetry.update();
-        ss.intake(1, 10);
-
-        ss.intake(1, 1);
-
-        d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
-        ss.extake(1, extendValueA, -1,1);
 
         // move right to position robot in front of second skystone
         d.translate(Drivetrain.Direction.RIGHT, 36, 0.25);
 
-        // obtain skystone
+        // extend intake mechanism, intake skystone
         ss.setBlock(liftValueA, extendValueA);
         d.translate(Drivetrain.Direction.BACK, 12, 0.25);
         ss.intake(1, 1);
 
-        // move left all the way into build zone
+        // translate left all the way into building zone
         d.translate(Drivetrain.Direction.LEFT, 36, 0.25);
         ss.extake(1, extendValueA, -1,1);
 
-        // move right to park under bridge
+        // translate right to park under bridge
         d.translate(Drivetrain.Direction.RIGHT, 36, 0.25);
         s.shutdown();
     }

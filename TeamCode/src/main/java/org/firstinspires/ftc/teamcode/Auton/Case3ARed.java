@@ -36,7 +36,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-// CASE A: Next to wall
+/* CASE A: Parks next to wall, red alliance side. Assumes alliance partner moves skystones. Robot translates RIGHT
+to move foundation and parks.
+ */
 @Autonomous(name = "Case 3 A Red", group = "Auton")
 public class Case3ARed extends LinearOpMode {
 
@@ -51,9 +53,9 @@ public class Case3ARed extends LinearOpMode {
 
         waitForStart();
 
-        // move forward up to the foundation
+        // translate forward up to the foundation
         d.translate(Drivetrain.Direction.FWD, 24, 0.5);
-        // translate right to align with foundation, 4th nub
+        // translate right to align with foundation, by the 4th nub
         d.translate(Drivetrain.Direction.RIGHT, 28, 0.5);
         d.translate(Drivetrain.Direction.FWD, 1, 0.5);
 
@@ -66,7 +68,7 @@ public class Case3ARed extends LinearOpMode {
         // unhook the foundation
         ss.hookFoundation(0, 2800);
 
-        // CASE A: translate left park to under bridge
+        // CASE A: translate left to park under bridge by the wall
         d.translate(Drivetrain.Direction.LEFT, 60, 0.5);
     }
 }

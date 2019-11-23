@@ -36,7 +36,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
-
+/*
+Red alliance side. Assumes alliance partner moves skystones and foundation. Robot translates right to park.
+ */
 
 @Autonomous(name = "Case 4 Red", group = "Auton")
 public class Case4Red extends LinearOpMode {
