@@ -15,7 +15,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 /***
- *
+ * This class is intended to reset the mechanical parts of the robot intake after the actual teleop
+ * has been used and the mechanical parts are not in their intended positions. Functionally, this
+ * class has the same capabilities as the Mecanum Teleop, but this functions slower and without code
+ * stops so we can always reset the intake parts.
  */
 
 @TeleOp(name="Teleop Reset", group="Functionality")

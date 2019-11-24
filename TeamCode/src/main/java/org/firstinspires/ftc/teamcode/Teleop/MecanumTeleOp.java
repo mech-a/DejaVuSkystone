@@ -29,11 +29,12 @@ public class MecanumTeleOp extends LinearOpMode {
 
     double fwd, strafe, rotate;
 
+    //enum used to distinguish field-centric and robot-centric driving
     public enum DriveMode {
         FIELD, CARTESIAN
     }
 
-    double[] speedSwitch = {0.05,0.375};
+    double[] speedSwitch = {0.05,0.375}; //speed switch min and max
     boolean runFast = true, runSlow = false;
     double modifier = speedSwitch[1];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
@@ -66,6 +67,8 @@ public class MecanumTeleOp extends LinearOpMode {
     // bottom is starting, which is 0
     final double VERTICAL_MIN = -2900;
     final double VERTICAL_MAX = -100;
+    final double verticalRange = Math.abs(VERTICAL_MAX+VERTICAL_MIN);
+    final double pControlConstant = 10;
 
     boolean frontRollerDirection = false,
             middleRollerDirection = false;
@@ -119,11 +122,9 @@ public class MecanumTeleOp extends LinearOpMode {
             if(gamepad2.dpad_down) {
                 //servoArm.setPosition(0); //move the arm all the way down
                 servoArm.setPosition(servoArm.getPosition()-0.01);
-                //TODO move the vertical slide all the way down
             } else if(gamepad2.dpad_up) {
                 servoArm.setPosition(servoArm.getPosition()+0.01);
                 //servoArm.setPosition(0.25); //move the servo so the top of gripper is parallel to ground
-                //TODO move the vertical slide slightly up
             } else if(gamepad2.dpad_right) {
                 servoHand.setPosition(servoHand.getPosition()+0.01);
                 //servoArm.setPosition(0.5); //move the servo so the arm channel is parallel to the ground
@@ -228,7 +229,7 @@ public class MecanumTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
-                mtrVertical.setPower(gamepad2.right_stick_y/2);
+                mtrVertical.setPower(gamepad2.right_stick_y/2+((VERTICAL_MAX-mtrVertical.getCurrentPosition())/(pControlConstant*(verticalRange))));
             } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
                 if(Math.abs(gamepad2.right_stick_y) > 0.5) {
                     mtrVertical.setPower(gamepad2.right_stick_y);

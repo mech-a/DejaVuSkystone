@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
  *
  */
 
-@TeleOp(name="Dependant Mecanum", group="Pre-Comp")
+@TeleOp(name="Dependent Mecanum", group="Pre-Comp")
 public class DependantMecanum extends LinearOpMode {
     public StoneScorer ss;
     public Drivetrain d;
