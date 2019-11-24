@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Drivetrain implements Subassembly {
-    DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
+    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     LinearOpMode caller;
     Telemetry telemetry;
-    int driveMtrTarget = 1;
+    public int driveMtrTarget = 1;
     //DT Specs:
     public static final double HD_COUNTS_PER_REV = 560;
     //in inches

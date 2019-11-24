@@ -102,11 +102,19 @@ public class DeviationTesting extends LinearOpMode {
 
             telemetry.addData("Inches: ", control.get(0).dub);
             telemetry.addData("Speed: ", "%.2f", control.get(1).dub);
-            telemetry.update();
 
             if (gamepad1.a) {
                 d.translate(dir, control.get(0).dub, control.get(1).dub);
             }
+
+            telemetry.addData("Target Position: ", d.driveMtrTarget);
+
+            telemetry.addData("FL: ", d.mtrFL.getCurrentPosition());
+            telemetry.addData("FR: ", d.mtrFR.getCurrentPosition());
+            telemetry.addData("BL: ", d.mtrBL.getCurrentPosition());
+            telemetry.addData("BR: ", d.mtrBR.getCurrentPosition());
+
+            telemetry.update();
 
         }
     }
