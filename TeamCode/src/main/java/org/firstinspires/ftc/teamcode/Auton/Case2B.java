@@ -38,8 +38,10 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-/* Assumes that alliance partner does not foundation, either parks or doesn't park. Robot moves skystones, then hooks foundation
-to back up and move it into the building site. Unhooks from foundation, then parks away from wall.
+/**
+ * Assumes that alliance partner does not foundation, either parks or doesn't park.
+ * Robot moves skystones, then hooks foundation to back up and move it into the building site.
+ * Unhooks from foundation, then parks away from wall.
  */
 
 @Autonomous(name = "Case 2 B", group = "Auton")
