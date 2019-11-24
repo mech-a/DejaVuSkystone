@@ -143,21 +143,18 @@ public class Drivetrain implements Subassembly {
             telemetry.update();
         }
 
-        //if driver presses STOP
-        if (!caller.isStopRequested()) { //should it be negated?
-            mtrFL.setPower(0);
-            mtrFR.setPower(0);
-            mtrBL.setPower(0);
-            mtrBR.setPower(0);
+        //  To ensure motors are stopped
+        mtrFL.setPower(0);
+        mtrFR.setPower(0);
+        mtrBL.setPower(0);
+        mtrBR.setPower(0);
+
+        if (!caller.isStopRequested()) {
+            mtrFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
-
-//        if (!caller.isStopRequested()) {
-//            mtrFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        }
 
     }
 
