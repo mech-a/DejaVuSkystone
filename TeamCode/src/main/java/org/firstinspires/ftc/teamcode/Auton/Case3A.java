@@ -36,8 +36,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-/* CASE A: Parks next to wall, blue alliance side. Assumes alliance partner moves skystones. Robot translates LEFT
-to move foundation and parks. */
+/**
+ * CASE A: Parks next to wall, blue alliance side. Assumes alliance partner moves skystones.
+ * Robot translates LEFT to move foundation and parks.
+ */
+
 @Autonomous(name = "Case 3 A Blue", group = "Auton")
 public class Case3A extends LinearOpMode {
 

@@ -45,8 +45,10 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-/* Assumes that alliance partner moves foundation into building site and parks. Robot will intake first skystone,
-and bring it completely to building side. Repeated for second skystone. Robot parks.
+/**
+ * Assumes that alliance partner moves foundation into building site and parks.
+ * Robot will intake first skystone, and bring it completely to building side.
+ * Repeated for second skystone. Robot parks.
  */
 
 @Autonomous(name = "Case 1 A Blue", group = "Auton")
