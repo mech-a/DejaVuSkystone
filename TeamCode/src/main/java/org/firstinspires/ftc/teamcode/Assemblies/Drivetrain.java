@@ -3,9 +3,13 @@ package org.firstinspires.ftc.teamcode.Assemblies;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class Drivetrain implements Subassembly {
     DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
@@ -21,6 +25,10 @@ public class Drivetrain implements Subassembly {
             getCountsPerInch(DRIVE_GEAR_RATIO, HD_COUNTS_PER_REV, WHEEL_DIAM);
     private boolean ccwRotation = false;
 
+    //for now, I'll instantiate two more motors to act like the odometry wheels
+    private DcMotor odVert, odHoriz;
+
+
     public Drivetrain(LinearOpMode caller) {
         this.caller = caller;
         telemetry = caller.telemetry;
@@ -33,6 +41,12 @@ public class Drivetrain implements Subassembly {
         mtrBL = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[2]);
         mtrBR = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[3]);
 
+        //init'ng the odom
+        odVert = caller.hardwareMap.get(DcMotor.class, "od_vert");
+        odVert.setDirection(DcMotorSimple.Direction.FORWARD);
+        odHoriz = caller.hardwareMap.get(DcMotor.class, "od_horiz");
+        odHoriz.setDirection(DcMotorSimple.Direction.FORWARD);
+
         mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
         mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -43,6 +57,14 @@ public class Drivetrain implements Subassembly {
     public void status() {
 
     }
+
+    public ArrayList<Double> getCurrentEncoderValues() {
+        ArrayList<Double> currentEncoderValues = new ArrayList<>();
+        currentEncoderValues.add(((double) odVert.getCurrentPosition()));
+        currentEncoderValues.add(((double) odHoriz.getCurrentPosition()));
+        return currentEncoderValues;
+    }
+
 
     //@Override
     public void run() {
