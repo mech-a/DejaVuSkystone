@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -51,6 +52,9 @@ public class MecanumTeleOp extends LinearOpMode {
     double[] g1 = new double[4];
 
     double powFL, powFR, powBL, powBR;
+
+    public static final double FRONT_DRIVE_GEAR_RATIO = 10 / 11;
+    public static final double BACK_DRIVE_GEAR_RATIO = 1;
 
 
     // max out is 2400
@@ -192,10 +196,10 @@ public class MecanumTeleOp extends LinearOpMode {
 
             //TODO make speed switches
 
-            mtrFL.setPower(powFL);
-            mtrFR.setPower(powFR);
-            mtrBL.setPower(powBL);
-            mtrBR.setPower(powBR);
+            mtrFL.setPower(FRONT_DRIVE_GEAR_RATIO * powFL);
+            mtrFR.setPower(FRONT_DRIVE_GEAR_RATIO * powFR);
+            mtrBL.setPower(BACK_DRIVE_GEAR_RATIO * powBL);
+            mtrBR.setPower(BACK_DRIVE_GEAR_RATIO * powBR);
 
             if(gamepad2.left_stick_y > 0.1 && mtrArmLift.getCurrentPosition() < ARMLIFT_MAX) {
                 mtrArmLift.setPower(gamepad2.left_stick_y / 2);
