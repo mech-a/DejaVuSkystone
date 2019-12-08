@@ -5,16 +5,20 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import java.util.ArrayList;
 
 public class GlobalPosition implements Runnable {
+    //Thread should continue running, if false, nothing will run
     private boolean threadEnabled = true;
+    //To access the odometry wheels/encoders, should be passed in by caller
     private Drivetrain d;
+    //refresh rate
     private long iterationTime;
 
-    //{y, x, theta}
+    //{y, x, theta} is what this will have at the end, currently just (y,x)
     private ArrayList<Double> position = new ArrayList<>();
 
     public GlobalPosition(Drivetrain d, long iterationTime) {
         this.d = d;
         this.iterationTime = iterationTime;
+        //gets away from any default values
         for(Double aDouble : d.getCurrentEncoderValues())
             position.add(aDouble);
     }
@@ -24,6 +28,7 @@ public class GlobalPosition implements Runnable {
     public void run() {
         while(threadEnabled) {
             setPositionArrays();
+            //sleep try-catch in case any exceptions are thrown
             try {
                 Thread.sleep(iterationTime);
             } catch (InterruptedException e) {
@@ -45,7 +50,14 @@ public class GlobalPosition implements Runnable {
 
         //we could calculate the angle we got to now, but its not necessary because the imu
         //is p. accurate. however, this is the way to do it
+        //TODO add angle calculations through x/y
+    }
 
+    public void driveTo(double y, double x, double maxError) {
+        //inputs: error function, PID coeffs: outputs: motor powers
+        while(threadEnabled) {
+            
+        }
     }
 
     public ArrayList getPositionArray() {
