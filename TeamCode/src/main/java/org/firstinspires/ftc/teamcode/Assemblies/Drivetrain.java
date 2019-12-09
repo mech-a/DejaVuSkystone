@@ -11,17 +11,14 @@ public class Drivetrain implements Subassembly {
     DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     LinearOpMode caller;
     Telemetry telemetry;
-    int frontDriveMtrTarget = 1, backDriveMtrTarget = 1;
+    int driveMtrTarget = 1;
     //DT Specs:
     public static final double HD_COUNTS_PER_REV = 560;
     //in inches
     public static final double WHEEL_DIAM = 4;
-    public static final double FRONT_DRIVE_GEAR_RATIO = 10 / 11;
-    public static final double BACK_DRIVE_GEAR_RATIO = 1;
-    public static final double FRONT_HD_COUNTS_PER_INCH =
-            getCountsPerInch(FRONT_DRIVE_GEAR_RATIO, HD_COUNTS_PER_REV, WHEEL_DIAM);
-    public static final double BACK_HD_COUNTS_PER_INCH =
-            getCountsPerInch(BACK_DRIVE_GEAR_RATIO, HD_COUNTS_PER_REV, WHEEL_DIAM);
+    public static final double DRIVE_GEAR_RATIO = 1;
+    public static final double HD_COUNTS_PER_INCH =
+            getCountsPerInch(DRIVE_GEAR_RATIO, HD_COUNTS_PER_REV, WHEEL_DIAM);
     private boolean ccwRotation = false;
 
     public Drivetrain(LinearOpMode caller) {
@@ -61,8 +58,7 @@ public class Drivetrain implements Subassembly {
     }
 
     public void translate(Direction dir, double inches, double speed) {
-        frontDriveMtrTarget = (int) (Math.abs(inches) * FRONT_HD_COUNTS_PER_INCH);
-        backDriveMtrTarget = (int) (Math.abs(inches) * BACK_HD_COUNTS_PER_INCH);
+        driveMtrTarget = (int) (Math.abs(inches) * HD_COUNTS_PER_INCH);
 
         int a, b;
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
@@ -91,10 +87,10 @@ public class Drivetrain implements Subassembly {
                     break;
             }
 
-            mtrFL.setTargetPosition(a * frontDriveMtrTarget);
-            mtrFR.setTargetPosition(b * frontDriveMtrTarget);
-            mtrBL.setTargetPosition(b * backDriveMtrTarget);
-            mtrBR.setTargetPosition(a * backDriveMtrTarget);
+            mtrFL.setTargetPosition(a * driveMtrTarget);
+            mtrFR.setTargetPosition(b * driveMtrTarget);
+            mtrBL.setTargetPosition(b * driveMtrTarget);
+            mtrBR.setTargetPosition(a * driveMtrTarget);
 
             mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -108,23 +104,23 @@ public class Drivetrain implements Subassembly {
         }
 
         if(!caller.isStopRequested()){
-            mtrFL.setPower(FRONT_DRIVE_GEAR_RATIO * speed);
-            mtrFR.setPower(FRONT_DRIVE_GEAR_RATIO * speed);
-            mtrBL.setPower(BACK_DRIVE_GEAR_RATIO * speed);
-            mtrBR.setPower(BACK_DRIVE_GEAR_RATIO * speed);
+            mtrFL.setPower(speed);
+            mtrFR.setPower(speed);
+            mtrBL.setPower(speed);
+            mtrBR.setPower(speed);
         }
 
         while(!caller.isStopRequested() &&
                 ((mtrFL.isBusy()) && (mtrFR.isBusy()) && (mtrBL.isBusy()) && (mtrBR.isBusy())) ) {
             //TODO change telemetry name to enum
             telemetry.addData("0mtrFl", "%7d : %7d",
-                    mtrFL.getCurrentPosition(), frontDriveMtrTarget);
+                    mtrFL.getCurrentPosition(), driveMtrTarget);
             telemetry.addData("1mtrFR", "%7d : %7d",
-                    mtrFR.getCurrentPosition(), frontDriveMtrTarget);
+                    mtrFR.getCurrentPosition(), driveMtrTarget);
             telemetry.addData("2mtrBR", "%7d : %7d",
-                    mtrBL.getCurrentPosition(), backDriveMtrTarget);
+                    mtrBL.getCurrentPosition(), driveMtrTarget);
             telemetry.addData("3mtrBL", "%7d : %7d",
-                    mtrBR.getCurrentPosition(), backDriveMtrTarget);
+                    mtrBR.getCurrentPosition(), driveMtrTarget);
 
             telemetry.update();
         }
