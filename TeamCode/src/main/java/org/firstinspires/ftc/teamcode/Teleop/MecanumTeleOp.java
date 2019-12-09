@@ -15,7 +15,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 /***
- *
+ * motor 0 fl
+ * motor 1 fr
+ * motor 2 br
+ * motor 3 bl
  */
 
 @TeleOp(name="Mecanum Non-dependency", group="Functionality")
