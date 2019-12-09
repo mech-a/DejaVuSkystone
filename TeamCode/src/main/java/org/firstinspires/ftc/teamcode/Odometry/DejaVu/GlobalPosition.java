@@ -23,7 +23,9 @@ public class GlobalPosition implements Runnable {
             position.add(aDouble);
     }
 
-
+    //error = goal - actual
+    //scalar = kP * error + kI * (0, current) error dt + kD * de/dt
+    //integral += timePerIteration * currentEncoder
     @Override
     public void run() {
         while(threadEnabled) {
@@ -53,12 +55,18 @@ public class GlobalPosition implements Runnable {
         //TODO add angle calculations through x/y
     }
 
-    public void driveTo(double y, double x, double maxError) {
-        //inputs: error function, PID coeffs: outputs: motor powers
-        while(threadEnabled) {
-            
-        }
-    }
+//    public void driveTo(double y, double x, double maxError) {
+//        //inputs: error function, PID coeffs: outputs: motor powers
+//        while(threadEnabled) {
+//            setPositionArrays();
+//            double errorX = x-position.get(1);
+//
+//            double pX = kP * errorX;
+//            double dX = kD * (errorX-lastErrorX)/(iterationTime/1000.0);
+//            double iX +=kI * (errorX*iterationTime/1000);
+//            double outputScalar = pX + dX + iX;
+//        }
+//    }
 
     public ArrayList getPositionArray() {
         return position;

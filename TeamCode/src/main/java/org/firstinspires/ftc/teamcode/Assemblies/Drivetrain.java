@@ -41,6 +41,16 @@ public class Drivetrain implements Subassembly {
         mtrBL = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[2]);
         mtrBR = caller.hardwareMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[3]);
 
+        mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        mtrFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         //init'ng the odom
         odVert = caller.hardwareMap.get(DcMotor.class, "od_vert");
         odVert.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -60,10 +70,11 @@ public class Drivetrain implements Subassembly {
 
     public ArrayList<Double> getCurrentEncoderValues() {
         ArrayList<Double> currentEncoderValues = new ArrayList<>();
-        currentEncoderValues.add(((double) odVert.getCurrentPosition()));
-        currentEncoderValues.add(((double) odHoriz.getCurrentPosition()));
+        currentEncoderValues.add(((double) mtrFL.getCurrentPosition()));
+        currentEncoderValues.add(((double) mtrFR.getCurrentPosition()));
         return currentEncoderValues;
     }
+
 
 
     //@Override
@@ -164,3 +175,4 @@ public class Drivetrain implements Subassembly {
     }
 
 }
+
