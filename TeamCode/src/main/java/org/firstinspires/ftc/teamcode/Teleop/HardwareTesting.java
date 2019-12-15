@@ -11,8 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @TeleOp
 public class HardwareTesting extends LinearOpMode {
     DcMotorEx mtrFL, mtrFR, mtrBL, mtrBR;
-    DcMotorEx mtrVertical;
-    CRServo leftRoller, rightRoller;
+    DcMotorEx mtrVertical, leftRoller, rightRoller;
 
     @Override
     public void runOpMode() {
@@ -37,8 +36,8 @@ public class HardwareTesting extends LinearOpMode {
         mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftRoller = hardwareMap.get(CRServo.class, "leftRoller");
-        rightRoller = hardwareMap.get(CRServo.class, "rightRoller");
+        leftRoller = hardwareMap.get(DcMotorEx.class, "leftRoller");
+        rightRoller = hardwareMap.get(DcMotorEx.class, "rightRoller");
 
         leftRoller.setDirection(DcMotorSimple.Direction.FORWARD);
         rightRoller.setDirection(DcMotorSimple.Direction.REVERSE);
