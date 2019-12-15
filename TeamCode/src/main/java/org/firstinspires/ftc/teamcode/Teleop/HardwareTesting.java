@@ -51,11 +51,12 @@ public class HardwareTesting extends LinearOpMode {
             if (gamepad1.a) {
                 leftRoller.setPower(1);
                 rightRoller.setPower(1);
-            }
-
-            if (gamepad1.b) {
+            } else if (gamepad1.b){
                 leftRoller.setPower(-1);
                 rightRoller.setPower(-1);
+            } else {
+                leftRoller.setPower(0);
+                rightRoller.setPower(0);
             }
 
 
