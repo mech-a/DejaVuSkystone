@@ -52,10 +52,10 @@ public class Drivetrain implements Subassembly {
         mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //init'ng the odom
-        odVert = caller.hardwareMap.get(DcMotor.class, "od_vert");
-        odVert.setDirection(DcMotorSimple.Direction.FORWARD);
-        odHoriz = caller.hardwareMap.get(DcMotor.class, "od_horiz");
-        odHoriz.setDirection(DcMotorSimple.Direction.FORWARD);
+//        odVert = caller.hardwareMap.get(DcMotor.class, "od_vert");
+//        odVert.setDirection(DcMotorSimple.Direction.FORWARD);
+//        odHoriz = caller.hardwareMap.get(DcMotor.class, "od_horiz");
+//        odHoriz.setDirection(DcMotorSimple.Direction.FORWARD);
 
         mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
