@@ -72,8 +72,52 @@ public class ThreadTest extends LinearOpMode {
             telemetry.addData("position 0", gp.getPositionArray().get(0));
             telemetry.addData("position 1", gp.getPositionArray().get(1));
             telemetry.update();
+            driveTo(0, 30, 20);
         }
         gp.shutdown();
 
     }
-}
+
+    public void driveTo(double y, double x, double maxError) {
+//        //inputs: error function, PID coeffs: outputs: motor powers
+        private ArrayList<Double> position = new ArrayList<>();
+
+        double pX;
+        double dX;
+        double iX;
+        double outputScalar;
+
+        double kD = 0;
+        double kI = 0;
+        double kP = 1;
+
+        boolean threadEnabled = true;
+
+        for (int i = 0; i < d.getCurrentEncoderValues().size(); i++) {
+            position.set(i, d.getCurrentEncoderValues().get(i));
+        }
+
+        while(threadEnabled) {
+
+            double errorX = x-position.get(1);
+
+            if (errorX <= maxError) {
+                break;
+            }
+
+            pX = kP * errorX;
+            dX = kD * (errorX-lastErrorX)/(iterationTime/1000.0);
+            iX +=kI * (errorX*iterationTime/1000);
+            outputScalar = pX + dX + iX;
+
+            telemetry.addData(outputScalar);
+            telemetry.update();
+            //Set Motor values to this scalar
+            d.mtrFL.setPower(outputScalar);
+            //d.mtrFR.setPower(outputScalar);
+            //d.mtrBL.setPower(outputScalar);
+            //d.mtrBR.setPower(outputScalar);
+
+        }
+    }
+
