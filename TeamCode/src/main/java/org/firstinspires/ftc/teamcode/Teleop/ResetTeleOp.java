@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,17 +15,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-/***
- *
- */
-
-@TeleOp(name="Teleop Reset", group="Functionality")
+@TeleOp(name="Intake/DT Teleop", group="Functionality")
 public class ResetTeleOp extends LinearOpMode {
 
-    DcMotor mtrHorizontal, mtrVertical, mtrIntake, mtrArmLift;
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
-    CRServo sFrontRoller, sMiddleRoller;
-    Servo servoHand, servoArm;
+    DcMotorEx mtrVertical, leftRoller, rightRoller;
     //Servo sFrontIntake;  < this servo was replaced by the DCMotor mtrIntake
 
     double fwd, strafe, rotate;
@@ -47,35 +42,21 @@ public class ResetTeleOp extends LinearOpMode {
 
     private Orientation angles;
 
-    boolean gripper = false;
     double[] g1 = new double[4];
 
     double powFL, powFR, powBL, powBR;
 
-
-    // max out is 2400
-    // in is 0, which is starting
-    final double HORIZONTAL_MAX = 5000;
-    final double HORIZONTAL_MIN = -5000;
-
-
-    final double ARMLIFT_MIN = -5000; //top
-    final double ARMLIFT_MAX = 5000; //bottom
-
+    double intakeSpeed = 0.5;
     // top is -2700
     // bottom is starting, which is 0
     final double VERTICAL_MIN = -5000;
     final double VERTICAL_MAX = 5000;
-
-    boolean frontRollerDirection = false,
-            middleRollerDirection = false;
 
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
         initMotors();
-        initServos();
         imuInit();
 
         telemetry.addData("Stat", "Init!");
@@ -89,64 +70,33 @@ public class ResetTeleOp extends LinearOpMode {
             // middle position is 0.23
             // all the one down is 0.20
 
-            // set vertical lift to -360
-            if (gamepad2.dpad_down) {
-                // pos 1
-                servoArm.setPosition(0.20);
-            } else if (gamepad2.dpad_up) {
-                // pos 2
-                servoArm.setPosition(0.23);
-            } else if (gamepad2.dpad_right) {
-                // pos 3
-                servoArm.setPosition(0.59);
-            }
+            mtrVertical.setPower(gamepad1.right_stick_y / 2);
 
-            if (gamepad2.x && (servoArm.getPosition() > 0)) {
-                // when x is hit, then the gripper clamp moves in more (tigher grip)
-                servoArm.setPosition(servoArm.getPosition() - 0.005);
-            } else if (gamepad2.y && (servoArm.getPosition() < 1)) {
-                // when y is hit, then the gripper clamp moves out more (looser grip)
-                servoArm.setPosition(servoArm.getPosition() + 0.005);
+            if (gamepad1.x) {
+                leftRoller.setPower(0);
+                rightRoller.setPower(0);
             }
 
 
-            if (gamepad2.right_trigger > 0.2) {
-                servoHand.setPosition(0.20); //in
-            } else if (gamepad2.left_trigger > 0.2) {
-                servoHand.setPosition(0); //out
-            }
-
-            if(gamepad2.dpad_down) {
-                //servoArm.setPosition(0); //move the arm all the way down
-                servoArm.setPosition(servoArm.getPosition()-0.01);
-                //TODO move the vertical slide all the way down
-            } else if(gamepad2.dpad_up) {
-                servoArm.setPosition(servoArm.getPosition()+0.01);
-                //servoArm.setPosition(0.25); //move the servo so the top of gripper is parallel to ground
-                //TODO move the vertical slide slightly up
-            } else if(gamepad2.dpad_right) {
-                servoHand.setPosition(servoHand.getPosition()+0.01);
-                //servoArm.setPosition(0.5); //move the servo so the arm channel is parallel to the ground
-            } else if(gamepad2.dpad_left) {
-                servoHand.setPosition(servoHand.getPosition()- 0.01);
+            if (gamepad1.left_bumper || gamepad1.right_bumper) {
+                // if rolling in, and right bumper pressed OR if rolling out and left bumper pressed, then will stop
+                 if (((leftRoller.getPower() == intakeSpeed) && (gamepad1.right_bumper)) ||
+                ((leftRoller.getPower() == -intakeSpeed) && (gamepad1.left_bumper))) {
+                     leftRoller.setPower(0);
+                     rightRoller.setPower(0);
+                 } else if (leftRoller.getPower() == 0){
+                     // right bumper means intake, left bumper means outtake
+                     if (gamepad1.right_bumper) {
+                         leftRoller.setPower(intakeSpeed);
+                         rightRoller.setPower(intakeSpeed);
+                     } else if (gamepad1.left_bumper) {
+                         leftRoller.setPower(-intakeSpeed);
+                         rightRoller.setPower(-intakeSpeed);
+                     }
+                 }
             }
 
             telemetry.addData("Controls", "x");
-
-            if (gamepad1.x) {
-                mtrIntake.setPower(1);
-                sFrontRoller.setPower(-1);
-                sMiddleRoller.setPower(1);
-            } else if (gamepad1.y) {
-                mtrIntake.setPower(0);
-                sFrontRoller.setPower(0);
-                sMiddleRoller.setPower(0);
-            }
-            else if (gamepad1.dpad_down){
-                mtrIntake.setPower(-1);
-                sFrontRoller.setPower(1);
-                sMiddleRoller.setPower(-1);
-            }
 
             if(gamepad1.dpad_up) {
                 //todo figure out reset angle
@@ -161,48 +111,16 @@ public class ResetTeleOp extends LinearOpMode {
             for(int i = 0; i < g1.length; i++)
                 g1[i] = (Math.abs(g1[i]) > DEADZONE ? g1[i] : 0) * modifier;
 
-            if(gamepad1.b) {
+            if(gamepad1.y) {
                 driveMode = DriveMode.CARTESIAN;
             }
-            else if (gamepad1.a) {
-                driveMode = DriveMode.FIELD;
-            }
-
 
             driverControl();
-
-
-//            for (int i = 0; i < 4; i++) {
-//                g1[i] /= 2;
-//            }
-
-//            powFL = g1[1] + g1[2] + g1[0];
-//            powFR = g1[1] - g1[2] - g1[0];
-//            powBL = g1[1] + g1[2] - g1[0];
-//            powBR = g1[1] - g1[2] + g1[0];
-//
-//            if(gamepad1.right_trigger > 0.2) {
-//                powFL = 1;
-//                powFR = 1;
-//                powBL = 1;
-//                powBR = 1;
-//            }
-
-            //TODO make speed switches
 
             mtrFL.setPower(powFL);
             mtrFR.setPower(powFR);
             mtrBL.setPower(powBL);
             mtrBR.setPower(powBR);
-
-            if(gamepad2.left_stick_y > 0.1 && mtrArmLift.getCurrentPosition() < ARMLIFT_MAX) {
-                mtrArmLift.setPower(gamepad2.left_stick_y / 2);
-            } else if (gamepad2.left_stick_y < -0.1 && mtrArmLift.getCurrentPosition() > ARMLIFT_MIN) {
-                mtrArmLift.setPower(gamepad2.left_stick_y / 2);
-            } else {
-                mtrArmLift.setPower(0);
-            }
-
 
 //            if((gamepad2.left_stick_y > 0.1) || (gamepad2.left_stick_y < -0.1)) {
 //                mtrArmLift.setPower(gamepad2.left_stick_y/2);
@@ -213,17 +131,6 @@ public class ResetTeleOp extends LinearOpMode {
 //                telemetry.addData("lin act", "0");
 //                telemetry.update();
 //            }
-
-            //////////////
-
-
-
-            if((gamepad2.left_stick_x > 0.1 && mtrHorizontal.getCurrentPosition() < HORIZONTAL_MAX) ||
-                    (gamepad2.left_stick_x < -0.1 && mtrHorizontal.getCurrentPosition() > HORIZONTAL_MIN)) {
-                mtrHorizontal.setPower(gamepad2.left_stick_x / 2);
-            } else {
-                mtrHorizontal.setPower(0);
-            }
 
             if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
                 mtrVertical.setPower(gamepad2.right_stick_y / 3);
@@ -241,18 +148,13 @@ public class ResetTeleOp extends LinearOpMode {
             //0 br
 
             telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
-                    mtrHorizontal.getPower() + mtrVertical.getPower() + " ");
+                    mtrVertical.getPower() + " ");
             //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
 //            telemetry.addData("Front Roller Forward", frontRollerDirection);
 //            telemetry.addData("Middle Roller Forward", middleRollerDirection);
             telemetry.addData("vertical lift", mtrVertical.getCurrentPosition());
-            telemetry.addData("horizontal arm", mtrHorizontal.getCurrentPosition());
-            telemetry.addData("arm lift", mtrArmLift.getCurrentPosition());
-            telemetry.addData("grippy man:", servoHand.getPosition());
-            telemetry.addData("big arm dude: ", servoArm.getPosition());
             telemetry.addData("imu angle", getHeading());
             telemetry.addData("drive mode", driveMode);
-            telemetry.addData("horizontal arm", mtrHorizontal.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -338,50 +240,15 @@ public class ResetTeleOp extends LinearOpMode {
             powFR = g1[1] - g1[2] - g1[0];
             powBL = g1[1] + g1[2] - g1[0];
             powBR = g1[1] - g1[2] + g1[0];
-
         }
     }
 
-    public void initServos() {
-        sFrontRoller = hardwareMap.get(CRServo.class, "frontRoller");
-        sMiddleRoller = hardwareMap.get(CRServo.class, "middleRoller");
-        servoArm = hardwareMap.get(Servo.class, "arm_servo");
-        servoHand = hardwareMap.get(Servo.class, "gripper_servo");
-
-        // initialize servo hand position
-        servoHand.setPosition(0);
-        // initialize arm servo position
-        servoArm.setPosition(0.21);
-
-        sFrontRoller.setDirection(CRServo.Direction.REVERSE);
-        sMiddleRoller.setDirection(CRServo.Direction.FORWARD);
-    }
-
     public void initMotors() {
-        mtrHorizontal = hardwareMap.get(DcMotor.class, "horizontal");
-        mtrVertical = hardwareMap.get(DcMotor.class, "vertical");
-        mtrArmLift = hardwareMap.get(DcMotor.class, "linearActuator");
-        mtrIntake = hardwareMap.get(DcMotor.class, "intake");
+        leftRoller = hardwareMap.get(DcMotorEx.class, "leftRoller");
+        rightRoller = hardwareMap.get(DcMotorEx.class, "rightRoller");
 
-        mtrHorizontal.setDirection(DcMotorSimple.Direction.REVERSE);
-        mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
-        mtrArmLift.setDirection(DcMotorSimple.Direction.FORWARD);
-        mtrIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        mtrHorizontal.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mtrVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mtrIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mtrArmLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        mtrHorizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        mtrHorizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mtrArmLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mtrIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRoller.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -389,21 +256,26 @@ public class ResetTeleOp extends LinearOpMode {
         mtrFR = hardwareMap.get(DcMotor.class, "fr");
         mtrBL = hardwareMap.get(DcMotor.class, "bl");
         mtrBR = hardwareMap.get(DcMotor.class, "br");
+        mtrVertical = hardwareMap.get(DcMotorEx.class, "vertical");
 
         mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
-        mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
-        mtrBR.setDirection(DcMotorSimple.Direction.FORWARD);
+        //backleft and backright are switched
+        mtrBL.setDirection(DcMotorSimple.Direction.FORWARD);
+        mtrBR.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrVertical.setDirection(DcMotorSimple.Direction.FORWARD);
 
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         mtrFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // 0 br
         // 1 bl

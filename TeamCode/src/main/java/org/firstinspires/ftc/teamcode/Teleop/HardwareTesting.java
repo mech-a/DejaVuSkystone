@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
-@TeleOp
+@TeleOp (name="Hardware Testing", group="Functionality")
 public class HardwareTesting extends LinearOpMode {
     DcMotorEx mtrFL, mtrFR, mtrBL, mtrBR;
     DcMotorEx mtrVertical, leftRoller, rightRoller;
@@ -58,7 +58,6 @@ public class HardwareTesting extends LinearOpMode {
                 leftRoller.setPower(0);
                 rightRoller.setPower(0);
             }
-
 
         }
     }
