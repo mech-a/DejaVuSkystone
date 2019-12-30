@@ -12,7 +12,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Drivetrain implements Subassembly {
-    DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
+    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     LinearOpMode caller;
     Telemetry telemetry;
     int driveMtrTarget = 1;

@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 
+import java.util.ArrayList;
+
 
 /**
  * Copy Me Linear
@@ -48,7 +50,6 @@ public class ThreadTest extends LinearOpMode {
 
     // Declare OpMode members.
     Drivetrain d = new Drivetrain(this);
-
 
 
     @Override
@@ -72,7 +73,7 @@ public class ThreadTest extends LinearOpMode {
             telemetry.addData("position 0", gp.getPositionArray().get(0));
             telemetry.addData("position 1", gp.getPositionArray().get(1));
             telemetry.update();
-            driveTo(0, 30, 20);
+            driveTo(0, 800, 20);
         }
         gp.shutdown();
 
@@ -80,7 +81,7 @@ public class ThreadTest extends LinearOpMode {
 
     public void driveTo(double y, double x, double maxError) {
 //        //inputs: error function, PID coeffs: outputs: motor powers
-        private ArrayList<Double> position = new ArrayList<>();
+        ArrayList<Double> position = new ArrayList<>();
 
         double pX;
         double dX;
@@ -94,23 +95,25 @@ public class ThreadTest extends LinearOpMode {
         boolean threadEnabled = true;
 
         for (int i = 0; i < d.getCurrentEncoderValues().size(); i++) {
-            position.set(i, d.getCurrentEncoderValues().get(i));
+            position.add(d.getCurrentEncoderValues().get(i));
         }
 
-        while(threadEnabled) {
+        while (threadEnabled) {
 
-            double errorX = x-position.get(1);
+            double errorX = x + d.getCurrentEncoderValues().get(0);
 
             if (errorX <= maxError) {
                 break;
             }
 
             pX = kP * errorX;
-            dX = kD * (errorX-lastErrorX)/(iterationTime/1000.0);
-            iX +=kI * (errorX*iterationTime/1000);
-            outputScalar = pX + dX + iX;
+            //dX = kD * (errorX-lastErrorX)/(iterationTime/1000.0);
+            //iX +=kI * (errorX*iterationTime/1000);
+            //outputScalar = pX + dX + iX;
+            outputScalar = pX;
 
-            telemetry.addData(outputScalar);
+
+            telemetry.addData("output scalar", outputScalar);
             telemetry.update();
             //Set Motor values to this scalar
             d.mtrFL.setPower(outputScalar);
@@ -120,4 +123,5 @@ public class ThreadTest extends LinearOpMode {
 
         }
     }
+}
 
