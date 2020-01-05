@@ -69,12 +69,12 @@ public class ThreadTest extends LinearOpMode {
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+
             telemetry.addData("position 0", gp.getPositionArray().get(0));
             telemetry.addData("position 1", gp.getPositionArray().get(1));
             telemetry.update();
-            driveTo(0, 800, 20);
-        }
+            driveTo(0, 1000, 20);
+
         gp.shutdown();
 
     }
@@ -90,7 +90,7 @@ public class ThreadTest extends LinearOpMode {
 
         double kD = 0;
         double kI = 0;
-        double kP = 1;
+        double kP = 0.002;
 
         boolean threadEnabled = true;
 
@@ -100,7 +100,7 @@ public class ThreadTest extends LinearOpMode {
 
         while (threadEnabled) {
 
-            double errorX = x + d.getCurrentEncoderValues().get(0);
+            double errorX = x - d.getCurrentEncoderValues().get(0);
 
             if (errorX <= maxError) {
                 break;
@@ -114,12 +114,13 @@ public class ThreadTest extends LinearOpMode {
 
 
             telemetry.addData("output scalar", outputScalar);
+            telemetry.addData("position FL", d.getCurrentEncoderValues().get(0));
             telemetry.update();
             //Set Motor values to this scalar
             d.mtrFL.setPower(outputScalar);
-            //d.mtrFR.setPower(outputScalar);
-            //d.mtrBL.setPower(outputScalar);
-            //d.mtrBR.setPower(outputScalar);
+            d.mtrFR.setPower(outputScalar);
+            d.mtrBL.setPower(outputScalar);
+            d.mtrBR.setPower(outputScalar);
 
         }
     }

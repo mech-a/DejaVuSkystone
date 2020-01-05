@@ -59,8 +59,8 @@ public class Drivetrain implements Subassembly {
 
         mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
-        mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
-        mtrBR.setDirection(DcMotorSimple.Direction.FORWARD);
+        mtrBL.setDirection(DcMotorSimple.Direction.FORWARD);
+        mtrBR.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
