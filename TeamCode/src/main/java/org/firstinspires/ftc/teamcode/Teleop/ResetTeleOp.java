@@ -19,6 +19,8 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 public class ResetTeleOp extends LinearOpMode {
 
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
+    Servo rotationServo, ferrisServo, foundationServoL, foundationServoR;
+    Servo clawServo;
     DcMotorEx mtrVertical, leftRoller, rightRoller;
     //Servo sFrontIntake;  < this servo was replaced by the DCMotor mtrIntake
 
@@ -57,6 +59,7 @@ public class ResetTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
         initMotors();
+        initServos();
         imuInit();
 
         telemetry.addData("Stat", "Init!");
@@ -71,6 +74,32 @@ public class ResetTeleOp extends LinearOpMode {
             // all the one down is 0.20
 
             mtrVertical.setPower(gamepad1.right_stick_y / 2);
+
+            if(gamepad2.x) {
+                ferrisServo.setPosition(0.577);      //ferris servo has limits 0.577 and 0.0522
+                rotationServo.setPosition(0.03);  //rotation servo has limits 0.03 and 0.54
+            }
+            else if(gamepad2.y) {
+                ferrisServo.setPosition(0.0522);
+                rotationServo.setPosition(0.54);
+            }
+
+            if(gamepad2.a) {
+                clawServo.setPosition(clawServo.getPosition() + 0.005);
+            }
+
+            if(gamepad2.b) {
+                clawServo.setPosition(clawServo.getPosition() - 0.005);
+            }
+
+            if(gamepad1.dpad_up) {
+                foundationServoR.setPosition(foundationServoR.getPosition() + 0.005);
+                foundationServoL.setPosition(foundationServoL.getPosition() + 0.005);
+            }
+            else if(gamepad1.dpad_down) {
+                foundationServoR.setPosition(foundationServoR.getPosition() - 0.005);
+                foundationServoL.setPosition(foundationServoL.getPosition() - 0.005);
+            }
 
             if (gamepad1.x) {
                 leftRoller.setPower(0);
@@ -147,14 +176,17 @@ public class ResetTeleOp extends LinearOpMode {
             //1 bl
             //0 br
 
-            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
-                    mtrVertical.getPower() + " ");
-            //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
-//            telemetry.addData("Front Roller Forward", frontRollerDirection);
-//            telemetry.addData("Middle Roller Forward", middleRollerDirection);
-            telemetry.addData("vertical lift", mtrVertical.getCurrentPosition());
-            telemetry.addData("imu angle", getHeading());
-            telemetry.addData("drive mode", driveMode);
+            telemetry.addData("Left Grab: ", foundationServoL.getPosition());
+            telemetry.addData("Right Grab: ", foundationServoR.getPosition());
+            telemetry.addData("Claw Servo: ", clawServo.getPosition());
+//            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
+//                    mtrVertical.getPower() + " ");
+//            //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
+////            telemetry.addData("Front Roller Forward", frontRollerDirection);
+////            telemetry.addData("Middle Roller Forward", middleRollerDirection);
+//            telemetry.addData("vertical lift", mtrVertical.getCurrentPosition());
+//            telemetry.addData("imu angle", getHeading());
+//            telemetry.addData("drive mode", driveMode);
             telemetry.update();
         }
     }
@@ -243,7 +275,27 @@ public class ResetTeleOp extends LinearOpMode {
         }
     }
 
-    public void initMotors() {
+    public void initServos() {
+        rotationServo = hardwareMap.get(Servo.class, "rotation_servo");
+        ferrisServo = hardwareMap.get(Servo.class, "ferris_servo");
+        foundationServoL = hardwareMap.get(Servo.class, "foundation_left");
+        foundationServoR = hardwareMap.get(Servo.class, "foundation_right");
+        clawServo = hardwareMap.get(Servo.class, "claw_servo");
+
+        rotationServo.setPosition(0.54);
+        ferrisServo.setPosition(0.0522);
+        foundationServoL.setPosition(0.205);
+        foundationServoR.setPosition(0.14444);
+        clawServo.setPosition(0.5);
+
+        rotationServo.setDirection(Servo.Direction.FORWARD);
+        ferrisServo.setDirection(Servo.Direction.FORWARD);
+        foundationServoR.setDirection(Servo.Direction.FORWARD);
+        foundationServoL.setDirection(Servo.Direction.REVERSE);
+        clawServo.setDirection(Servo.Direction.FORWARD);
+    }
+
+        public void initMotors() {
         leftRoller = hardwareMap.get(DcMotorEx.class, "leftRoller");
         rightRoller = hardwareMap.get(DcMotorEx.class, "rightRoller");
 
