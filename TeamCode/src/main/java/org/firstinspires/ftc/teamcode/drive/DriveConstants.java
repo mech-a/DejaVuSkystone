@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
+import com.qualcomm.hardware.motors.GoBILDA5202Series;
 import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
@@ -27,7 +28,7 @@ public class DriveConstants {
      * @DeviceProperties and @MotorType annotations.
      */
     private static final MotorConfigurationType MOTOR_CONFIG =
-            MotorConfigurationType.getMotorType(NeveRest20Gearmotor.class);
+            MotorConfigurationType.getMotorType(GoBILDA5202Series.class);
 
     /*
      * Set the first flag appropriately. If using the built-in motor velocity PID, update
@@ -46,7 +47,8 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 2;
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 1;
+                                         // Front Wheels - 10/11
+    public static double TRACK_WIDTH = 15;
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
