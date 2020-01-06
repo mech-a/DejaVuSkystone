@@ -75,4 +75,8 @@ public class GlobalPosition implements Runnable {
     public void shutdown() {
         threadEnabled = false;
     }
+
+    public long getIterationTime() {
+        return iterationTime;
+    }
 }

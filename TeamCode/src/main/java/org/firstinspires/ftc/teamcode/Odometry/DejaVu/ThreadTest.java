@@ -73,13 +73,13 @@ public class ThreadTest extends LinearOpMode {
             telemetry.addData("position 0", gp.getPositionArray().get(0));
             telemetry.addData("position 1", gp.getPositionArray().get(1));
             telemetry.update();
-            driveTo(0, 1000, 20);
+            driveTo(0, 1000, 20, gp);
 
         gp.shutdown();
 
     }
 
-    public void driveTo(double y, double x, double maxError) {
+    public void driveTo(double y, double x, double maxError, GlobalPosition gp) {
 //        //inputs: error function, PID coeffs: outputs: motor powers
         ArrayList<Double> position = new ArrayList<>();
 
@@ -110,7 +110,7 @@ public class ThreadTest extends LinearOpMode {
             }
 
             pX = kP * errorX;
-            dX = kD * (errorX-lastErrorX)/(75.0/1000.0);
+            dX = kD * (errorX-lastErrorX)/(gp.getIterationTime()/1000.0);
             iX = kI * (totalErrorX);
             outputScalar = pX + dX +iX;
             //outputScalar = pX;
