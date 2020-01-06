@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
  */
 
 // CASE A: Next to wall
-@Autonomous(group = "drive")
+@Autonomous(name = "Case 3 B Blue", group = "Auton")
 public class Case3B extends LinearOpMode {
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);

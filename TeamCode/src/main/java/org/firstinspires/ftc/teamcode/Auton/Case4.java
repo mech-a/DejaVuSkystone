@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 
-@Autonomous(name = "Case 4 Blue", group = "Auton")
+@Autonomous(name = "Case 4 Red", group = "Auton")
 public class Case4 extends LinearOpMode {
 
     SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
