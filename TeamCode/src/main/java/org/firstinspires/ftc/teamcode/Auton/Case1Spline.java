@@ -36,7 +36,7 @@ public class Case1Spline extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        //starting at 30, 60
+        //following needs to be matched to case 1, copied over from case 3
         drive.setPoseEstimate(new Pose2d(30, 60, 0));
 
         drive.followTrajectorySync(

@@ -55,6 +55,8 @@ public class Case4 extends LinearOpMode {
 
         waitForStart();
 
+        drive.setPoseEstimate(new Pose2d(30, -60, 0));
+
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                     .splineTo(new Pose2d(0, -60, 0))
