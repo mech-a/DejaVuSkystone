@@ -87,10 +87,12 @@ public class ThreadTest extends LinearOpMode {
         double dX;
         double iX;
         double outputScalar;
-
-        double kD = 0;
+        double errorX = x;
+        double lastErrorX;
+        double totalErrorX = 0;
+        double kD = 1;
         double kI = 0;
-        double kP = 0.002;
+        double kP = 1;
 
         boolean threadEnabled = true;
 
@@ -99,19 +101,21 @@ public class ThreadTest extends LinearOpMode {
         }
 
         while (threadEnabled) {
+            lastErrorX = errorX;
+            errorX = x - d.getCurrentEncoderValues().get(0);
 
-            double errorX = x - d.getCurrentEncoderValues().get(0);
 
             if (errorX <= maxError) {
                 break;
             }
 
             pX = kP * errorX;
-            //dX = kD * (errorX-lastErrorX)/(iterationTime/1000.0);
-            //iX +=kI * (errorX*iterationTime/1000);
-            //outputScalar = pX + dX + iX;
-            outputScalar = pX;
+            dX = kD * (errorX-lastErrorX)/(75.0/1000.0);
+            iX = kI * (totalErrorX);
+            outputScalar = pX + dX +iX;
+            //outputScalar = pX;
 
+            totalErrorX += errorX;
 
             telemetry.addData("output scalar", outputScalar);
             telemetry.addData("position FL", d.getCurrentEncoderValues().get(0));
