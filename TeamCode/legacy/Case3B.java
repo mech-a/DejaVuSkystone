@@ -32,24 +32,43 @@ package org.firstinspires.ftc.teamcode.Auton;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-
-@Autonomous(name = "Case 4 Red", group = "Auton")
-public class Case4Red extends LinearOpMode {
+// CASE B: Away from wall
+@Autonomous(name = "Case 3 B", group = "Auton")
+public class Case3B extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
+        // initialize drivetrain and stone scoring subassemblies
         d.init();
+        ss.init();
 
         waitForStart();
 
-        d.translate(Drivetrain.Direction.RIGHT, 30, 0.35);
+        // move forward up to the foundation
+        d.translate(Drivetrain.Direction.FWD, 24, 0.5);
+        // translate left to align with foundation, 4th nub
+        d.translate(Drivetrain.Direction.LEFT, 20, 0.5);
+        // hook onto foundation
+        ss.hookFoundation(1, 3600);
+
+        // drag foundation back
+        d.translate(Drivetrain.Direction.BACK, 30, 0.25);
+
+        // unhook the foundation
+        ss.hookFoundation(0, 3500);
+
+        // translate right to be out of the way of the foundation
+        d.translate(Drivetrain.Direction.RIGHT, 36, 0.5);
+        // CASE B: move forward to be away from wall
+        d.translate(Drivetrain.Direction.FWD, 23, 0.5);
+        // move right to park
+        d.translate(Drivetrain.Direction.RIGHT, 23, 0.5);
     }
 }

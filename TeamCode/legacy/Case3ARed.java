@@ -29,36 +29,44 @@
 
 package org.firstinspires.ftc.teamcode.Auton;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
-
-@Autonomous(name = "Case 4 Blue", group = "Auton")
-public class Case4 extends LinearOpMode {
-
-    SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
+// CASE A: Next to wall
+@Autonomous(name = "Case 3 A Red", group = "Auton")
+public class Case3ARed extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
+        // initialize drivetrain and stone scoring subassemblies
         d.init();
+        ss.init();
 
         waitForStart();
 
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                    .splineTo(new Pose2d(0, -60, 0))
-                    .build()
-        );
+        // move forward up to the foundation
+        d.translate(Drivetrain.Direction.FWD, 24, 0.5);
+        // translate right to align with foundation, 4th nub
+        d.translate(Drivetrain.Direction.RIGHT, 28, 0.5);
+        d.translate(Drivetrain.Direction.FWD, 1, 0.5);
+
+        // hook onto foundation
+        ss.hookFoundation(1, 3700);
+
+        // drag foundation back
+        d.translate(Drivetrain.Direction.BACK, 29, 0.25);
+
+        // unhook the foundation
+        ss.hookFoundation(0, 2800);
+
+        // CASE A: translate left park to under bridge
+        d.translate(Drivetrain.Direction.LEFT, 60, 0.5);
     }
 }

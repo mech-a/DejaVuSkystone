@@ -42,7 +42,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 
 @Autonomous(name = "Case 4 Blue", group = "Auton")
-public class Case4 extends LinearOpMode {
+public class Case4Blue extends LinearOpMode {
 
     SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
 
@@ -57,8 +57,8 @@ public class Case4 extends LinearOpMode {
 
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
-                    .splineTo(new Pose2d(0, -60, 0))
-                    .build()
+                        .splineTo(new Pose2d(0, 60, 0))
+                        .build()
         );
     }
 }

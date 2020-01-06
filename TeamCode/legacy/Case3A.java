@@ -29,36 +29,47 @@
 
 package org.firstinspires.ftc.teamcode.Auton;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
-
-@Autonomous(name = "Case 4 Blue", group = "Auton")
-public class Case4 extends LinearOpMode {
-
-    SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
+// CASE A: Next to wall
+@Autonomous(name = "Case 3 A Blue", group = "Auton")
+public class Case3A extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
+        // initialize drivetrain and stone scoring subassemblies
         d.init();
+        ss.init();
 
         waitForStart();
 
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                    .splineTo(new Pose2d(0, -60, 0))
-                    .build()
-        );
+
+        // move forward up to the foundation
+        d.translate(Drivetrain.Direction.FWD, 24, 0.5);
+        // translate left to align with foundation, 4th nub
+        d.translate(Drivetrain.Direction.LEFT, 20, 0.5);
+        // hook onto foundation
+        ss.hookFoundation(1, 3600);
+
+        // drag foundation back
+        d.translate(Drivetrain.Direction.BACK, 30, 0.25);
+
+        ss.extendH(-400);
+        // unhook the foundation
+        ss.hookFoundation(0, 3500);
+
+
+        // CASE A: translate right park to under bridge
+        d.translate(Drivetrain.Direction.RIGHT, 54, 0.75);
+        d.translate(Drivetrain.Direction.BACK, 4, 0.75);
+
     }
 }

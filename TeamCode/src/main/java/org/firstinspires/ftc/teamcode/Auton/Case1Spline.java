@@ -16,27 +16,33 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 // CASE A: Next to wall
 @Autonomous(group = "drive")
-public class Case3BRed extends LinearOpMode {
+public class Case1Spline extends LinearOpMode {
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
+    Sensors s = new Sensors(this);
+
+    Sensors.SkyStoneLocation skyStoneLocation;
 
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
         d.init();
         ss.init();
+        s.init();
 
         waitForStart();
 
+        skyStoneLocation = s.findSkystone();
+
         if (isStopRequested()) return;
 
-        //starting at 30, -60
-        drive.setPoseEstimate(new Pose2d(30, -60, 0));
+        //starting at 30, 60
+        drive.setPoseEstimate(new Pose2d(30, 60, 0));
 
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
-                        .splineTo(new Pose2d(30, -30, 0))
-                        .splineTo(new Pose2d(50, -30, 0))
+                        .splineTo(new Pose2d(30, 30, 0))
+                        .splineTo(new Pose2d(50, 30, 0))
                         .build()
         );
 
@@ -44,7 +50,7 @@ public class Case3BRed extends LinearOpMode {
 
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
-                        .splineTo(new Pose2d(50, -60, 0))
+                        .splineTo(new Pose2d(50, 60, 0))
                         .build()
         );
 
@@ -52,9 +58,7 @@ public class Case3BRed extends LinearOpMode {
 
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
-                        .splineTo(new Pose2d(15, -60, 0))
-                        .splineTo(new Pose2d(15, -35, 0))
-                        .splineTo(new Pose2d(0, -35, 0))
+                        .splineTo(new Pose2d(0, 60, 0))
                         .build()
         );
     }
