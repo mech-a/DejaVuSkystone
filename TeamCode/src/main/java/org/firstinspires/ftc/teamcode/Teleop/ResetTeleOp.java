@@ -32,6 +32,7 @@ public class ResetTeleOp extends LinearOpMode {
 
     double[] speedSwitch = {0.05,0.375};
     boolean runFast = true, runSlow = false;
+    boolean ferrisOut = false;
     double modifier = speedSwitch[1];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
 
@@ -75,16 +76,45 @@ public class ResetTeleOp extends LinearOpMode {
 
             mtrVertical.setPower(gamepad1.right_stick_y / 2);
 
-            if(gamepad2.x) {
-                ferrisServo.setPosition(0.577);      //ferris servo has limits 0.577 and 0.0522
-                rotationServo.setPosition(0.03);  //rotation servo has limits 0.03 and 0.54
+
+            //using the x and y buttons to bring the extake arm in and out
+            //the extake arm functions as an assisted farris wheel with two servos that must move
+            // in opposite directions, and the vertical slide which must slightly raise before the
+            // extake goes out
+            //TODO: get the vertical slide to move properly before the extake is taken out
+            if(gamepad2.x) { //send the extake arm out
+                ferrisOut = true;
+
+                mtrVertical.setTargetPosition(500);
+                mtrVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                mtrVertical.setPower(0.2);
+
             }
-            else if(gamepad2.y) {
+            else if(gamepad2.y) { //bring the extake arm in
+                ferrisOut = false;
+
                 ferrisServo.setPosition(0.0522);
                 rotationServo.setPosition(0.54);
+
+                mtrVertical.setTargetPosition(0);
+                mtrVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                mtrVertical.setPower(-0.2);
             }
 
-            if(gamepad2.a) {
+            if(!mtrVertical.isBusy()) { // attempting to stop the vertical slide motor once it raises slgihtly
+                mtrVertical.setPower(0);
+                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                if(ferrisOut) {
+                    ferrisServo.setPosition(0.577);      //ferris servo has limits 0.577 and 0.0522
+                    rotationServo.setPosition(0.03);  //rotation servo has limits 0.03 and 0.54
+                } else {
+                    ferrisServo.setPosition(0.0522);
+                    rotationServo.setPosition(0.54);
+                }
+            }
+
+            //using a and b to unlatch the claw holding the block
+            if(gamepad2.a) { //claw servo limits are 0.38944 and 0.5
                 clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
 
@@ -92,6 +122,8 @@ public class ResetTeleOp extends LinearOpMode {
                 clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
 
+            //use dpad up and down to hook onto the foundation
+            //TODO: test these values and make sure they will work
             if(gamepad1.dpad_up) {
                 foundationServoR.setPosition(foundationServoR.getPosition() + 0.005);
                 foundationServoL.setPosition(foundationServoL.getPosition() + 0.005);
@@ -179,6 +211,7 @@ public class ResetTeleOp extends LinearOpMode {
             telemetry.addData("Left Grab: ", foundationServoL.getPosition());
             telemetry.addData("Right Grab: ", foundationServoR.getPosition());
             telemetry.addData("Claw Servo: ", clawServo.getPosition());
+            telemetry.addData("vertical slide: ", mtrVertical.getCurrentPosition());'\\\'
 //            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
 //                    mtrVertical.getPower() + " ");
 //            //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
@@ -328,6 +361,8 @@ public class ResetTeleOp extends LinearOpMode {
         mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // 0 br
         // 1 bl
