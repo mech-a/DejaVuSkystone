@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoControllerEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -16,14 +15,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-@TeleOp(name="Intake/DT Teleop", group="Functionality")
-public class ResetTeleOp extends LinearOpMode {
+@TeleOp(name="TEST Intake/DT Teleop", group="Functionality")
+public class TestingTeleop extends LinearOpMode {
 
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
     Servo rotationServo, ferrisServo, foundationServoL, foundationServoR;
     Servo clawServo;
     DcMotorEx mtrVertical, leftRoller, rightRoller;
-    //Servo sFrontIntake;  < this servo was replaced by the DCMotor mtrIntake
 
     double fwd, strafe, rotate;
 
@@ -49,11 +47,13 @@ public class ResetTeleOp extends LinearOpMode {
 
     double powFL, powFR, powBL, powBR;
 
-    double intakeSpeed = 0.5;
+    double intakeSpeed = 0.75;
     // top is -2700
     // bottom is starting, which is 0
     final double VERTICAL_MIN = -5000;
     final double VERTICAL_MAX = 5000;
+
+    int intake = 0;
 
     StoneScorer ss = new StoneScorer(this);
 
@@ -70,27 +70,33 @@ public class ResetTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            // all the way out parallel to the ground is 0.55
-            // middle position is 0.23
-            // all the one down is 0.20
-
             mtrVertical.setPower(gamepad1.right_stick_y / 2);
 
             if(gamepad2.x) {
-                ferrisServo.setPosition(0.577);      //ferris servo has limits 0.577 and 0.0522
-                rotationServo.setPosition(0.03);  //rotation servo has limits 0.03 and 0.54
+                extakeSetup();
             }
             else if(gamepad2.y) {
-                ferrisServo.setPosition(0.0522);
-                rotationServo.setPosition(0.54);
+                extakeReturn();
+            }
+
+            if(gamepad1.a) {
+                rotationServo.setPosition(rotationServo.getPosition() + 0.005);
+                //clawServo.setPosition(clawServo.getPosition() + 0.005);
+            }
+
+            if(gamepad1.b) {
+                rotationServo.setPosition(rotationServo.getPosition() - 0.005);
+                //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
 
             if(gamepad2.a) {
-                clawServo.setPosition(clawServo.getPosition() + 0.005);
+                ferrisServo.setPosition(ferrisServo.getPosition() + 0.005);
+                //clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
 
             if(gamepad2.b) {
-                clawServo.setPosition(clawServo.getPosition() - 0.005);
+                ferrisServo.setPosition(ferrisServo.getPosition() - 0.005);
+                //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
 
             if(gamepad1.dpad_up) {
@@ -102,28 +108,28 @@ public class ResetTeleOp extends LinearOpMode {
                 foundationServoL.setPosition(foundationServoL.getPosition() - 0.005);
             }
 
-            if (gamepad1.x) {
-                leftRoller.setPower(0);
-                rightRoller.setPower(0);
+            if (gamepad1.right_bumper) {
+                if (intake == 0) {
+                    leftRoller.setPower(intakeSpeed);
+                    rightRoller.setPower(intakeSpeed);
+                    intake = 1;
+                } else {
+                    leftRoller.setPower(0);
+                    rightRoller.setPower(0);
+                    intake = 0;
+                }
             }
 
-
-            if (gamepad1.left_bumper || gamepad1.right_bumper) {
-                // if rolling in, and right bumper pressed OR if rolling out and left bumper pressed, then will stop
-                 if (((leftRoller.getPower() == intakeSpeed) && (gamepad1.right_bumper)) ||
-                ((leftRoller.getPower() == -intakeSpeed) && (gamepad1.left_bumper))) {
-                     leftRoller.setPower(0);
-                     rightRoller.setPower(0);
-                 } else if (leftRoller.getPower() == 0){
-                     // right bumper means intake, left bumper means outtake
-                     if (gamepad1.right_bumper) {
-                         leftRoller.setPower(intakeSpeed);
-                         rightRoller.setPower(intakeSpeed);
-                     } else if (gamepad1.left_bumper) {
-                         leftRoller.setPower(-intakeSpeed);
-                         rightRoller.setPower(-intakeSpeed);
-                     }
-                 }
+            if (gamepad1.left_bumper) {
+                if (intake == 0) {
+                    leftRoller.setPower(-intakeSpeed);
+                    rightRoller.setPower(-intakeSpeed);
+                    intake = -1;
+                } else {
+                    leftRoller.setPower(0);
+                    rightRoller.setPower(0);
+                    intake = 0;
+                }
             }
 
             telemetry.addData("Controls", "x");
@@ -152,22 +158,22 @@ public class ResetTeleOp extends LinearOpMode {
             mtrBL.setPower(powBL);
             mtrBR.setPower(powBR);
 
-//            if((gamepad2.left_stick_y > 0.1) || (gamepad2.left_stick_y < -0.1)) {
-//                mtrArmLift.setPower(gamepad2.left_stick_y/2);
-//                telemetry.addData("lin act", "1");
-//                telemetry.update();
+//            if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
+//                mtrVertical.setPower(gamepad2.right_stick_y / 3);
+//            } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
+//                mtrVertical.setPower(gamepad2.right_stick_y / 3);
+//            } else if (gamepad2.right_stick_y < 0.1 && gamepad2.right_stick_y > -0.1) {
+//                mtrVertical.setPower(0);
 //            } else {
-//                mtrArmLift.setPower(0);
-//                telemetry.addData("lin act", "0");
-//                telemetry.update();
+//                mtrVertical.setPower(0);
 //            }
 
-            if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 3);
-            } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 3);
-            } else if (gamepad2.right_stick_y < 0.1 && gamepad2.right_stick_y > -0.1) {
-                mtrVertical.setPower(0);
+            if (gamepad2.right_stick_y > 0.1) {
+                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                mtrVertical.setPower(gamepad2.right_stick_y / 2);
+            } else if (gamepad2.right_stick_y < -0.1) {
+                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                mtrVertical.setPower(gamepad2.right_stick_y);
             } else {
                 mtrVertical.setPower(0);
             }
@@ -177,78 +183,24 @@ public class ResetTeleOp extends LinearOpMode {
             //1 bl
             //0 br
 
-
-
-            // brandon & I were discussing using the twice-bumper method, but we thought about it
-            // more and the amount of times that the bumpers would have to be triggered during a
-            // typical match would be really high with that, so using the while-button-is-pressed
-            // makes more sense. if needed, check @intakeControl
-            if(gamepad1.left_bumper) {
-                intakePower(-intakeSpeed);
-            }
-            else if(gamepad1.right_bumper) {
-                intakePower(intakeSpeed);
-            }
-            else {
-                intakePower(0);
-            }
-
-
-
             telemetry.addData("Left Grab: ", foundationServoL.getPosition());
             telemetry.addData("Right Grab: ", foundationServoR.getPosition());
+            telemetry.addData("Rotate Servo: ", rotationServo.getPosition());
+            telemetry.addData("Ferris Servo: ", ferrisServo.getPosition());
             telemetry.addData("Claw Servo: ", clawServo.getPosition());
-<<<<<<< HEAD
-            telemetry.addData("vertical slide: ", mtrVertical.getCurrentPosition());
-=======
             telemetry.addData("Right Intake:", rightRoller.getPower());
             telemetry.addData("Left Intake", leftRoller.getPower());
->>>>>>> c520c15d47dba285dc63ec06b42dff941ffad198
+            telemetry.addData("Intake", intake);
 //            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
 //                    mtrVertical.getPower() + " ");
-//            //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
-////            telemetry.addData("Front Roller Forward", frontRollerDirection);
-////            telemetry.addData("Middle Roller Forward", middleRollerDirection);
+//            telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
+//            telemetry.addData("Front Roller Forward", frontRollerDirection);
+//            telemetry.addData("Middle Roller Forward", middleRollerDirection);
 //            telemetry.addData("vertical lift", mtrVertical.getCurrentPosition());
 //            telemetry.addData("imu angle", getHeading());
 //            telemetry.addData("drive mode", driveMode);
             telemetry.update();
         }
-    }
-
-    @Deprecated
-    private void intakeControl(boolean in, boolean out) {
-        //todo exit clause
-        boolean runIn = false;
-        boolean runOut  = false;
-
-        if(gamepad1.left_bumper) {
-            runIn = false;
-            runOut = true;
-        }
-
-        if(gamepad1.right_bumper) {
-            runIn = true;
-            runOut = false;
-        }
-
-        if(runIn) {
-            leftRoller.setPower(-1);
-            rightRoller.setPower(-1);
-        }
-        if(runOut) {
-            leftRoller.setPower(1);
-            rightRoller.setPower(1);
-        }
-        else {
-            leftRoller.setPower(0);
-            rightRoller.setPower(0);
-        }
-    }
-    
-    private void intakePower(double pow) {
-        leftRoller.setPower(pow);
-        rightRoller.setPower(pow);
     }
 
     private void speedSwitch() {
@@ -306,7 +258,6 @@ public class ResetTeleOp extends LinearOpMode {
 
             heading = Math.toRadians(heading);
 
-
             if(heading > 0) {
                 //ccw
                 fwd = g1[1] * Math.cos(Math.abs(heading)) - g1[0] * Math.sin(Math.abs(heading));
@@ -324,7 +275,6 @@ public class ResetTeleOp extends LinearOpMode {
             powFR = fwd - rotate - strafe;
             powBL = fwd + rotate - strafe;
             powBR = fwd - rotate + strafe;
-
         }
         else {
             // if the drive mode is Cartesian, we run the standard mecanum drive drive system
@@ -336,17 +286,18 @@ public class ResetTeleOp extends LinearOpMode {
     }
 
     public void initServos() {
+        // in order of configuration
         rotationServo = hardwareMap.get(Servo.class, "rotation_servo");
         ferrisServo = hardwareMap.get(Servo.class, "ferris_servo");
+        clawServo = hardwareMap.get(Servo.class, "claw_servo");
         foundationServoL = hardwareMap.get(Servo.class, "foundation_left");
         foundationServoR = hardwareMap.get(Servo.class, "foundation_right");
-        clawServo = hardwareMap.get(Servo.class, "claw_servo");
 
-        rotationServo.setPosition(0.54);
-        ferrisServo.setPosition(0.0522);
+        rotationServo.setPosition(0.585);
+        ferrisServo.setPosition(0.5594444444);
+        clawServo.setPosition(0.50);
         foundationServoL.setPosition(0.205);
         foundationServoR.setPosition(0.14444);
-        clawServo.setPosition(0.5);
 
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);
@@ -355,7 +306,7 @@ public class ResetTeleOp extends LinearOpMode {
         clawServo.setDirection(Servo.Direction.FORWARD);
     }
 
-        public void initMotors() {
+    public void initMotors() {
         leftRoller = hardwareMap.get(DcMotorEx.class, "leftRoller");
         rightRoller = hardwareMap.get(DcMotorEx.class, "rightRoller");
 
@@ -375,7 +326,7 @@ public class ResetTeleOp extends LinearOpMode {
         //backleft and backright are switched
         mtrBL.setDirection(DcMotorSimple.Direction.FORWARD);
         mtrBR.setDirection(DcMotorSimple.Direction.REVERSE);
-        mtrVertical.setDirection(DcMotorSimple.Direction.FORWARD);
+        mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
 
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -387,11 +338,41 @@ public class ResetTeleOp extends LinearOpMode {
         mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // encoder is reset to 0 at whatever starting position it is in
+        mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // 0 br
         // 1 bl
         // 2 fr
         // 3 fl
+    }
+
+    // all the way out parallel to the ground is 0.55
+    // middle position is 0.23
+    // all the one down is 0.20
+
+    public void extakeSetup() {
+        mtrVertical.setTargetPosition(1200);
+        mtrVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrVertical.setPower(0.25);
+
+        ferrisServo.setPosition(0.577);      //ferris servo has limits 0.577 and 0.0522
+        rotationServo.setPosition(0.03);  //rotation servo has limits 0.03 and 0.54
+
+        mtrVertical.setTargetPosition(-600);
+        mtrVertical.setPower(0.25);
+    }
+
+    public void extakeReturn() {
+        mtrVertical.setTargetPosition(1200);
+        mtrVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrVertical.setPower(0.25);
+
+        ferrisServo.setPosition(0.595);
+        rotationServo.setPosition(0.4049999999);
+
+        mtrVertical.setTargetPosition(-600);
+        mtrVertical.setPower(0.25);
     }
 }
