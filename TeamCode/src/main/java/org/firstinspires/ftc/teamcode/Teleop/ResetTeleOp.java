@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoControllerEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -208,10 +209,28 @@ public class ResetTeleOp extends LinearOpMode {
             //1 bl
             //0 br
 
+
+
+            // brandon & I were discussing using the twice-bumper method, but we thought about it
+            // more and the amount of times that the bumpers would have to be triggered during a
+            // typical match would be really high with that, so using the while-button-is-pressed
+            // makes more sense. if needed, check @intakeControl
+            if(gamepad1.left_bumper) {
+                intakePower(-intakeSpeed);
+            }
+            else if(gamepad1.right_bumper) {
+                intakePower(intakeSpeed);
+            }
+            else {
+                intakePower(0);
+            }
+
+
+
             telemetry.addData("Left Grab: ", foundationServoL.getPosition());
             telemetry.addData("Right Grab: ", foundationServoR.getPosition());
             telemetry.addData("Claw Servo: ", clawServo.getPosition());
-            telemetry.addData("vertical slide: ", mtrVertical.getCurrentPosition());'\\\'
+            telemetry.addData("vertical slide: ", mtrVertical.getCurrentPosition());
 //            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
 //                    mtrVertical.getPower() + " ");
 //            //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
@@ -222,6 +241,41 @@ public class ResetTeleOp extends LinearOpMode {
 //            telemetry.addData("drive mode", driveMode);
             telemetry.update();
         }
+    }
+
+    @Deprecated
+    private void intakeControl(boolean in, boolean out) {
+        //todo exit clause
+        boolean runIn = false;
+        boolean runOut  = false;
+
+        if(gamepad1.left_bumper) {
+            runIn = false;
+            runOut = true;
+        }
+
+        if(gamepad1.right_bumper) {
+            runIn = true;
+            runOut = false;
+        }
+
+        if(runIn) {
+            leftRoller.setPower(-1);
+            rightRoller.setPower(-1);
+        }
+        if(runOut) {
+            leftRoller.setPower(1);
+            rightRoller.setPower(1);
+        }
+        else {
+            leftRoller.setPower(0);
+            rightRoller.setPower(0);
+        }
+    }
+    
+    private void intakePower(double pow) {
+        leftRoller.setPower(pow);
+        rightRoller.setPower(pow);
     }
 
     private void speedSwitch() {
