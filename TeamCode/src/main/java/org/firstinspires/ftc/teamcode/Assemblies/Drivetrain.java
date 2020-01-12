@@ -1,13 +1,20 @@
 package org.firstinspires.ftc.teamcode.Assemblies;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
+import org.jetbrains.annotations.NotNull;
 
-public class Drivetrain implements Subassembly {
+import java.util.List;
+
+public class Drivetrain extends SampleMecanumDriveBase implements Subassembly {
     DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     LinearOpMode caller;
     Telemetry telemetry;
@@ -47,6 +54,32 @@ public class Drivetrain implements Subassembly {
     //@Override
     public void run() {
 
+    }
+
+    @Override
+    public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
+        return null;
+    }
+
+    @Override
+    public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
+
+    }
+
+    @NotNull
+    @Override
+    public List<Double> getWheelPositions() {
+        return null;
+    }
+
+    @Override
+    public void setMotorPowers(double v, double v1, double v2, double v3) {
+
+    }
+
+    @Override
+    protected double getRawExternalHeading() {
+        return 0;
     }
 
     public enum Direction {
@@ -142,3 +175,5 @@ public class Drivetrain implements Subassembly {
     }
 
 }
+
+

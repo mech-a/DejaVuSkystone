@@ -25,7 +25,6 @@ public class Case1Spline extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
         d.init();
         ss.init();
         s.init();
@@ -37,27 +36,35 @@ public class Case1Spline extends LinearOpMode {
         if (isStopRequested()) return;
 
         //following needs to be matched to case 1, copied over from case 3
-        drive.setPoseEstimate(new Pose2d(30, 60, 0));
+        if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
+            d.followTrajectorySync(
+                    d.trajectoryBuilder()
+                            .splineTo(new Pose2d(0, 60, 0))
+                            .build() );
+        } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
+            d.followTrajectorySync(
+                    d.trajectoryBuilder()
+                            .splineTo(new Pose2d(0, 60, 0))
+                            .build() );
+        } else if (skyStoneLocation == Sensors.SkyStoneLocation.RIGHT) {
+            d.followTrajectorySync(
+                    d.trajectoryBuilder()
+                            .splineTo(new Pose2d(0, 60, 0))
+                            .build() );
+        }
 
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                        .splineTo(new Pose2d(30, 30, 0))
-                        .splineTo(new Pose2d(50, 30, 0))
-                        .build()
-        );
+        ss.setBlock(10, 10); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
 
-        ss.setBlock(10, 10);
-
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
                         .splineTo(new Pose2d(50, 60, 0))
                         .build()
         );
 
         ss.setBlock(-10, -10);
 
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
                         .splineTo(new Pose2d(0, 60, 0))
                         .build()
         );

@@ -44,8 +44,6 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 @Autonomous(name = "Case 4 Red", group = "Auton")
 public class Case4 extends LinearOpMode {
 
-    SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
-
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
@@ -55,10 +53,10 @@ public class Case4 extends LinearOpMode {
 
         waitForStart();
 
-        drive.setPoseEstimate(new Pose2d(30, -60, 0));
+        d.setPoseEstimate(new Pose2d(30, -60, 0));
 
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
                     .splineTo(new Pose2d(0, -60, 0))
                     .build()
         );
