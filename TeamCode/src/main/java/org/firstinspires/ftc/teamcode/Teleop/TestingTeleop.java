@@ -78,6 +78,10 @@ public class TestingTeleop extends LinearOpMode {
 
             // x extends extake, y brings extake back in
             if(gamepad2.x) {
+                leftRoller.setPower(0);
+                rightRoller.setPower(0);
+                intake = 0;
+
                 clawTimer.reset();
                 extake_position = 1;
                 clawServo.setPosition(0.62);
@@ -110,10 +114,10 @@ public class TestingTeleop extends LinearOpMode {
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
             if(gamepad2.dpad_right) {
-                clawServo.setPosition(clawServo.getPosition() + 0.005);
+                clawServo.setPosition(0.62);
             }
             if(gamepad2.dpad_left) {
-                clawServo.setPosition(clawServo.getPosition() - 0.005);
+                clawServo.setPosition(0.862);
             }
             if(gamepad2.a) {
                 ferrisServo.setPosition(ferrisServo.getPosition() + 0.005);
@@ -134,7 +138,7 @@ public class TestingTeleop extends LinearOpMode {
             }
 
             // intake control - right bumper IN, left bumper OUT
-            if (release && gamepad1.right_bumper) {
+            if (release && gamepad2.right_bumper) {
                 if (intake == 0) {
                     leftRoller.setPower(intakeSpeed);
                     rightRoller.setPower(intakeSpeed);
@@ -147,7 +151,7 @@ public class TestingTeleop extends LinearOpMode {
                 release = false;
             }
 
-            if (release && gamepad1.left_bumper) {
+            if (release && gamepad2.left_bumper) {
                 if (intake == 0) {
                     leftRoller.setPower(-intakeSpeed);
                     rightRoller.setPower(-intakeSpeed);
