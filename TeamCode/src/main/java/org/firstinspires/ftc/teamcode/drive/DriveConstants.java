@@ -17,6 +17,8 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
  *
  * These are not the only parameters; some are located in the localizer classes, drive base classes,
  * and op modes themselves.
+ *
+ * Adapted for different front and back gear ratios
  */
 @Config
 public class DriveConstants {
@@ -35,7 +37,7 @@ public class DriveConstants {
      * MOTOR_VELO_PID with the tuned coefficients from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static final PIDCoefficients MOTOR_VELO_PID = null;
+    public static final PIDCoefficients MOTOR_VELO_PID = null; //TODO update with coefficients
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -46,8 +48,8 @@ public class DriveConstants {
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 4;
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-                                         // Front Wheels - 10/11
+    public static double FRONT_GEAR_RATIO = 10/11, BACK_GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
+    public static double GEAR_RATIO = 1;
     public static double TRACK_WIDTH = 15;
 
     /*
@@ -73,13 +75,28 @@ public class DriveConstants {
             Math.toRadians(180.0), Math.toRadians(180.0), 0.0
     );
 
-
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / MOTOR_CONFIG.getTicksPerRev();
     }
 
+    public static double frontEncoderTicksToInches(double ticks) {
+        return WHEEL_RADIUS * 2 * Math.PI * FRONT_GEAR_RATIO * ticks / MOTOR_CONFIG.getTicksPerRev();
+    }
+
+    public static double backEncoderTicksToInches(double ticks) {
+        return WHEEL_RADIUS * 2 * Math.PI * BACK_GEAR_RATIO * ticks / MOTOR_CONFIG.getTicksPerRev();
+    }
+
     public static double rpmToVelocity(double rpm) {
         return rpm * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
+    }
+
+    public static double frontRpmToVelocity(double rpm) {
+        return rpm * FRONT_GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
+    }
+
+    public static double backRpmToVelocity(double rpm) {
+        return rpm * BACK_GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
     }
 
     public static double getMaxRpm() {
