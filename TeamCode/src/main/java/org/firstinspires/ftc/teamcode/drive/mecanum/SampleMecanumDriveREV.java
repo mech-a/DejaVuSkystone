@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
+
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 import java.util.ArrayList;
@@ -18,7 +19,9 @@ import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.backEncoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.frontEncoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.getMotorVelocityF;
 
 /*
@@ -92,8 +95,15 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
     @Override
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
-            wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()));
+        for (int i = 0; i < motors.size(); i++) {
+            double inches;
+            int currentPos = motors.get(i).getCurrentPosition();
+            if (i % 3 == 0) {
+                inches = frontEncoderTicksToInches(currentPos);
+            } else {
+                inches = backEncoderTicksToInches(currentPos);
+            }
+            wheelPositions.add(inches);
         }
         return wheelPositions;
     }
@@ -101,8 +111,15 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
     @Override
     public List<Double> getWheelVelocities() {
         List<Double> wheelVelocities = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
-            wheelVelocities.add(encoderTicksToInches(motor.getVelocity()));
+        for (int i = 0; i < motors.size(); i++) {
+            double inches;
+            double velocity = motors.get(i).getVelocity();
+            if (i % 3 == 0) {
+                inches = frontEncoderTicksToInches(velocity);
+            } else {
+                inches = backEncoderTicksToInches(velocity);
+            }
+            wheelVelocities.add(inches);
         }
         return wheelVelocities;
     }
