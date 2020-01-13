@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
  * This is an example of a more complex path to really test the tuning.
  */
 
-// CASE A: Next to wall
+// CASE B: Away from wall
 @Autonomous(group = "drive")
-public class Case2 extends LinearOpMode {
+public class Case2B extends LinearOpMode {
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
@@ -34,23 +34,23 @@ public class Case2 extends LinearOpMode {
         if (isStopRequested()) return;
 
         //starting at -35, -60
-        d.setPoseEstimate(new Pose2d(-35, 60, 0));
+        d.setPoseEstimate(new Pose2d(-35, -60, 0));
 
         //following needs to be matched to case 1, copied over from case 3
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-28, 30, 0))
+                            .splineTo(new Pose2d(-28, -30, 0))
                             .build() );
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-35, 30, 0))
+                            .splineTo(new Pose2d(-35, -30, 0))
                             .build() );
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.RIGHT) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-45, 30, 0))
+                            .splineTo(new Pose2d(-45, -30, 0))
                             .build() );
         }
 
@@ -59,7 +59,7 @@ public class Case2 extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(55, 28, -30))
+                        .splineTo(new Pose2d(55, -28, -30))
                         .build()
         );
 
@@ -70,8 +70,8 @@ public class Case2 extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(35, 54, 0))
-                        .splineTo(new Pose2d (50, 54, 0))
+                        .splineTo(new Pose2d(35, -54, 0))
+                        .splineTo(new Pose2d (50, -54, 0))
                         .build()
         );
 
@@ -81,17 +81,17 @@ public class Case2 extends LinearOpMode {
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-52, 30, 0))
+                            .splineTo(new Pose2d(-52, -30, 0))
                             .build() );
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-60, 30, 0))
+                            .splineTo(new Pose2d(-60, -30, 0))
                             .build() );
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.RIGHT) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-68, 30, 0))
+                            .splineTo(new Pose2d(-68, -30, 0))
                             .build() );
         }
 
@@ -100,7 +100,7 @@ public class Case2 extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(50, 54, 0))
+                        .splineTo(new Pose2d(50, -54, 0))
                         .build()
         );
 
@@ -110,7 +110,7 @@ public class Case2 extends LinearOpMode {
         //parking away from wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(0, 37, 0))
+                        .splineTo(new Pose2d(0, -37, 0))
                         .build()
         );
     }

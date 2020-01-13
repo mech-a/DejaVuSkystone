@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
  * This is an example of a more complex path to really test the tuning.
  */
 
-// CASE A: Next to wall
+// CASE B: Away from wall
 @Autonomous(group = "drive")
 public class Case1B extends LinearOpMode {
     Drivetrain d = new Drivetrain(this);

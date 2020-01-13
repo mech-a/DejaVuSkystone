@@ -42,7 +42,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 
 @Autonomous(name = "Case 4 Blue", group = "Auton")
-public class Case4Blue extends LinearOpMode {
+public class Case4A extends LinearOpMode {
 
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
@@ -55,6 +55,7 @@ public class Case4Blue extends LinearOpMode {
 
         d.setPoseEstimate(new Pose2d(30, 60, 0));
 
+        //parks next to wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
                         .splineTo(new Pose2d(0, 60, 0))

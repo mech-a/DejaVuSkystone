@@ -44,8 +44,9 @@ public class Case3A extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(50, 60, 0))
-                    .build()
+                        .splineTo(new Pose2d(35, 54, 0))
+                        .splineTo(new Pose2d (50, 54, 0))
+                        .build()
         );
 
         //lift up foundation hooks
