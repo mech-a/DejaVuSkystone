@@ -39,6 +39,7 @@ public class Case3A extends LinearOpMode {
                         .build()
         );
 
+        //foundation
         ss.setBlock(10, 10);
 
         d.followTrajectorySync(
@@ -47,6 +48,7 @@ public class Case3A extends LinearOpMode {
                     .build()
         );
 
+        //lift up foundation hooks
         ss.setBlock(-10, -10);
 
         d.followTrajectorySync(
