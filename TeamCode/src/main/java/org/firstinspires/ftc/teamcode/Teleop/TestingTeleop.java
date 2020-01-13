@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -55,7 +56,10 @@ public class TestingTeleop extends LinearOpMode {
     int intake = 0;
     boolean release = true;
 
+    int extake_position = 0; //-1 for in and 1 for out
+
     StoneScorer ss = new StoneScorer(this);
+    ElapsedTime clawTimer = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -74,10 +78,26 @@ public class TestingTeleop extends LinearOpMode {
 
             // x extends extake, y brings extake back in
             if(gamepad2.x) {
-                extakeSetup();
+                clawTimer.reset();
+                extake_position = 1;
+                clawServo.setPosition(0.62);
             }
             else if(gamepad2.y) {
-                extakeReturn();
+                clawTimer.reset();
+                extake_position = -1;
+                clawServo.setPosition(1);
+                ferrisServo.setPosition(0.6989);
+                rotationServo.setPosition(0.6);
+            }
+
+            if(extake_position == 1 && clawTimer.milliseconds() > 300) {
+                ferrisServo.setPosition(0.649);      //ferris servo has limits 0.577 and 0.0522
+                rotationServo.setPosition(0.028);  //rotation servo has limits 0.03 and 0.54
+                extake_position = 0;
+            }
+            if(extake_position == -1 && clawTimer.milliseconds() > 300) {
+                ferrisServo.setPosition(0.11);
+                extake_position = 0;
             }
 
             // temporary servo control
@@ -375,20 +395,6 @@ public class TestingTeleop extends LinearOpMode {
     // all the way out parallel to the ground is 0.55
     // middle position is 0.23
     // all the one down is 0.20
-
-    // EXTAKE OUT (extended over foundation, ready to release block)
-    public void extakeSetup() {
-        clawServo.setPosition(0.6594);
-        ferrisServo.setPosition(0.649);      //ferris servo has limits 0.577 and 0.0522
-        rotationServo.setPosition(0.028);  //rotation servo has limits 0.03 and 0.54
-    }
-
-    // EXTAKE IN (in the robot, picking up block from intake)
-    public void extakeReturn() {
-        clawServo.setPosition(1);
-        ferrisServo.setPosition(0.11);
-        rotationServo.setPosition(0.6);
-    }
 }
 // in the robot
 // ferris: 0.11
