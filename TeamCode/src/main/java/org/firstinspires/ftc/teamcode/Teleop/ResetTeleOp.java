@@ -23,7 +23,6 @@ public class ResetTeleOp extends LinearOpMode {
     Servo rotationServo, ferrisServo, foundationServoL, foundationServoR;
     Servo clawServo;
     DcMotorEx mtrVertical, leftRoller, rightRoller;
-    //Servo sFrontIntake;  < this servo was replaced by the DCMotor mtrIntake
 
     double fwd, strafe, rotate;
 
@@ -198,9 +197,7 @@ public class ResetTeleOp extends LinearOpMode {
             telemetry.addData("Left Grab: ", foundationServoL.getPosition());
             telemetry.addData("Right Grab: ", foundationServoR.getPosition());
             telemetry.addData("Claw Servo: ", clawServo.getPosition());
-<<<<<<< HEAD
             telemetry.addData("vertical slide: ", mtrVertical.getCurrentPosition());
-=======
             telemetry.addData("Right Intake:", rightRoller.getPower());
             telemetry.addData("Left Intake", leftRoller.getPower());
 >>>>>>> c520c15d47dba285dc63ec06b42dff941ffad198

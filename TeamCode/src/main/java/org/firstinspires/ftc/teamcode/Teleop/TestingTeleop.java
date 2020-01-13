@@ -15,12 +15,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-@TeleOp(name="TEST Intake/DT Teleop", group="Functionality")
+@TeleOp(name="Final Teleop", group="Functionality")
 public class TestingTeleop extends LinearOpMode {
 
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
-    Servo rotationServo, ferrisServo, foundationServoL, foundationServoR;
-    Servo clawServo;
+    Servo rotationServo, ferrisServo, clawServo, foundationServoL, foundationServoR;
     DcMotorEx mtrVertical, leftRoller, rightRoller;
 
     double fwd, strafe, rotate;
@@ -34,7 +33,7 @@ public class TestingTeleop extends LinearOpMode {
     double modifier = speedSwitch[1];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
 
-    //Keep default as field or cartesian?
+    // Keep default as field or cartesian?
     DriveMode driveMode = DriveMode.FIELD;
 
     private BNO055IMU imu;
@@ -54,6 +53,7 @@ public class TestingTeleop extends LinearOpMode {
     final double VERTICAL_MAX = 5000;
 
     int intake = 0;
+    boolean release = true;
 
     StoneScorer ss = new StoneScorer(this);
 
@@ -72,6 +72,7 @@ public class TestingTeleop extends LinearOpMode {
 
             mtrVertical.setPower(gamepad1.right_stick_y / 2);
 
+            // x extends extake, y brings extake back in
             if(gamepad2.x) {
                 extakeSetup();
             }
@@ -79,36 +80,41 @@ public class TestingTeleop extends LinearOpMode {
                 extakeReturn();
             }
 
-            if(gamepad1.a) {
-                rotationServo.setPosition(rotationServo.getPosition() + 0.005);
+            // temporary servo control
+            if(gamepad2.dpad_up) {
+                rotationServo.setPosition(rotationServo.getPosition() + 0.015);
                 //clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
-
-            if(gamepad1.b) {
-                rotationServo.setPosition(rotationServo.getPosition() - 0.005);
+            if(gamepad2.dpad_down) {
+                rotationServo.setPosition(rotationServo.getPosition() - 0.015);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
-
+            if(gamepad2.dpad_right) {
+                clawServo.setPosition(clawServo.getPosition() + 0.005);
+            }
+            if(gamepad2.dpad_left) {
+                clawServo.setPosition(clawServo.getPosition() - 0.005);
+            }
             if(gamepad2.a) {
                 ferrisServo.setPosition(ferrisServo.getPosition() + 0.005);
                 //clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
-
             if(gamepad2.b) {
                 ferrisServo.setPosition(ferrisServo.getPosition() - 0.005);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
 
-            if(gamepad1.dpad_up) {
+            // foundation hook control
+            if (gamepad1.dpad_up) {
                 foundationServoR.setPosition(foundationServoR.getPosition() + 0.005);
                 foundationServoL.setPosition(foundationServoL.getPosition() + 0.005);
-            }
-            else if(gamepad1.dpad_down) {
+            } else if(gamepad1.dpad_down) {
                 foundationServoR.setPosition(foundationServoR.getPosition() - 0.005);
                 foundationServoL.setPosition(foundationServoL.getPosition() - 0.005);
             }
 
-            if (gamepad1.right_bumper) {
+            // intake control - right bumper IN, left bumper OUT
+            if (release && gamepad1.right_bumper) {
                 if (intake == 0) {
                     leftRoller.setPower(intakeSpeed);
                     rightRoller.setPower(intakeSpeed);
@@ -118,9 +124,10 @@ public class TestingTeleop extends LinearOpMode {
                     rightRoller.setPower(0);
                     intake = 0;
                 }
+                release = false;
             }
 
-            if (gamepad1.left_bumper) {
+            if (release && gamepad1.left_bumper) {
                 if (intake == 0) {
                     leftRoller.setPower(-intakeSpeed);
                     rightRoller.setPower(-intakeSpeed);
@@ -130,10 +137,16 @@ public class TestingTeleop extends LinearOpMode {
                     rightRoller.setPower(0);
                     intake = 0;
                 }
+                release = false;
+            }
+
+            if (!gamepad1.right_bumper && !gamepad1.left_bumper) {
+                release = true;
             }
 
             telemetry.addData("Controls", "x");
 
+            // drivetrain control
             if(gamepad1.dpad_up) {
                 //todo figure out reset angle
                 imuInit();
@@ -168,11 +181,19 @@ public class TestingTeleop extends LinearOpMode {
 //                mtrVertical.setPower(0);
 //            }
 
-            if (gamepad2.right_stick_y > 0.1) {
-                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            if (gamepad2.right_stick_y > 0.1) {
+//                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                mtrVertical.setPower(gamepad2.right_stick_y / 2);
+//            } else if (gamepad2.right_stick_y < -0.1) {
+//                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                mtrVertical.setPower(gamepad2.right_stick_y);
+//            } else {
+//                mtrVertical.setPower(0);
+//            }
+
+            if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
                 mtrVertical.setPower(gamepad2.right_stick_y / 2);
-            } else if (gamepad2.right_stick_y < -0.1) {
-                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
                 mtrVertical.setPower(gamepad2.right_stick_y);
             } else {
                 mtrVertical.setPower(0);
@@ -183,23 +204,25 @@ public class TestingTeleop extends LinearOpMode {
             //1 bl
             //0 br
 
-            telemetry.addData("Left Grab: ", foundationServoL.getPosition());
-            telemetry.addData("Right Grab: ", foundationServoR.getPosition());
+            telemetry.addData("Left Foundation: ", foundationServoL.getPosition());
+            telemetry.addData("Right Foundation: ", foundationServoR.getPosition());
+
             telemetry.addData("Rotate Servo: ", rotationServo.getPosition());
             telemetry.addData("Ferris Servo: ", ferrisServo.getPosition());
             telemetry.addData("Claw Servo: ", clawServo.getPosition());
-            telemetry.addData("Right Intake:", rightRoller.getPower());
-            telemetry.addData("Left Intake", leftRoller.getPower());
-            telemetry.addData("Intake", intake);
-//            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
-//                    mtrVertical.getPower() + " ");
-//            telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());
-//            telemetry.addData("Front Roller Forward", frontRollerDirection);
-//            telemetry.addData("Middle Roller Forward", middleRollerDirection);
-//            telemetry.addData("vertical lift", mtrVertical.getCurrentPosition());
-//            telemetry.addData("imu angle", getHeading());
-//            telemetry.addData("drive mode", driveMode);
+
+            telemetry.addData("Right Intake Power: ", rightRoller.getPower());
+            telemetry.addData("Left Intake Power: ", leftRoller.getPower());
+            telemetry.addData("Intake Value: ", intake);
+            telemetry.addData("Release Status: ", release);
+
+            telemetry.addData("Vertical Lift", mtrVertical.getCurrentPosition());
+            telemetry.addData("IMU Angle", getHeading());
+            telemetry.addData("Drive Mode", driveMode);
+
             telemetry.update();
+
+            sleep(50);
         }
     }
 
@@ -228,8 +251,8 @@ public class TestingTeleop extends LinearOpMode {
         gyroParameters.loggingEnabled      = true;
         gyroParameters.loggingTag          = "IMU";
 
-        //Default is 32
-        //TODO check powerdrain
+        // Default is 32
+        // TODO check powerdrain
         gyroParameters.gyroBandwidth = BNO055IMU.GyroBandwidth.HZ523;
 
         imu.initialize(gyroParameters);
@@ -293,11 +316,12 @@ public class TestingTeleop extends LinearOpMode {
         foundationServoL = hardwareMap.get(Servo.class, "foundation_left");
         foundationServoR = hardwareMap.get(Servo.class, "foundation_right");
 
-        rotationServo.setPosition(0.585);
-        ferrisServo.setPosition(0.5594444444);
-        clawServo.setPosition(0.50);
-        foundationServoL.setPosition(0.205);
-        foundationServoR.setPosition(0.14444);
+        // initialization points for servos
+        rotationServo.setPosition(0.6);
+        ferrisServo.setPosition(0.11);
+        clawServo.setPosition(1);
+        foundationServoL.setPosition(0);
+        foundationServoR.setPosition(0);
 
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);
@@ -352,27 +376,27 @@ public class TestingTeleop extends LinearOpMode {
     // middle position is 0.23
     // all the one down is 0.20
 
+    // EXTAKE OUT (extended over foundation, ready to release block)
     public void extakeSetup() {
-        mtrVertical.setTargetPosition(1200);
-        mtrVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        mtrVertical.setPower(0.25);
-
-        ferrisServo.setPosition(0.577);      //ferris servo has limits 0.577 and 0.0522
-        rotationServo.setPosition(0.03);  //rotation servo has limits 0.03 and 0.54
-
-        mtrVertical.setTargetPosition(-600);
-        mtrVertical.setPower(0.25);
+        clawServo.setPosition(0.6594);
+        ferrisServo.setPosition(0.649);      //ferris servo has limits 0.577 and 0.0522
+        rotationServo.setPosition(0.028);  //rotation servo has limits 0.03 and 0.54
     }
 
+    // EXTAKE IN (in the robot, picking up block from intake)
     public void extakeReturn() {
-        mtrVertical.setTargetPosition(1200);
-        mtrVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        mtrVertical.setPower(0.25);
-
-        ferrisServo.setPosition(0.595);
-        rotationServo.setPosition(0.4049999999);
-
-        mtrVertical.setTargetPosition(-600);
-        mtrVertical.setPower(0.25);
+        clawServo.setPosition(1);
+        ferrisServo.setPosition(0.11);
+        rotationServo.setPosition(0.6);
     }
 }
+// in the robot
+// ferris: 0.11
+// rotation: 0.6
+// claw: 1
+
+// extake OUT
+// ferris: 0.649
+// rotation: 0.028
+
+
