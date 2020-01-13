@@ -192,9 +192,9 @@ public class TestingTeleop extends LinearOpMode {
 //            }
 
             if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 2);
+                mtrVertical.setPower(gamepad2.right_stick_y / 3);
             } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
-                mtrVertical.setPower(gamepad2.right_stick_y);
+                mtrVertical.setPower(gamepad2.right_stick_y / 3);
             } else {
                 mtrVertical.setPower(0);
             }

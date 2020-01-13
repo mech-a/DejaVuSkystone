@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Teleop;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 @TeleOp(name="Intake/DT Teleop", group="Functionality")
+@Disabled
 public class ResetTeleOp extends LinearOpMode {
 
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
@@ -200,7 +202,6 @@ public class ResetTeleOp extends LinearOpMode {
             telemetry.addData("vertical slide: ", mtrVertical.getCurrentPosition());
             telemetry.addData("Right Intake:", rightRoller.getPower());
             telemetry.addData("Left Intake", leftRoller.getPower());
->>>>>>> c520c15d47dba285dc63ec06b42dff941ffad198
 //            telemetry.addData("Mtr powers", " " + powFL + powFR + powBL + powBR +
 //                    mtrVertical.getPower() + " ");
 //            //telemetry.addData("Front Roller Forward", sFrontIntake.getPosition());

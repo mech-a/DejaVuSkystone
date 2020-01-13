@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name="Pushbot: Teleop POV", group="Pushbot")
+@Disabled
 public class STEMCodeTrainingHolo extends LinearOpMode {
 
     public DcMotor mtr0;
