@@ -53,7 +53,7 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         rightRear = hardwareMap.get(DcMotorEx.class, "br");
         rightFront = hardwareMap.get(DcMotorEx.class, "fr");
 
-        motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
+        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
             if (RUN_USING_ENCODER) {
@@ -98,7 +98,7 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         for (int i = 0; i < motors.size(); i++) {
             double inches;
             int currentPos = motors.get(i).getCurrentPosition();
-            if (i % 2 == 0) {
+            if (i % 3 == 0) {
                 inches = frontEncoderTicksToInches(currentPos);
             } else {
                 inches = backEncoderTicksToInches(currentPos);
@@ -114,7 +114,7 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         for (int i = 0; i < motors.size(); i++) {
             double inches;
             double velocity = motors.get(i).getVelocity();
-            if (i % 2 == 0) {
+            if (i % 3 == 0) {
                 inches = frontEncoderTicksToInches(velocity);
             } else {
                 inches = backEncoderTicksToInches(velocity);
