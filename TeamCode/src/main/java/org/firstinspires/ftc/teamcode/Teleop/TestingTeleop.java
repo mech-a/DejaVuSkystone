@@ -91,16 +91,16 @@ public class TestingTeleop extends LinearOpMode {
                 extake_position = -1;
                 clawServo.setPosition(1);
                 ferrisServo.setPosition(0.6989);
-                rotationServo.setPosition(0.6);
+                rotationServo.setPosition(0.66);
             }
 
             if(extake_position == 1 && clawTimer.milliseconds() > 300) {
-                ferrisServo.setPosition(0.649);      //ferris servo has limits 0.577 and 0.0522
-                rotationServo.setPosition(0.028);  //rotation servo has limits 0.03 and 0.54
+                ferrisServo.setPosition(0.86);      //ferris servo has limits 0.577 and 0.0522
+                rotationServo.setPosition(0.0);  //rotation servo has limits 0.03 and 0.54
                 extake_position = 0;
             }
             if(extake_position == -1 && clawTimer.milliseconds() > 300) {
-                ferrisServo.setPosition(0.11);
+                ferrisServo.setPosition(0.32);
                 extake_position = 0;
             }
 
@@ -341,8 +341,8 @@ public class TestingTeleop extends LinearOpMode {
         foundationServoR = hardwareMap.get(Servo.class, "foundation_right");
 
         // initialization points for servos
-        rotationServo.setPosition(0.6);
-        ferrisServo.setPosition(0.11);
+        rotationServo.setPosition(0.66);
+        ferrisServo.setPosition(0.32);
         clawServo.setPosition(1);
         foundationServoL.setPosition(0);
         foundationServoR.setPosition(0);
