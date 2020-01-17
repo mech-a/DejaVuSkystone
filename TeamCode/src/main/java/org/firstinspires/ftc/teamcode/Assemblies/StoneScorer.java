@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class StoneScorer implements Subassembly {
     DcMotorEx mtrVertical, leftRoller, rightRoller;
-    Servo rotationServo, ferrisServo, clawServo, foundationServoL, foundationServoR;
+    Servo rotationServo, ferrisServo, clawServo, foundationServo;
 
     LinearOpMode caller;
     Telemetry telemetry;
@@ -32,8 +32,7 @@ public class StoneScorer implements Subassembly {
         rotationServo = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[0]);
         ferrisServo = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[1]);
         clawServo = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[2]);
-        foundationServoL = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[3]);
-        foundationServoR = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[4]);
+        foundationServo = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[3]);
 
         // MOTORS SETUP ///////////////////////////////////////////////////////////////////////////
 
@@ -52,13 +51,11 @@ public class StoneScorer implements Subassembly {
         rotationServo.setPosition(0.66);
         ferrisServo.setPosition(0.32);
         clawServo.setPosition(1);
-        foundationServoL.setPosition(0);
-        foundationServoR.setPosition(0);
+        foundationServo.setPosition(0);
 
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);
-        foundationServoR.setDirection(Servo.Direction.FORWARD);
-        foundationServoL.setDirection(Servo.Direction.REVERSE);
+        foundationServo.setDirection(Servo.Direction.FORWARD);
         clawServo.setDirection(Servo.Direction.FORWARD);
     }
 
@@ -112,14 +109,12 @@ public class StoneScorer implements Subassembly {
     // lower servo to hook foundation
     // TODO: FIND AND PUT IN CORRECT VALUES
     public void hookFoundation() {
-        foundationServoL.setPosition(1);
-        foundationServoR.setPosition(1);
+        foundationServo.setPosition(1);
     }
 
     // raise servo to unhook foundation
     public void unhookFoundation() {
-        foundationServoL.setPosition(0);
-        foundationServoR.setPosition(0);
+        foundationServo.setPosition(0);
     }
 
     // raise or lower vertical slide
