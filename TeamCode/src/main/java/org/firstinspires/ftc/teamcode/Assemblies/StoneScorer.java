@@ -64,6 +64,12 @@ public class StoneScorer implements Subassembly {
 
     }
 
+    //TODO switch out functions in roadrunner based autons w this
+    public void setBlock(double d, double d2) {
+
+    }
+
+
     public StoneScorer(LinearOpMode caller) {
         this.caller = caller;
         telemetry = caller.telemetry;
