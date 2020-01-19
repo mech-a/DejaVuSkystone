@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Teleop;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -16,8 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-@TeleOp(name="Testing Teleop", group="Functionality")
-public class TestingTeleop extends LinearOpMode {
+@TeleOp(name="Final Teleop", group="Functionality")
+public class TestingTeleopBounded extends LinearOpMode {
 
     DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     DcMotorEx mtrVertical, leftRoller, rightRoller;
@@ -50,8 +49,8 @@ public class TestingTeleop extends LinearOpMode {
     double intakeSpeed = 0.75;
     // top is -2700
     // bottom is starting, which is 0
-    final double VERTICAL_MIN = -5000;
-    final double VERTICAL_MAX = 5000;
+    final double VERTICAL_MIN = -2700;
+    final double VERTICAL_MAX = 0;
 
     int intake = 0;
     boolean release = true;
@@ -73,8 +72,6 @@ public class TestingTeleop extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-
-            mtrVertical.setPower(gamepad1.right_stick_y / 2);
 
             // x extends extake, y brings extake back in
             if(gamepad2.x) {
@@ -191,30 +188,17 @@ public class TestingTeleop extends LinearOpMode {
             mtrBL.setPower(powBL);
             mtrBR.setPower(powBR);
 
-//            if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
-//                mtrVertical.setPower(gamepad2.right_stick_y / 3);
-//            } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
-//                mtrVertical.setPower(gamepad2.right_stick_y / 3);
-//            } else if (gamepad2.right_stick_y < 0.1 && gamepad2.right_stick_y > -0.1) {
-//                mtrVertical.setPower(0);
-//            } else {
-//                mtrVertical.setPower(0);
-//            }
-
-//            if (gamepad2.right_stick_y > 0.1) {
-//                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                mtrVertical.setPower(gamepad2.right_stick_y / 2);
-//            } else if (gamepad2.right_stick_y < -0.1) {
-//                mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                mtrVertical.setPower(gamepad2.right_stick_y);
-//            } else {
-//                mtrVertical.setPower(0);
-//            }
-
-            if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 3);
-            } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 3);
+            if (-gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
+                mtrVertical.setPower(-gamepad2.right_stick_y/2);
+            } else if (-gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
+                if(Math.abs(-gamepad2.right_stick_y) > 0.5) {
+                    mtrVertical.setPower(-gamepad2.right_stick_y);
+                }
+                else {
+                    mtrVertical.setPower(-gamepad2.right_stick_y/2);
+                }
+            } else if (-gamepad2.right_stick_y < 0.1 && -gamepad2.right_stick_y > -0.1) {
+                mtrVertical.setPower(0);
             } else {
                 mtrVertical.setPower(0);
             }
@@ -379,7 +363,6 @@ public class TestingTeleop extends LinearOpMode {
         mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // encoder is reset to 0 at whatever starting position it is in
-        mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // 0 br
