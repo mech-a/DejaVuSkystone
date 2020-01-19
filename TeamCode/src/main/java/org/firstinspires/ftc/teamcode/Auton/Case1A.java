@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
  * This is an example of a more complex path to really test the tuning.
  */
 
-// CASE B: Away from wall
+// CASE A: Next to wall
 @Autonomous(group = "drive")
-public class Case2B extends LinearOpMode {
+public class Case1A extends LinearOpMode {
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
@@ -33,7 +33,7 @@ public class Case2B extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        //starting at -35, -60
+        //starting at -35, 60
         d.setPoseEstimate(new Pose2d(-35, -60, 0));
 
         //following needs to be matched to case 1, copied over from case 3
@@ -59,24 +59,12 @@ public class Case2B extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(55, -28, -30))
+                        .splineTo(new Pose2d(20, -50, 0))
                         .build()
         );
 
         //extake
         ss.setBlock(-10, -10);
-        //foundation
-        ss.setBlock(10, 10);
-
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .splineTo(new Pose2d(35, -54, 0))
-                        .splineTo(new Pose2d (50, -54, 0))
-                        .build()
-        );
-
-        //lift foundation hooks
-        ss.setBlock(10, 10);
 
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.followTrajectorySync(
@@ -100,17 +88,17 @@ public class Case2B extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(50, -54, 0))
+                        .splineTo(new Pose2d(20, -50, 0))
                         .build()
         );
 
         //extake
         ss.setBlock(-10, -10);
 
-        //parking away from wall
+        //parking next to wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(0, -37, 0))
+                        .splineTo(new Pose2d(0, -60, 0))
                         .build()
         );
     }

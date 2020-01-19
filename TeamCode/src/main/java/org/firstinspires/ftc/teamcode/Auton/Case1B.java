@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 // CASE B: Away from wall
 @Autonomous(group = "drive")
-public class Case2B extends LinearOpMode {
+public class Case1B extends LinearOpMode {
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
@@ -59,24 +59,12 @@ public class Case2B extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(55, -28, -30))
+                        .splineTo(new Pose2d(20, -50, 0))
                         .build()
         );
 
         //extake
         ss.setBlock(-10, -10);
-        //foundation
-        ss.setBlock(10, 10);
-
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .splineTo(new Pose2d(35, -54, 0))
-                        .splineTo(new Pose2d (50, -54, 0))
-                        .build()
-        );
-
-        //lift foundation hooks
-        ss.setBlock(10, 10);
 
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.followTrajectorySync(
@@ -100,7 +88,7 @@ public class Case2B extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(50, -54, 0))
+                        .splineTo(new Pose2d(20, -50, 0))
                         .build()
         );
 
