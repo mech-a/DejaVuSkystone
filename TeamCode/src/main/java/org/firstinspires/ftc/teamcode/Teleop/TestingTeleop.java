@@ -94,7 +94,7 @@ public class TestingTeleop extends LinearOpMode {
                 rotationServo.setPosition(0.66);
             }
 
-            if(extake_position == 1 && clawTimer.milliseconds() > 300) {
+            if(extake_position == 1 && clawTimer.milliseconds() > 500) {
                 ferrisServo.setPosition(0.86);      //ferris servo has limits 0.577 and 0.0522
                 rotationServo.setPosition(0.0);  //rotation servo has limits 0.03 and 0.54
                 extake_position = 0;
