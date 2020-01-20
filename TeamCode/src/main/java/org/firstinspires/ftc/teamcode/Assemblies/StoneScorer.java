@@ -3,52 +3,60 @@ package org.firstinspires.ftc.teamcode.Assemblies;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import static java.lang.Thread.sleep;
-
 public class StoneScorer implements Subassembly {
-    DcMotor mtrH, mtrV, linrA, frontRoller;
-    CRServo roll1, roll2, roll3;
-    Servo flipper, grabber;
+    DcMotorEx mtrVertical, leftRoller, rightRoller;
+    Servo rotationServo, ferrisServo, clawServo, foundationServo;
+
     LinearOpMode caller;
     Telemetry telemetry;
-    public static double speedH = 0.5;
-    public static final int distanceExtend = 2400; // was 1600
+
+    int intake = 0;
+    boolean release = true;
+    int extake_position = 0; // -1 for in and 1 for out
+
+    ElapsedTime clawTimer = new ElapsedTime();
 
     @Override
     public void init() {
-        mtrH = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[0]);
-        mtrV = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[1]);
-        linrA = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[2]);
-        frontRoller = caller.hardwareMap.get(DcMotor.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[3]);
+        mtrVertical = caller.hardwareMap.get(DcMotorEx.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[0]);
+        leftRoller = caller.hardwareMap.get(DcMotorEx.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[1]);
+        rightRoller = caller.hardwareMap.get(DcMotorEx.class, ConfigurationData.BLOCK_MANIPULATOR_MOTOR_NAMES[2]);
 
-        roll1 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[0]);
-        roll2 = caller.hardwareMap.get(CRServo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[1]);
-        //flipper = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[2]);
-        //grabber = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[3]);
+        rotationServo = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[0]);
+        ferrisServo = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[1]);
+        clawServo = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[2]);
+        foundationServo = caller.hardwareMap.get(Servo.class, ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES[3]);
 
-        mtrH.setDirection(DcMotorSimple.Direction.REVERSE);
-        mtrV.setDirection(DcMotorSimple.Direction.REVERSE);
-        linrA.setDirection(DcMotorSimple.Direction.FORWARD );
-        frontRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        // MOTORS SETUP ///////////////////////////////////////////////////////////////////////////
 
-        mtrH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrV.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linrA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRoller.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRoller.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        mtrH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        linrA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // encoder is reset to 0 at whatever starting position it is in
+        mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        flipper = caller.hardwareMap.get(Servo.class, "arm_servo");
-        grabber = caller.hardwareMap.get(Servo.class, "gripper_servo");
+        // SERVOS SETUP ///////////////////////////////////////////////////////////////////////////
 
-        flipper.setPosition(0.21);
+        // initialization points for servos
+        rotationServo.setPosition(0.66);
+        ferrisServo.setPosition(0.32);
+        clawServo.setPosition(1);
+        foundationServo.setPosition(0);
+
+        rotationServo.setDirection(Servo.Direction.FORWARD);
+        ferrisServo.setDirection(Servo.Direction.FORWARD);
+        foundationServo.setDirection(Servo.Direction.FORWARD);
+        clawServo.setDirection(Servo.Direction.FORWARD);
     }
 
     @Override
@@ -56,154 +64,78 @@ public class StoneScorer implements Subassembly {
 
     }
 
+    //TODO switch out functions in roadrunner based autons w this
+    public void setBlock(double d, double d2) {
+
+    }
+
+
     public StoneScorer(LinearOpMode caller) {
         this.caller = caller;
         telemetry = caller.telemetry;
     }
 
-    // extend the horizontal to parameter value, lower the horizontal slide to parameter value
-    public void setBlock(int extendHVal, int dropVal) {
-        extendH(extendHVal);
-        liftH(dropVal);
+    // set intake motors to intakePower
+    public void intake(int intakePower) {
+        leftRoller.setPower(intakePower);
+        rightRoller.setPower(intakePower);
     }
 
-    // start rolling the first two intake wheels, retract the horizontal,
-    public void intake(int dirRoll, int retractHVal) {
-        roll2(dirRoll);
-        extendH(retractHVal / 2);
-        liftH(-300);
-        extendH(retractHVal / 4);
-        liftH(-200);
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    // extends extake
+    public void extakeOut() {
+        leftRoller.setPower(0);
+        rightRoller.setPower(0);
+        intake = 0;
+
+        clawTimer.reset();
+        extake_position = 1;
+        clawServo.setPosition(0.62);
+
+        if(extake_position == 1 && clawTimer.milliseconds() > 300) {
+            ferrisServo.setPosition(0.86);      //ferris servo has limits 0.577 and 0.0522
+            rotationServo.setPosition(0.00);  //rotation servo has limits 0.03 and 0.54
+            extake_position = 0;
         }
     }
 
-    public void extake(int extendHVal, int liftVal, int dirRoll, int retractHVal) {
-        extendH(extendHVal);
-        liftH(liftVal);
+    // pull extake in
+    public void extakeIn() {
+        clawTimer.reset();
+        extake_position = -1;
+        clawServo.setPosition(1);
+        ferrisServo.setPosition(0.6989);
+        rotationServo.setPosition(0.66);
 
-        // negative value entered here for dirRoll
-        roll2(dirRoll);
-        try {
-            sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(extake_position == -1 && clawTimer.milliseconds() > 300) {
+            ferrisServo.setPosition(0.32);
+            extake_position = 0;
         }
-        extendH(retractHVal);
     }
 
-    // used for both extending and retracting the horizontal slides
-    public void extendH(int distance) {
-        mtrH.setTargetPosition(distance);
-        mtrH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    // lower servo to hook foundation
+    // TODO: FIND AND PUT IN CORRECT VALUES
+    public void hookFoundation() {
+        foundationServo.setPosition(1);
+    }
+
+    // raise servo to unhook foundation
+    public void unhookFoundation() {
+        foundationServo.setPosition(0);
+    }
+
+    // raise or lower vertical slide
+    public void mtrVertical(int distance) {
+        mtrVertical.setTargetPosition(distance);
+        mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (!caller.isStopRequested()) {
-            mtrH.setPower(speedH);
-        }
-
-        while (!caller.isStopRequested() && (mtrH.isBusy())) {
-            //TODO change telemetry name to enum
-            telemetry.addData("mtrHorizontal", "%7d : %7d",
-                    mtrH.getCurrentPosition(), distance);
-            telemetry.update();
-        }
-
-        if (!caller.isStopRequested()) {
-            mtrH.setPower(0);
-            mtrH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void roll2(int direction) {
-        frontRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        roll1.setDirection(CRServo.Direction.FORWARD);
-
-        if (direction == 1) {
-            frontRoller.setPower(direction * 0.50);
-            roll1.setPower(direction);
-        } else if (direction == -1) {
-            frontRoller.setPower(direction);
-            roll1.setDirection(CRServo.Direction.REVERSE);
-            roll1.setPower(1);
-        } else if (direction == 0) {
-            frontRoller.setPower(0);
-            roll1.setPower(0);
-        }
-
-
-    }
-
-    public void roll4(int direction) {
-        frontRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        roll1.setDirection(CRServo.Direction.FORWARD);
-        roll2.setDirection(CRServo.Direction.FORWARD);
-        roll3.setDirection(CRServo.Direction.FORWARD);
-
-        frontRoller.setPower(direction * 0.50);
-        roll1.setPower(direction);
-        roll2.setPower(direction);
-        roll3.setPower(direction);
-    }
-
-    // resets linear actuator motor position to 0, runs to position
-    public void liftH(int position) {
-        linrA.setTargetPosition(position);
-        linrA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linrA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if (!caller.isStopRequested()) {
-            linrA.setPower(speedH);
-        }
-
-        while (!caller.isStopRequested() && (linrA.isBusy())) {
-            //TODO change telemetry name to enum
-            telemetry.addData("mtrHorizontal", "%7d : %7d",
-                    linrA.getCurrentPosition(), position);
+            mtrVertical.setPower(1);
         }
 
         if (!caller.isStopRequested()) {
-            linrA.setPower(0);
-            linrA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mtrVertical.setPower(0);
+            mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-    }
-
-    public void liftV(int distance) {
-        mtrV.setTargetPosition(distance);
-        mtrV.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrV.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if (!caller.isStopRequested()) {
-            mtrV.setPower(speedH);
-        }
-
-        while (!caller.isStopRequested() && (linrA.isBusy())) {
-            //TODO change telemetry name to enum
-            telemetry.addData("mtrHorizontal", "%7d : %7d",
-                    mtrV.getCurrentPosition(), distance);
-        }
-
-        if (!caller.isStopRequested()) {
-            mtrV.setPower(0);
-            mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void hookFoundation(int hookDir, int liftVal) {
-        // 1 if it is hooking on
-        // anything but 1 if it is releasing the foundation
-        if(hookDir == 1) {
-            // extend the horizontal slide to 2400
-            extendH(distanceExtend);
-            liftH(liftVal);
-        } else {
-            liftH(-liftVal);
-            // bring in the horizontal slide
-            extendH(-distanceExtend + 600);
-        }
-
     }
 }

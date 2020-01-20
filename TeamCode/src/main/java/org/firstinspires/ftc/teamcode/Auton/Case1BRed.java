@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 /*
  * This is an example of a more complex path to really test the tuning.
@@ -14,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 // CASE B: Away from wall
 @Autonomous(group = "drive")
-public class Case2B extends LinearOpMode {
+public class Case1BRed extends LinearOpMode {
     Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
@@ -33,24 +35,24 @@ public class Case2B extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        //starting at -35, -60
-        d.setPoseEstimate(new Pose2d(-35, -60, 0));
+        //starting at -35, 60
+        d.setPoseEstimate(new Pose2d(-35, 60, 0));
 
         //following needs to be matched to case 1, copied over from case 3
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-28, -30, 0))
+                            .splineTo(new Pose2d(-28, 30, 0))
                             .build() );
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-35, -30, 0))
+                            .splineTo(new Pose2d(-35, 30, 0))
                             .build() );
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.RIGHT) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-45, -30, 0))
+                            .splineTo(new Pose2d(-45, 30, 0))
                             .build() );
         }
 
@@ -59,39 +61,27 @@ public class Case2B extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(55, -28, -30))
+                        .splineTo(new Pose2d(20, 50, 0))
                         .build()
         );
 
         //extake
         ss.setBlock(-10, -10);
-        //foundation
-        ss.setBlock(10, 10);
-
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .splineTo(new Pose2d(35, -54, 0))
-                        .splineTo(new Pose2d (50, -54, 0))
-                        .build()
-        );
-
-        //lift foundation hooks
-        ss.setBlock(10, 10);
 
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-52, -30, 0))
+                            .splineTo(new Pose2d(-52, 30, 0))
                             .build() );
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-60, -30, 0))
+                            .splineTo(new Pose2d(-60, 30, 0))
                             .build() );
         } else if (skyStoneLocation == Sensors.SkyStoneLocation.RIGHT) {
             d.followTrajectorySync(
                     d.trajectoryBuilder()
-                            .splineTo(new Pose2d(-68, -30, 0))
+                            .splineTo(new Pose2d(-68, 30, 0))
                             .build() );
         }
 
@@ -100,7 +90,7 @@ public class Case2B extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(50, -54, 0))
+                        .splineTo(new Pose2d(20, 50, 0))
                         .build()
         );
 
@@ -110,7 +100,7 @@ public class Case2B extends LinearOpMode {
         //parking away from wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(0, -37, 0))
+                        .splineTo(new Pose2d(0, 37, 0))
                         .build()
         );
     }
