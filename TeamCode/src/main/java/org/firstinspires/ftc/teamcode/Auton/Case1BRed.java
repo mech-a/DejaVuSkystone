@@ -15,9 +15,9 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
  */
 
 // CASE B: Away from wall
-@Autonomous(group = "drive")
+@Autonomous(name = "Case 1 B Red", group = "drive")
 public class Case1BRed extends LinearOpMode {
-    Drivetrain d = new Drivetrain(this);
+    //Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
 
@@ -25,9 +25,11 @@ public class Case1BRed extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        d.init();
+     //   d.init();
         ss.init();
         s.init();
+
+        SampleMecanumDriveBase d = new SampleMecanumDriveREV(hardwareMap);
 
         waitForStart();
 
@@ -57,7 +59,9 @@ public class Case1BRed extends LinearOpMode {
         }
 
         //intake
-        ss.setBlock(10, 10); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
+        ss.intake(0.75);
+        sleep(1500);
+        ss.intake(0);
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
@@ -66,7 +70,8 @@ public class Case1BRed extends LinearOpMode {
         );
 
         //extake
-        ss.setBlock(-10, -10);
+        ss.extakeOut();
+        ss.extakeIn();
 
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.followTrajectorySync(
@@ -86,7 +91,9 @@ public class Case1BRed extends LinearOpMode {
         }
 
         //intake
-        ss.setBlock(10, 10); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
+        ss.intake(0.75);
+        sleep(1500);
+        ss.intake(0);
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
@@ -95,7 +102,8 @@ public class Case1BRed extends LinearOpMode {
         );
 
         //extake
-        ss.setBlock(-10, -10);
+        ss.extakeOut();
+        ss.extakeIn();
 
         //parking away from wall
         d.followTrajectorySync(

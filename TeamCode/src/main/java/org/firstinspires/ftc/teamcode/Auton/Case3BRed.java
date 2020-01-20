@@ -17,13 +17,15 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 // CASE A: Next to wall
 @Autonomous(name = "Case 3 B Red", group = "Auton")
 public class Case3BRed extends LinearOpMode {
-    Drivetrain d = new Drivetrain(this);
+   // Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        d.init();
+       // d.init();
         ss.init();
+
+        SampleMecanumDriveBase d = new SampleMecanumDriveREV(hardwareMap);
 
         waitForStart();
 
@@ -39,7 +41,7 @@ public class Case3BRed extends LinearOpMode {
                         .build()
         );
 
-        ss.setBlock(10, 10);
+        ss.hookFoundation();
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
@@ -48,7 +50,7 @@ public class Case3BRed extends LinearOpMode {
                         .build()
         );
 
-        ss.setBlock(-10, -10);
+        ss.unhookFoundation();
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()

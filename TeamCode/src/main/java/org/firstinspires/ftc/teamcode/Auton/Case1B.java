@@ -7,15 +7,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 /*
  * This is an example of a more complex path to really test the tuning.
  */
 
 // CASE B: Away from wall
-@Autonomous(group = "drive")
+@Autonomous(name = "Case 1 B Blue", group = "drive")
 public class Case1B extends LinearOpMode {
-    Drivetrain d = new Drivetrain(this);
+   // Drivetrain d = new Drivetrain(this);
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
 
@@ -23,9 +25,11 @@ public class Case1B extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        d.init();
+        //d.init();
         ss.init();
         s.init();
+
+        SampleMecanumDriveBase d = new SampleMecanumDriveREV(hardwareMap);
 
         waitForStart();
 
@@ -55,7 +59,9 @@ public class Case1B extends LinearOpMode {
         }
 
         //intake
-        ss.setBlock(10, 10); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
+        ss.intake(0.75);
+        sleep(1500);
+        ss.intake(0);
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
@@ -64,7 +70,8 @@ public class Case1B extends LinearOpMode {
         );
 
         //extake
-        ss.setBlock(-10, -10);
+        ss.extakeOut();
+        ss.extakeIn();
 
         if (skyStoneLocation == Sensors.SkyStoneLocation.LEFT) {
             d.followTrajectorySync(
@@ -84,7 +91,9 @@ public class Case1B extends LinearOpMode {
         }
 
         //intake
-        ss.setBlock(10, 10); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
+        ss.intake(0.75);
+        sleep(1500);
+        ss.intake(0);
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
@@ -93,7 +102,8 @@ public class Case1B extends LinearOpMode {
         );
 
         //extake
-        ss.setBlock(-10, -10);
+        ss.extakeOut();
+        ss.extakeIn();
 
         //parking away from wall
         d.followTrajectorySync(

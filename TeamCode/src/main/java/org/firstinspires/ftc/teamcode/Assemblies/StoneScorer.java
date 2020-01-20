@@ -61,10 +61,17 @@ public class StoneScorer implements Subassembly {
         telemetry = caller.telemetry;
     }
 
+<<<<<<< Updated upstream
     // extend the horizontal to parameter value, lower the horizontal slide to parameter value
     public void setBlock(int extendHVal, int dropVal) {
         extendH(extendHVal);
         liftH(dropVal);
+=======
+    // set intake motors to intakePower
+    public void intake(double intakePower) {
+        leftRoller.setPower(intakePower);
+        rightRoller.setPower(intakePower);
+>>>>>>> Stashed changes
     }
 
     // start rolling the first two intake wheels, retract the horizontal,
