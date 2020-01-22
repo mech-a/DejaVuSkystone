@@ -74,7 +74,7 @@ public class TestingTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            mtrVertical.setPower(gamepad1.right_stick_y / 2);
+            //mtrVertical.setPower(gamepad1.right_stick_y / 2);
 
             // x extends extake, y brings extake back in
             if(gamepad2.x) {
@@ -342,7 +342,7 @@ public class TestingTeleop extends LinearOpMode {
         rotationServo.setPosition(0.66);
         ferrisServo.setPosition(0.32);
         clawServo.setPosition(1);
-        foundationServo.setPosition(0);
+        foundationServo.setPosition(0.8);
 
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);

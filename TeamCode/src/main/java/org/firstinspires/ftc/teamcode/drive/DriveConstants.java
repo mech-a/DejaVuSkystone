@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
-import com.qualcomm.hardware.motors.GoBILDA5202Series;
-import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+
+import org.firstinspires.ftc.teamcode.GoBILDA5202SeriesDeja;
 
 /*
  * Constants shared between multiple drive types.
@@ -17,8 +17,6 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
  *
  * These are not the only parameters; some are located in the localizer classes, drive base classes,
  * and op modes themselves.
- *
- * Adapted for different front and back gear ratios
  */
 @Config
 public class DriveConstants {
@@ -30,14 +28,15 @@ public class DriveConstants {
      * @DeviceProperties and @MotorType annotations.
      */
     private static final MotorConfigurationType MOTOR_CONFIG =
-            MotorConfigurationType.getMotorType(GoBILDA5202Series.class);
+            MotorConfigurationType.getMotorType(GoBILDA5202SeriesDeja.class);
 
     /*
      * Set the first flag appropriately. If using the built-in motor velocity PID, update
      * MOTOR_VELO_PID with the tuned coefficients from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static final PIDCoefficients MOTOR_VELO_PID = null; //TODO update with coefficients
+    public static final PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(24.5, 1.5, 2);
+            //null;
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -47,9 +46,8 @@ public class DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    public static double WHEEL_RADIUS = 4;
-    public static double FRONT_GEAR_RATIO = 0.9, BACK_GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double GEAR_RATIO = 1;
+    public static double WHEEL_RADIUS = 2;
+    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
     public static double TRACK_WIDTH = 15;
 
     /*
@@ -71,32 +69,17 @@ public class DriveConstants {
      * forces acceleration-limited profiling).
      */
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(
-            30.0, 30.0, 0.0,
+            30.0, 10.0, 0.0,
             Math.toRadians(180.0), Math.toRadians(180.0), 0.0
     );
+
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / MOTOR_CONFIG.getTicksPerRev();
     }
 
-    public static double frontEncoderTicksToInches(double ticks) {
-        return WHEEL_RADIUS * 2 * Math.PI * FRONT_GEAR_RATIO * ticks / MOTOR_CONFIG.getTicksPerRev();
-    }
-
-    public static double backEncoderTicksToInches(double ticks) {
-        return WHEEL_RADIUS * 2 * Math.PI * BACK_GEAR_RATIO * ticks / MOTOR_CONFIG.getTicksPerRev();
-    }
-
     public static double rpmToVelocity(double rpm) {
         return rpm * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
-    }
-
-    public static double frontRpmToVelocity(double rpm) {
-        return rpm * FRONT_GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
-    }
-
-    public static double backRpmToVelocity(double rpm) {
-        return rpm * BACK_GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
     }
 
     public static double getMaxRpm() {
