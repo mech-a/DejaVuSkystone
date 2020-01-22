@@ -21,6 +21,7 @@ public class Drivetrain implements Subassembly {
     //   B
 
     private static final int NUM_MOTORS_DT = 4;
+    private boolean isInitialized = false;
 
     DcMotorEx mtrFL, mtrFR, mtrBR, mtrBL;
     ArrayList<DcMotorEx> motors;
@@ -60,9 +61,10 @@ public class Drivetrain implements Subassembly {
 
             motors.add(temp);
         }
+        isInitialized = true;
     }
-    
-    public void status() {
 
+    public void status() {
+        telemetry.addData("Drivetrain Assem Init?", isInitialized);
     }
 }
