@@ -92,7 +92,7 @@ public class TestingTeleop extends LinearOpMode {
                 ferrisServo.setPosition(0.6989);
                 rotationServo.setPosition(0.66);
             }
-            else if (gamepad1.a) {
+            else if (gamepad2.a) {
                 extake_position = 1;
             }
 
