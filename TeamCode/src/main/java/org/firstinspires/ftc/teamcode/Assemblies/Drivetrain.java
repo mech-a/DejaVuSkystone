@@ -67,4 +67,17 @@ public class Drivetrain implements Subassembly {
     public void status() {
         telemetry.addData("Drivetrain Assem Init?", isInitialized);
     }
+
+    //TODO shift power normalization into this function, bad coding practice rn
+    public void setPowers(double fl, double fr, double br, double bl) {
+        mtrFL.setPower(fl);
+        mtrFR.setPower(fr);
+        mtrBR.setPower(br);
+        mtrBL.setPower(bl);
+    }
+
+    public void setPowers(double[] powers) {
+        for(int i = 0; i<powers.length; i++)
+            motors.get(i).setPower(i);
+    }
 }
