@@ -31,20 +31,16 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
+import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 
 @Autonomous(name = "Case 4 Red", group = "Auton")
 public class Case4ARed extends LinearOpMode {
 
-    Drivetrain d = new Drivetrain(this);
+    RRMergedDrivetrain d = new RRMergedDrivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
     @Override

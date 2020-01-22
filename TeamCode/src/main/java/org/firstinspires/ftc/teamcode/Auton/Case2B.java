@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
+import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 // CASE B: Away from wall
 @Autonomous(group = "drive")
 public class Case2B extends LinearOpMode {
-    Drivetrain d = new Drivetrain(this);
+    RRMergedDrivetrain d = new RRMergedDrivetrain(this);
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
 

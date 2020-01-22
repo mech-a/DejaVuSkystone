@@ -4,11 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
-import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
+import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 /*
  * This is an example of a more complex path to really test the tuning.
@@ -17,7 +14,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 // CASE A: Next to wall
 @Autonomous(name = "Case 3 B Red", group = "Auton")
 public class Case3BRed extends LinearOpMode {
-    Drivetrain d = new Drivetrain(this);
+    RRMergedDrivetrain d = new RRMergedDrivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
