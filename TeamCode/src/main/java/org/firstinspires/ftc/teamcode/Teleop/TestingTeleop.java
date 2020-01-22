@@ -83,7 +83,6 @@ public class TestingTeleop extends LinearOpMode {
                 intake = 0;
 
                 clawTimer.reset();
-                extake_position = 1;
                 clawServo.setPosition(0.62);
             }
             else if(gamepad2.y) {
@@ -92,6 +91,9 @@ public class TestingTeleop extends LinearOpMode {
                 clawServo.setPosition(1);
                 ferrisServo.setPosition(0.6989);
                 rotationServo.setPosition(0.66);
+            }
+            else if (gamepad1.a) {
+                extake_position = 1;
             }
 
             if(extake_position == 1 && clawTimer.milliseconds() > 500) {
@@ -130,9 +132,9 @@ public class TestingTeleop extends LinearOpMode {
 
             // foundation hook control
             if (gamepad1.dpad_up) {
-                foundationServo.setPosition(foundationServo.getPosition() + 0.005);
+                foundationServo.setPosition(foundationServo.getPosition() + 0.01);
             } else if(gamepad1.dpad_down) {
-                foundationServo.setPosition(foundationServo.getPosition() - 0.005);
+                foundationServo.setPosition(foundationServo.getPosition() - 0.01);
             }
 
             // intake control - right bumper IN, left bumper OUT
