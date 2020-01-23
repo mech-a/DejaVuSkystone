@@ -90,7 +90,7 @@ public class TestingTeleop extends LinearOpMode {
                 extake_position = -1;
                 clawServo.setPosition(1);
                 ferrisServo.setPosition(0.6989);
-                rotationServo.setPosition(0.66);
+                rotationServo.setPosition(0.615);
             }
             else if (gamepad2.a) {
                 extake_position = 1;
@@ -98,7 +98,7 @@ public class TestingTeleop extends LinearOpMode {
 
             if(extake_position == 1 && clawTimer.milliseconds() > 500) {
                 ferrisServo.setPosition(0.86);      //ferris servo has limits 0.577 and 0.0522
-                rotationServo.setPosition(0.0);  //rotation servo has limits 0.03 and 0.54
+                rotationServo.setPosition(0.05);  //rotation servo has limits 0.03 and 0.54
                 extake_position = 0;
             }
             if(extake_position == -1 && clawTimer.milliseconds() > 300) {
@@ -132,9 +132,15 @@ public class TestingTeleop extends LinearOpMode {
 
             // foundation hook control
             if (gamepad1.dpad_up) {
-                foundationServo.setPosition(foundationServo.getPosition() + 0.01);
+                foundationServo.setPosition(
+                        //foundationServo.getPosition() + 0.01
+                        0.6
+                );
             } else if(gamepad1.dpad_down) {
-                foundationServo.setPosition(foundationServo.getPosition() - 0.01);
+                foundationServo.setPosition(
+                        //foundationServo.getPosition() - 0.01
+                        0
+                );
             }
 
             // intake control - right bumper IN, left bumper OUT
@@ -339,7 +345,7 @@ public class TestingTeleop extends LinearOpMode {
         foundationServo = hardwareMap.get(Servo.class, "foundation_servo");
 
         // initialization points for servos
-        rotationServo.setPosition(0.66);
+        rotationServo.setPosition(0.615);
         ferrisServo.setPosition(0.32);
         clawServo.setPosition(1);
         foundationServo.setPosition(0.8);
