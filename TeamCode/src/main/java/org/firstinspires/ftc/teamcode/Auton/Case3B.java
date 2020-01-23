@@ -15,11 +15,12 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 // CASE A: Next to wall
 @Autonomous(name = "Case 3 B Blue", group = "Auton")
 public class Case3B extends LinearOpMode {
-    SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
+        SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
+
         ss.init();
 
         waitForStart();

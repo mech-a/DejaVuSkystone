@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 // CASE B: Away from wall
 @Autonomous(group = "drive")
 public class Case2BRed extends LinearOpMode {
-    SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
 
@@ -24,6 +23,8 @@ public class Case2BRed extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
+
         ss.init();
         s.init();
 

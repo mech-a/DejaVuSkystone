@@ -41,11 +41,12 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 @Autonomous(name = "Case 4 Red", group = "Auton")
 public class Case4BRed extends LinearOpMode {
 
-    SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
+
+        SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
 
         waitForStart();
 
