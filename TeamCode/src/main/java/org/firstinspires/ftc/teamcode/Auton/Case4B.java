@@ -42,15 +42,12 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 public class Case4B extends LinearOpMode {
 
     //RRMergedDrivetrain d = new RRMergedDrivetrain(this);
-
+    SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
         //d.init();
-
-        SampleMecanumDriveBase d = new SampleMecanumDriveREV(hardwareMap);
-
         waitForStart();
 
         d.setPoseEstimate(new Pose2d(30, 60, 0));

@@ -35,17 +35,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 
 @Autonomous(name = "Case 4 Red", group = "Auton")
 public class Case4BRed extends LinearOpMode {
 
-    RRMergedDrivetrain d = new RRMergedDrivetrain(this);
+    SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() {
-        d.init();
 
         waitForStart();
 

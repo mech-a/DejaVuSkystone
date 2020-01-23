@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
 /*
  * This is an example of a more complex path to really test the tuning.
@@ -14,12 +15,11 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 // CASE A: Next to wall
 @Autonomous(name = "Case 3 B Blue", group = "Auton")
 public class Case3B extends LinearOpMode {
-    RRMergedDrivetrain d = new RRMergedDrivetrain(this);
+    SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
     StoneScorer ss = new StoneScorer(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        d.init();
         ss.init();
 
         waitForStart();
