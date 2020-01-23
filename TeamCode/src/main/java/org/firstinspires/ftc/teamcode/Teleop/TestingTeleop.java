@@ -21,6 +21,10 @@ public class TestingTeleop extends LinearOpMode {
 
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
     Servo rotationServo, ferrisServo, clawServo, foundationServo;
+    //rotation servo - towards back of bot (-) ccw
+    //foundation servo - towards back ccw (-)
+    //claw servo
+    //ferris servo
     DcMotorEx mtrVertical, leftRoller, rightRoller;
 
     double fwd, strafe, rotate;
@@ -83,28 +87,35 @@ public class TestingTeleop extends LinearOpMode {
                 intake = 0;
 
                 clawTimer.reset();
-                clawServo.setPosition(0.62);
+                clawServo.setPosition(0.643);
             }
             else if(gamepad2.y) {
                 clawTimer.reset();
                 extake_position = -1;
                 clawServo.setPosition(1);
-                ferrisServo.setPosition(0.6989);
-                rotationServo.setPosition(0.615);
+                ferrisServo.setPosition(0.92);
+                rotationServo.setPosition(0.643);
             }
             else if (gamepad2.a) {
                 extake_position = 1;
             }
 
             if(extake_position == 1 && clawTimer.milliseconds() > 500) {
-                ferrisServo.setPosition(0.86);      //ferris servo has limits 0.577 and 0.0522
-                rotationServo.setPosition(0.05);  //rotation servo has limits 0.03 and 0.54
+                ferrisServo.setPosition(0.795);
+                rotationServo.setPosition(0.02);
                 extake_position = 0;
             }
             if(extake_position == -1 && clawTimer.milliseconds() > 300) {
-                ferrisServo.setPosition(0.32);
+                ferrisServo.setPosition(0.33);
                 extake_position = 0;
             }
+            if(gamepad2.b) {
+                clawServo.setPosition(1); //open
+            }
+
+            //drop angle
+            //rotate 0.02
+            //ferris 0.795 then 0.92 for kick back
 
             // temporary servo control
             if(gamepad2.dpad_up) {
@@ -115,16 +126,18 @@ public class TestingTeleop extends LinearOpMode {
                 rotationServo.setPosition(rotationServo.getPosition() - 0.015);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
-            if(gamepad2.dpad_right) {
-                clawServo.setPosition(0.62);
+            if(gamepad2.right_trigger > 0.9) {
+                clawServo.setPosition(0.62); //close
             }
             if(gamepad2.dpad_left) {
-                clawServo.setPosition(0.862);
-            }
-            if(gamepad2.a) {
                 ferrisServo.setPosition(ferrisServo.getPosition() + 0.005);
-                //clawServo.setPosition(clawServo.getPosition() + 0.005);
+                //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
+            if(gamepad2.dpad_right) {
+                ferrisServo.setPosition(ferrisServo.getPosition() - 0.005);
+                //clawServo.setPosition(clawServo.getPosition() - 0.005);
+            }
+
             if(gamepad2.b) {
                 ferrisServo.setPosition(ferrisServo.getPosition() - 0.005);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
@@ -134,7 +147,7 @@ public class TestingTeleop extends LinearOpMode {
             if (gamepad1.dpad_up) {
                 foundationServo.setPosition(
                         //foundationServo.getPosition() + 0.01
-                        0.6
+                        0.65
                 );
             } else if(gamepad1.dpad_down) {
                 foundationServo.setPosition(
@@ -155,6 +168,7 @@ public class TestingTeleop extends LinearOpMode {
                     intake = 0;
                 }
                 release = false;
+                sleep(50);
             }
 
             if (release && gamepad2.left_bumper) {
@@ -168,7 +182,10 @@ public class TestingTeleop extends LinearOpMode {
                     intake = 0;
                 }
                 release = false;
+                sleep(50);
             }
+
+
 
             if (!gamepad1.right_bumper && !gamepad1.left_bumper) {
                 release = true;
@@ -345,10 +362,10 @@ public class TestingTeleop extends LinearOpMode {
         foundationServo = hardwareMap.get(Servo.class, "foundation_servo");
 
         // initialization points for servos
-        rotationServo.setPosition(0.615);
-        ferrisServo.setPosition(0.32);
+        rotationServo.setPosition(0.643);
+        ferrisServo.setPosition(0.33);
         clawServo.setPosition(1);
-        foundationServo.setPosition(0.8);
+        foundationServo.setPosition(0.6);
 
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);
