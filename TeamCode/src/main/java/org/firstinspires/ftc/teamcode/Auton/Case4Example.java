@@ -29,32 +29,44 @@
 
 package org.firstinspires.ftc.teamcode.Auton;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
+import org.yaml.snakeyaml.scanner.Constant;
 
-
-@Autonomous(name = "Case 4 Red", group = "Auton")
-public class Case4ARed extends LinearOpMode {
+@Config
+@Autonomous(name = "Case 4 ex", group = "Auton")
+public class Case4Example extends LinearOpMode {
 
     StoneScorer ss = new StoneScorer(this);
 
+    //consider y and x as traditional
+    static double est_x = 30, est_y = 60, goal_x = 30, goal_y = 30;
+    static double est_heading = 0, keep_heading = 0;
+
     @Override
     public void runOpMode() {
+
         SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
 
         waitForStart();
 
-        d.setPoseEstimate(new Pose2d(30, -60, 0));
+        d.setPoseEstimate(new Pose2d(est_x, est_y, est_heading));
 
+        //parks next to wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                    .splineTo(new Pose2d(0, -60, 0))
-                    .build()
+                        .splineTo(new Pose2d(goal_x, goal_y, keep_heading))//this tries to rotate/curve the bot, so we need to tune
+                        //.lineTo(new Vector2d(goal_x, goal_y), new ConstantInterpolator(keep_heading))// direct strafing
+                        .build()
         );
+
     }
 }

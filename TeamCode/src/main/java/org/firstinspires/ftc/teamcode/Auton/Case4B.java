@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.Auton;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -37,8 +38,8 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 
-
-@Autonomous(name = "Case 4 Blue RR", group = "Auton")
+//moves backward
+@Autonomous(name = "Case 4 B Blue", group = "Auton")
 public class Case4B extends LinearOpMode {
 
     StoneScorer ss = new StoneScorer(this);
@@ -54,7 +55,7 @@ public class Case4B extends LinearOpMode {
         //parks away from wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(0, 37, 0))
+                        .splineTo(new Pose2d(0, 37, 0), new ConstantInterpolator(0))
                         .build()
         );
     }
