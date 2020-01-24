@@ -115,12 +115,12 @@ public class StoneScorer implements Subassembly {
     // lower servo to hook foundation
     // TODO: FIND AND PUT IN CORRECT VALUES
     public void hookFoundation() {
-        foundationServo.setPosition(1);
+        foundationServo.setPosition(0);
     }
 
     // raise servo to unhook foundation
     public void unhookFoundation() {
-        foundationServo.setPosition(0);
+        foundationServo.setPosition(.65);
     }
 
     // raise or lower vertical slide
