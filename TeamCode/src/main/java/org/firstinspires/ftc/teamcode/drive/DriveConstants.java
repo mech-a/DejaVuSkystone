@@ -35,7 +35,7 @@ public class DriveConstants {
      * MOTOR_VELO_PID with the tuned coefficients from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static final PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(24.5, 1.5, 2);
+    public static final PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(24, 1.5, 4);
             //null;
 
     /*
@@ -48,7 +48,9 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 2;
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 15;
+    public static double TRACK_WIDTH = 14.5 //13.11 //second pass
+            //15
+            ;
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -70,8 +72,9 @@ public class DriveConstants {
      */
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(
             30.0, 10.0, 0.0,
-            Math.toRadians(180.0), Math.toRadians(180.0), 0.0
+            Math.toRadians(90.0), Math.toRadians(45.0), 0.0
     );
+    //public static DriveConstraints NEW_CONSTRAINTS = new DriveConstraints()
 
 
     public static double encoderTicksToInches(double ticks) {

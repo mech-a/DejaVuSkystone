@@ -48,4 +48,5 @@ import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
 @ExpansionHubPIDFPositionParams(P=5.0)
 public interface GoBILDA5202SeriesDeja
     {
+        //when configuring the robot, there is no reason to select this one over the others, so don't worry abt it too much
     }
