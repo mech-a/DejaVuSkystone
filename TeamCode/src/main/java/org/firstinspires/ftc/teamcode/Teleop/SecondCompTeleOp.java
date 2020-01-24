@@ -48,6 +48,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 
+import java.util.ArrayList;
+
 
 /**
  * Second Competition Tele-op
@@ -63,19 +65,25 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 public class SecondCompTeleOp extends LinearOpMode {
     //Objects
     public enum DriveMode {FIELD, CARTESIAN}
+    public enum TelemetryOutputType {SHORT, DEBUG}
 
     DriveMode driveMode = DriveMode.FIELD;
+    TelemetryOutputType telemetryOutputType = TelemetryOutputType.SHORT;
 
     //TODO finish developing stonescorer and sensors
     Drivetrain d = new Drivetrain(this);
 
     //left joystick x, y; right joystick x, y
+    //ArrayList<Double> g1Joy = new ArrayList<>();
+    //ArrayList<Double> g2Joy = new ArrayList<>();
     double[] g1Joy = new double[4];
     double[] g2Joy = new double[4];
 
     //Fields
     //TODO move to config/constants, keeping in for ftcdashboard
     public static double slowMod = 0.05, fastMod = 0.325;
+    //de-capitalize, not final
+    public static double TRIGGER_DEADZONE = 0.1;
     boolean runFast = true, runSlow = false;
 
     public static double joystickDeadzone = 0.1;
@@ -95,6 +103,8 @@ public class SecondCompTeleOp extends LinearOpMode {
     DcMotor leftRoller, rightRoller;
     Servo clawServo, ferrisServo, rotationServo, foundationServo;
 
+    private double fwd, rotate, strafe;
+    
     //TODO enumerate
     int extake_position = 0; ////-1 for in and 1 for out
     //TODO figure out
@@ -135,23 +145,30 @@ public class SecondCompTeleOp extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            speedSwitch();
             joystickArraysRefresh();
 
             //TODO consolidate into StoneScorer, Sensors, and Constants
             //x - extend extake, y - bring in extake
             if(gamepad2.x) {
+                //zero out intake
                 leftRoller.setPower(0);
                 rightRoller.setPower(0);
                 intake = 0;
 
+                //clamp onto block clamp_clawServo = 0.62
                 clawTimer.reset();
                 clawServo.setPosition(0.62);
             }
             else if(gamepad2.y) {
                 clawTimer.reset();
                 extake_position = -1;
+
+                //unclamp servo unclamp_clawServo = 1
                 clawServo.setPosition(1);
+                //kickback ferris servo kickback_ferrisServo = 0.6989
                 ferrisServo.setPosition(0.6989);
+                //back to default accepting, front_rotationServo = 0.66
                 rotationServo.setPosition(0.66);
             }
             else if (gamepad2.a) {
@@ -159,17 +176,21 @@ public class SecondCompTeleOp extends LinearOpMode {
             }
 
             if(extake_position == 1 && clawTimer.milliseconds() > 500) {
-                ferrisServo.setPosition(0.86);      //ferris servo has limits 0.577 and 0.0522
-                rotationServo.setPosition(0.0);  //rotation servo has limits 0.03 and 0.54
+                //ready to drop position place_ferrisServo = 0.86
+                ferrisServo.setPosition(0.86);
+                //move whole apparatus around to the back back_rotationServo = 0.0
+                rotationServo.setPosition(0.0);
                 extake_position = 0;
             }
             if(extake_position == -1 && clawTimer.milliseconds() > 300) {
+                //ready to take in block intake_ferrisServo = 0.32
                 ferrisServo.setPosition(0.32);
                 extake_position = 0;
             }
 
             // temporary servo control
             if(gamepad2.dpad_up) {
+                //step_rotationServo = 0.015
                 rotationServo.setPosition(rotationServo.getPosition() + 0.015);
                 //clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
@@ -178,12 +199,15 @@ public class SecondCompTeleOp extends LinearOpMode {
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
             if(gamepad2.dpad_right) {
+                //close clawServo, change to clamp_clawServo
                 clawServo.setPosition(0.62);
             }
             if(gamepad2.dpad_left) {
+                //open clawServo, change to unclamp_clawServo
                 clawServo.setPosition(0.862);
             }
             if(gamepad2.a) {
+                //step_ferrisServo = 0.005
                 ferrisServo.setPosition(ferrisServo.getPosition() + 0.005);
                 //clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
@@ -192,44 +216,99 @@ public class SecondCompTeleOp extends LinearOpMode {
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
 
+            //Reset IMU, takes 1s real time
+            if(gamepad1.dpad_up) {
+                //TODO decide if we want to make the imu rotate back to 0 at the end of autons
+                imuInit();
+            }
+
+            if(gamepad1.y)
+                driveMode = DriveMode.CARTESIAN;
+            else if(gamepad1.a)
+                driveMode = DriveMode.FIELD;
+            if(gamepad1.b)
+                telemetryOutputType = TelemetryOutputType.DEBUG;
+            else if (gamepad1.x)
+                telemetryOutputType = TelemetryOutputType.SHORT;
 
 
+            //applying the modifiers early will allow for mecanum ctrl calculations to not need to worry about scaling. still an ad hoc way to do it
+            //TODO do proper scaling in the mecanum drive
+            //applyModifiers();
 
-            applyModifiers();
+            //joystick pows & set DriveMode -> motor pows
+            driverControl();
 
+            //send out pows to Drivetrain
             setPowers();
+
+            //takes TelemetryOutputType and changes final telemetry accordingly
+            telemetryStack();
+        }
+    }
+
+    private void speedSwitch() {
+        if(gamepad1.right_trigger>TRIGGER_DEADZONE){
+            runFast = true;
+            runSlow = false;
+        }
+        else if(gamepad1.left_trigger>TRIGGER_DEADZONE){
+            runFast = false;
+            runSlow = true;
+        }
+        if(runFast){
+            modifier = speedSwitch[1];
+        }
+        if(runSlow){
+            modifier = speedSwitch[0];
         }
     }
 
 
     private void joystickArraysRefresh() {
-        //TODO look at Gamepad.cleanMotionValues for scaling joystick vals after deadzone & clipping
-        Gamepad[] gamepads = {gamepad1, gamepad2};
-        double[][] joysticks = {g1Joy, g2Joy};
+        //TODO implement arraylists so that we can do the clean way : )
+//        //TODO look at Gamepad.cleanMotionValues for scaling joystick vals after deadzone & clipping
+//        Gamepad[] gamepads = {gamepad1, gamepad2};
+//        double[][] joysticks = {g1Joy, g2Joy};
+//
+//        for(int i = 0; i<gamepads.length; i++) {
+//            //TODO consider moving to byte[] (see Gamepad.toByteArray) for redundancy reduction
+//            joysticks[i][0] = joystickAxisNormalization(gamepads[i].left_stick_x);
+//            joysticks[i][1] = -joystickAxisNormalization(gamepads[i].left_stick_y);
+//            joysticks[i][2] = joystickAxisNormalization(gamepads[i].right_stick_x);
+//            joysticks[i][3] = -joystickAxisNormalization(gamepads[i].right_stick_y);
+//        }
 
-        for(int i = 0; i<gamepads.length; i++) {
-            //TODO consider moving to byte[] (see Gamepad.toByteArray) for redundancy reduction
-            joysticks[i][0] = joystickAxisNormalization(gamepads[i].left_stick_x);
-            joysticks[i][1] = -joystickAxisNormalization(gamepads[i].left_stick_y);
-            joysticks[i][2] = joystickAxisNormalization(gamepads[i].right_stick_x);
-            joysticks[i][3] = -joystickAxisNormalization(gamepads[i].right_stick_y);
-        }
+        g1Joy[0] = joystickAxisNormalization(gamepad1.left_stick_x);
+        g1Joy[1] = -joystickAxisNormalization(gamepad1.left_stick_y);
+        g1Joy[2] = joystickAxisNormalization(gamepad1.right_stick_x);
+        g1Joy[3] = -joystickAxisNormalization(gamepad1.right_stick_y);
+
+        g2Joy[0] = joystickAxisNormalization(gamepad2.left_stick_x);
+        g2Joy[1] = -joystickAxisNormalization(gamepad2.left_stick_y);
+        g2Joy[2] = joystickAxisNormalization(gamepad2.right_stick_x);
+        g2Joy[3] = -joystickAxisNormalization(gamepad2.right_stick_y);
+
     }
 
     //TODO lambda functions/functional paradigms through kotlin to clean this up
     private double joystickAxisNormalization(double axisValue) {
-        //currently only deadzoning
-        return (Math.abs(axisValue) > joystickDeadzone ? axisValue : 0);
+        return ((Math.abs(axisValue) > joystickDeadzone ? axisValue : 0) * modifier);
     }
 
+    @Deprecated
     private void applyModifiers() {
-        for(int i = 0; i<dtPowers.length; i++)
-            dtPowers[i]*=modifier;
+//        for(int i = 0; i<dtPowers.length; i++)
+//            dtPowers[i]*=modifier;
+        //need to make a refresh for dtPowers = {powFL...}
+        powFL*=modifier;
+        powFR*=modifier;
+        powBR*=modifier;
+        powBL*=modifier;
     }
 
     private void setPowers(){
         d.setPowers(powFL, powFR, powBR, powBL);
-
     }
 
     private void imuInit() {
@@ -268,6 +347,67 @@ public class SecondCompTeleOp extends LinearOpMode {
         clawServo.setDirection(Servo.Direction.FORWARD);
     }
 
+    public void driverControl() {
+        if(driveMode == DriveMode.FIELD) {
+            double heading = getHeading();
+            telemetry.addData("Heading", heading);
+
+            heading = Math.toRadians(heading);
+
+            if(heading > 0) {
+                //ccw
+                fwd = g1Joy[1] * Math.cos(Math.abs(heading)) - g1Joy[0] * Math.sin(Math.abs(heading));
+                strafe = g1Joy[1] * Math.sin(Math.abs(heading)) + g1Joy[0] * Math.cos(Math.abs(heading));
+            }
+            else {
+                //cw
+                fwd = g1Joy[1] * Math.cos(Math.abs(heading)) + g1Joy[0] * Math.sin(Math.abs(heading));
+                strafe = -g1Joy[1] * Math.sin(Math.abs(heading)) + g1Joy[0] * Math.cos(Math.abs(heading));
+            }
+
+            rotate = g1Joy[2];
+
+            powFL = fwd + rotate + strafe;
+            powFR = fwd - rotate - strafe;
+            powBR = fwd - rotate + strafe;
+            powBL = fwd + rotate - strafe;
+        }
+        else {
+            // if the drive mode is Cartesian, we run the standard mecanum drive drive system
+            powFL = g1Joy[1] + g1Joy[2] + g1Joy[0];
+            powFR = g1Joy[1] - g1Joy[2] - g1Joy[0];
+            powBR = g1Joy[1] - g1Joy[2] + g1Joy[0];
+            powBL = g1Joy[1] + g1Joy[2] - g1Joy[0];
+        }
+    }
+
+    public double getHeading() {
+        refreshAngle();
+        return heading;
+    }
+
+    public void refreshAngle() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+
+        heading = AngleUnit.DEGREES.normalize(heading);
+
+        //heading = Math.floor(heading);
+        //heading = Range.clip(heading, -180.0, 180.0);
+    }
+
+    private void telemetryStack() {
+        if(telemetryOutputType == TelemetryOutputType.SHORT) {
+
+        }
+        else if (telemetryOutputType == TelemetryOutputType.DEBUG) {
+            //telemetry
+            telemetry.addData("","");
+
+        }
+
+    }
+    
 
 
 
