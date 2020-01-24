@@ -101,12 +101,12 @@ public class TestingTeleop extends LinearOpMode {
             }
 
             if(extake_position == 1 && clawTimer.milliseconds() > 500) {
-                ferrisServo.setPosition(0.795);
+                ferrisServo.setPosition(0.85);
                 rotationServo.setPosition(0.02);
                 extake_position = 0;
             }
             if(extake_position == -1 && clawTimer.milliseconds() > 300) {
-                ferrisServo.setPosition(0.33);
+                ferrisServo.setPosition(0.31);
                 extake_position = 0;
             }
             if(gamepad2.b) {
