@@ -41,6 +41,8 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.MotorType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
 
+//proper motor information for our drivetrain
+//TODO rename to proper motor name instead of deja
 @MotorType(ticksPerRev=537.6, gearing=19.2, maxRPM=312, orientation= Rotation.CCW)
 @DeviceProperties(xmlTag="goBILDA5202SeriesMotorDeja", name="GoBILDA 5202 series Deja", builtIn = true)
 @DistributorInfo(distributor="goBILDA_distributor", model="goBILDA-5202", url="https://www.gobilda.com/5202-series-yellow-jacket-planetary-gear-motors/")
