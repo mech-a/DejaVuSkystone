@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Assemblies;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,7 +25,7 @@ public class Drivetrain {
     private static final int NUM_MOTORS_DT = 4;
     private boolean isInitialized = false;
 
-    DcMotor mtrFL, mtrFR, mtrBR, mtrBL;
+    //DcMotor mtrFL, mtrFR, mtrBR, mtrBL;
     ArrayList<DcMotor> motors;
 
     LinearOpMode caller;
@@ -41,8 +43,8 @@ public class Drivetrain {
         telemetry = caller.telemetry;
     }
 
-    public void init(HardwareMap aHwMap) {
-        hwMap = aHwMap;
+    public void init() {
+        //hwMap = aHwMap;
         if(hwMap == null)
             telemetry.addData("Stat", "Null HWMAP");
         telemetry.update();
@@ -50,8 +52,14 @@ public class Drivetrain {
         motors = new ArrayList<>();
         //Depends on order of DRIVETRAIN_MOTOR_NAMES. Do not tamper with the order
         for(int i = 0; i<NUM_MOTORS_DT; i++) {
-            DcMotor temp;
-            temp = hwMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[i]);
+            DcMotor temp = null;
+
+            try{
+                temp = hwMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[i]);
+            } catch(NullPointerException e) {
+                Log.d("NPE", "DRIVETRAIN MOTOR ACCESS FAILED");
+            }
+            //temp = hwMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[i]);
 
             if(i%3==0)
                 //we have a motor on the left side of the robot
@@ -79,15 +87,16 @@ public class Drivetrain {
 //        mtrBR.setPower(br);
 //        mtrBL.setPower(bl);
 
+        //TODO get rid of ordinals : ( maybe use smth else
         motors.get(0).setPower(fl);
-        motors.get(0).setPower(fr);
-        motors.get(0).setPower(br);
-        motors.get(0).setPower(bl);
-
+        motors.get(1).setPower(fr);
+        motors.get(2).setPower(br);
+        motors.get(3).setPower(bl);
     }
 
     public void setPowers(double[] powers) {
         for(int i = 0; i<powers.length; i++)
             motors.get(i).setPower(i);
     }
+
 }

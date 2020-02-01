@@ -33,7 +33,7 @@ public class TestingTeleop extends LinearOpMode {
         FIELD, CARTESIAN
     }
 
-    double[] speedSwitch = {0.375,1.5*0.375};
+    double[] speedSwitch = {0.375,1.5*0.375,2*0.375};
     boolean runFast = true, runSlow = false;
     double modifier = speedSwitch[0];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
@@ -291,20 +291,29 @@ public class TestingTeleop extends LinearOpMode {
 
 
     private void speedSwitch() {
-        if(gamepad1.right_trigger>TRIGGER_DEADZONE){
-            runFast = true;
-            runSlow = false;
-        }
-        else if(gamepad1.left_trigger>TRIGGER_DEADZONE){
-            runFast = false;
-            runSlow = true;
-        }
-        if(runFast){
-            modifier = speedSwitch[1];
-        }
-        if(runSlow){
+//        if(gamepad1.right_trigger>TRIGGER_DEADZONE){
+//            runFast = true;
+//            runSlow = false;
+//        }
+//        else if(gamepad1.left_trigger>TRIGGER_DEADZONE){
+//            runFast = false;
+//            runSlow = true;
+//        }
+//        if(runFast){
+//            modifier = speedSwitch[1];
+//        }
+//        if(runSlow){
+//            modifier = speedSwitch[0];
+//        }
+
+        //speedswitch 0 = slow 1 = default 2 = fast
+        if(gamepad1.left_trigger>TRIGGER_DEADZONE)
             modifier = speedSwitch[0];
-        }
+        else if(gamepad1.right_trigger>TRIGGER_DEADZONE)
+            modifier = speedSwitch[2];
+        else
+            modifier = speedSwitch[1];
+
     }
 
     private void imuInit() {
