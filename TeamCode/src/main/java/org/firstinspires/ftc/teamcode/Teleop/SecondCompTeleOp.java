@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -100,8 +102,11 @@ public class SecondCompTeleOp extends LinearOpMode {
     double modifier = speedSwitch[1];
 
     //////////////////////////////////////////////////////////////
-    DcMotor leftRoller, rightRoller;
+    DcMotor leftRoller, rightRoller, mtrVertical;
+    DcMotor mtrFL, mtrFR, mtrBR, mtrBL;
     Servo clawServo, ferrisServo, rotationServo, foundationServo;
+
+    double powMtrVertical;
 
     private double fwd, rotate, strafe;
     
@@ -119,11 +124,26 @@ public class SecondCompTeleOp extends LinearOpMode {
     private Orientation angles;
 
     //tunables
+//    static double
+//            init_rotationServo = 0.66, min_rotationServo = 0, max_rotationServo = 0.66, step_rotationServo = 0.015,
+//            init_ferrisServo = 0.32, x_ferrisServo = 0.6989, min_ferrisServo = 0.32, max_ferrisServo = 0.86, step_ferrisServo = 0.005,
+//            init_clawServo = 1, min_clawServo = 0.62, max_clawServo = 1, dpadLeft_clawServo = 0.862,
+//            init_foundationServo = 0.8, step_foundationServo = 0.01;
     static double
-            init_rotationServo = 0.66, min_rotationServo = 0, max_rotationServo = 0.66, step_rotationServo = 0.015,
-            init_ferrisServo = 0.32, x_ferrisServo = 0.6989, min_ferrisServo = 0.32, max_ferrisServo = 0.86, step_ferrisServo = 0.005,
-            init_clawServo = 1, min_clawServo = 0.62, max_clawServo = 1, dpadLeft_clawServo = 0.862,
-            init_foundationServo = 0.8, step_foundationServo = 0.01;
+            clamp_clawServo = 0.643, unclamp_clawServo = 1,
+            kickback_ferrisServo = 0.92, place_ferrisServo = 0.85, intake_ferrisServo = 0.31, step_ferrisServo = 0.005,
+            up_foundationServo = 0.65, down_foundationServo = 0,
+            front_rotationServo = 0.643, back_rotationServo = 0.02, step_rotationServo = 0.015,
+            intakeSpeed = 0.75, vertMod = 1.0/3, vertSlideBottomBias = 50, vertSlideMax = 5000, vertSlideTopBias = 50,
+    //TODO remember, these are copy by value, don't know how they work with dashboard
+            init_rotationServo = front_rotationServo, init_clawServo = unclamp_clawServo, init_foundationServo = up_foundationServo, init_ferrisServo = intake_ferrisServo;
+
+    double rotationServoBias = 28.8/270;
+
+
+
+
+
 
 
 
@@ -131,7 +151,8 @@ public class SecondCompTeleOp extends LinearOpMode {
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        d.init();
+        //d.init();
+        initMotors();
         //TODO stonescorer
         initServos();
         //TODO understand why we hang at imuinit, logs dl'd on g-laptop
@@ -158,18 +179,18 @@ public class SecondCompTeleOp extends LinearOpMode {
 
                 //clamp onto block clamp_clawServo = 0.62
                 clawTimer.reset();
-                clawServo.setPosition(0.62);
+                clawServo.setPosition(clamp_clawServo);
             }
             else if(gamepad2.y) {
                 clawTimer.reset();
                 extake_position = -1;
 
                 //unclamp servo unclamp_clawServo = 1
-                clawServo.setPosition(1);
+                clawServo.setPosition(unclamp_clawServo);
                 //kickback ferris servo kickback_ferrisServo = 0.6989
-                ferrisServo.setPosition(0.6989);
+                ferrisServo.setPosition(kickback_ferrisServo);
                 //back to default accepting, front_rotationServo = 0.66
-                rotationServo.setPosition(0.66);
+                rotationServo.setPosition(front_rotationServo+rotationServoBias);
             }
             else if (gamepad2.a) {
                 extake_position = 1;
@@ -177,51 +198,128 @@ public class SecondCompTeleOp extends LinearOpMode {
 
             if(extake_position == 1 && clawTimer.milliseconds() > 500) {
                 //ready to drop position place_ferrisServo = 0.86
-                ferrisServo.setPosition(0.86);
+                ferrisServo.setPosition(place_ferrisServo);
                 //move whole apparatus around to the back back_rotationServo = 0.0
-                rotationServo.setPosition(0.0);
+                rotationServo.setPosition(back_rotationServo+rotationServoBias);
                 extake_position = 0;
             }
             if(extake_position == -1 && clawTimer.milliseconds() > 300) {
                 //ready to take in block intake_ferrisServo = 0.32
-                ferrisServo.setPosition(0.32);
+                ferrisServo.setPosition(intake_ferrisServo);
                 extake_position = 0;
+            }
+
+            if(gamepad2.b) {
+                clawServo.setPosition(unclamp_clawServo);
             }
 
             // temporary servo control
             if(gamepad2.dpad_up) {
                 //step_rotationServo = 0.015
-                rotationServo.setPosition(rotationServo.getPosition() + 0.015);
+                rotationServo.setPosition(rotationServo.getPosition() + step_rotationServo);
                 //clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
             if(gamepad2.dpad_down) {
-                rotationServo.setPosition(rotationServo.getPosition() - 0.015);
+                rotationServo.setPosition(rotationServo.getPosition() - step_rotationServo);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
             if(gamepad2.dpad_right) {
                 //close clawServo, change to clamp_clawServo
-                clawServo.setPosition(0.62);
+                clawServo.setPosition(clamp_clawServo);
             }
             if(gamepad2.dpad_left) {
                 //open clawServo, change to unclamp_clawServo
-                clawServo.setPosition(0.862);
+                clawServo.setPosition(unclamp_clawServo);
             }
             if(gamepad2.a) {
                 //step_ferrisServo = 0.005
-                ferrisServo.setPosition(ferrisServo.getPosition() + 0.005);
+                ferrisServo.setPosition(ferrisServo.getPosition() + step_ferrisServo);
                 //clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
+            //TODO this also opens the clawServo. odd
             if(gamepad2.b) {
-                ferrisServo.setPosition(ferrisServo.getPosition() - 0.005);
+                ferrisServo.setPosition(ferrisServo.getPosition() - step_ferrisServo);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
 
+
+            //TODO finish vertical slide ctrl
+            if(mtrVertical.getCurrentPosition() < -vertSlideBottomBias) {
+                //TODO enumerate joysticks
+                powMtrVertical = (g2Joy[3] > 0 ? g2Joy[3] : 0) * vertMod;
+            }
+            //TODO consider getting rid of upper
+            else if (mtrVertical.getCurrentPosition() > (vertSlideMax + vertSlideTopBias)) {
+                powMtrVertical = (g2Joy[3] < 0 ? g2Joy[3] : 0) * vertMod;
+            }
+            else {
+                powMtrVertical = g2Joy[3] * vertMod;
+            }
+            //setting powers of this guy in @see setPowers()
+
+
+
             //Reset IMU, takes 1s real time
+            //TODO remind brandon that this is changed to dpad left
             if(gamepad1.dpad_up) {
                 //TODO decide if we want to make the imu rotate back to 0 at the end of autons
                 imuInit();
             }
 
+            // foundation hook control
+            if (gamepad1.dpad_up) {
+                foundationServo.setPosition(
+                        //foundationServo.getPosition() + 0.01
+                        //up_foundation = 0.65
+                        up_foundationServo
+                );
+            } else if(gamepad1.dpad_down) {
+                foundationServo.setPosition(
+                        //foundationServo.getPosition() - 0.01
+                        //down_foundationServo = 0
+                        down_foundationServo
+                );
+            }
+
+            //TODO implement last-state control of intake
+            // intake control - right bumper IN, left bumper OUT
+            if (release && gamepad2.right_bumper) {
+                if (intake == 0) {
+                    leftRoller.setPower(intakeSpeed);
+                    rightRoller.setPower(intakeSpeed);
+                    intake = 1;
+                } else {
+                    leftRoller.setPower(0);
+                    rightRoller.setPower(0);
+                    intake = 0;
+                }
+                release = false;
+                sleep(50);
+            }
+
+            if (release && gamepad2.left_bumper) {
+                if (intake == 0) {
+                    leftRoller.setPower(-intakeSpeed);
+                    rightRoller.setPower(-intakeSpeed);
+                    intake = -1;
+                } else {
+                    leftRoller.setPower(0);
+                    rightRoller.setPower(0);
+                    intake = 0;
+                }
+                release = false;
+                sleep(50);
+            }
+
+
+
+            if (!gamepad1.right_bumper && !gamepad1.left_bumper) {
+                release = true;
+            }
+
+
+
+            //TODO finish telemetry outputs
             if(gamepad1.y)
                 driveMode = DriveMode.CARTESIAN;
             else if(gamepad1.a)
@@ -262,6 +360,72 @@ public class SecondCompTeleOp extends LinearOpMode {
         if(runSlow){
             modifier = speedSwitch[0];
         }
+    }
+
+    public void initMotors() {
+        leftRoller = hardwareMap.get(DcMotorEx.class, "leftRoller");
+        rightRoller = hardwareMap.get(DcMotorEx.class, "rightRoller");
+
+        leftRoller.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        mtrFL = hardwareMap.get(DcMotor.class, "fl");
+        mtrFR = hardwareMap.get(DcMotor.class, "fr");
+        mtrBL = hardwareMap.get(DcMotor.class, "bl");
+        mtrBR = hardwareMap.get(DcMotor.class, "br");
+        mtrVertical = hardwareMap.get(DcMotorEx.class, "vertical");
+
+        mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
+        //backleft and backright are switched
+        mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrBR.setDirection(DcMotorSimple.Direction.FORWARD);
+        //flipped from testing teleop
+        mtrVertical.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        mtrFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // encoder is reset to 0 at whatever starting position it is in
+        mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // 0 br
+        // 1 bl
+        // 2 fr
+        // 3 fl
+    }
+
+    private void initMotors2() {
+        //d.init(hardwareMap);
+
+
+
+        //telemetry.addData("Stat", "Finished drivetrain init!");
+
+
+
+        leftRoller = hardwareMap.get(DcMotorEx.class, "leftRoller");
+        rightRoller = hardwareMap.get(DcMotorEx.class, "rightRoller");
+        mtrVertical = hardwareMap.get(DcMotorEx.class, "vertical");
+
+        leftRoller.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //TODO what is default mode and zero pow behavior?
+        mtrVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 
@@ -308,7 +472,12 @@ public class SecondCompTeleOp extends LinearOpMode {
     }
 
     private void setPowers(){
-        d.setPowers(powFL, powFR, powBR, powBL);
+        //d.setPowers(powFL, powFR, powBR, powBL);
+
+        mtrFL.setPower(powFL);
+        mtrFR.setPower(powFR);
+        mtrBL.setPower(powBL);
+        mtrBR.setPower(powBR);
     }
 
     private void imuInit() {
@@ -336,10 +505,11 @@ public class SecondCompTeleOp extends LinearOpMode {
         foundationServo = hardwareMap.get(Servo.class, "foundation_servo");
 
         // initialization points for servos
-        rotationServo.setPosition(init_rotationServo);
+        rotationServo.setPosition(init_rotationServo+rotationServoBias);
         ferrisServo.setPosition(init_ferrisServo);
         clawServo.setPosition(init_clawServo);
-        foundationServo.setPosition(0.8);
+        //0.8 default
+        foundationServo.setPosition(init_foundationServo);
 
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);

@@ -155,6 +155,7 @@ public class Sensors implements Subassembly {
             finalRecognitions.clear();
             telemetry.update();
         }
+
         return location;
     }
 

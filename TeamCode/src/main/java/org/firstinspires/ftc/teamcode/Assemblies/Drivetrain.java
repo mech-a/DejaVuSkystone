@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Assemblies;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Drivetrain implements Subassembly {
+public class Drivetrain {
     // Motor index is as follows:
     //   F
     //  ___
@@ -23,8 +23,8 @@ public class Drivetrain implements Subassembly {
     private static final int NUM_MOTORS_DT = 4;
     private boolean isInitialized = false;
 
-    DcMotorEx mtrFL, mtrFR, mtrBR, mtrBL;
-    ArrayList<DcMotorEx> motors;
+    DcMotor mtrFL, mtrFR, mtrBR, mtrBL;
+    ArrayList<DcMotor> motors;
 
     LinearOpMode caller;
     HardwareMap hwMap;
@@ -41,13 +41,17 @@ public class Drivetrain implements Subassembly {
         telemetry = caller.telemetry;
     }
 
-    public void init() {
+    public void init(HardwareMap aHwMap) {
+        hwMap = aHwMap;
+        if(hwMap == null)
+            telemetry.addData("Stat", "Null HWMAP");
+        telemetry.update();
+
         motors = new ArrayList<>();
         //Depends on order of DRIVETRAIN_MOTOR_NAMES. Do not tamper with the order
         for(int i = 0; i<NUM_MOTORS_DT; i++) {
-            DcMotorEx temp;
-            temp = (DcMotorEx) (hwMap.get(DcMotor.class,
-                    ConfigurationData.DRIVETRAIN_MOTOR_NAMES[i]));
+            DcMotor temp;
+            temp = hwMap.get(DcMotor.class, ConfigurationData.DRIVETRAIN_MOTOR_NAMES[i]);
 
             if(i%3==0)
                 //we have a motor on the left side of the robot
@@ -70,10 +74,16 @@ public class Drivetrain implements Subassembly {
 
     //TODO shift power normalization into this function, bad coding practice rn
     public void setPowers(double fl, double fr, double br, double bl) {
-        mtrFL.setPower(fl);
-        mtrFR.setPower(fr);
-        mtrBR.setPower(br);
-        mtrBL.setPower(bl);
+//        mtrFL.setPower(fl);
+//        mtrFR.setPower(fr);
+//        mtrBR.setPower(br);
+//        mtrBL.setPower(bl);
+
+        motors.get(0).setPower(fl);
+        motors.get(0).setPower(fr);
+        motors.get(0).setPower(br);
+        motors.get(0).setPower(bl);
+
     }
 
     public void setPowers(double[] powers) {

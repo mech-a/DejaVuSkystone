@@ -48,8 +48,8 @@ public class Case4Example extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
 
     //consider y and x as traditional
-    static double est_x = 30, est_y = 60, goal_x = 30, goal_y = 30;
-    static double est_heading = 0, keep_heading = 0;
+    public static double est_x = 30, est_y = 60, goal_x = 30, goal_y = 30;
+    public static double est_heading = 0, keep_heading = 0;
 
     @Override
     public void runOpMode() {
@@ -63,8 +63,9 @@ public class Case4Example extends LinearOpMode {
         //parks next to wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(goal_x, goal_y, keep_heading))//this tries to rotate/curve the bot, so we need to tune
+                        //.splineTo(new Pose2d(goal_x, goal_y, keep_heading))//this tries to rotate/curve the bot, so we need to tune
                         //.lineTo(new Vector2d(goal_x, goal_y), new ConstantInterpolator(keep_heading))// direct strafing
+                        .lineTo(new Vector2d(goal_x, goal_y))
                         .build()
         );
 

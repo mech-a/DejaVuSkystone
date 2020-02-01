@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Teleop;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -16,16 +15,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
-@TeleOp(name="Final Teleop", group="Functionality")
-public class TestingTeleop extends LinearOpMode {
+@TeleOp(name="Dashboard Teleop", group="Functionality")
+public class DashboardEnabledTeleop extends LinearOpMode {
 
-    DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
-    Servo rotationServo, ferrisServo, clawServo, foundationServo;
-    //rotation servo - towards back of bot (-) ccw
-    //foundation servo - towards back ccw (-)
-    //claw servo
-    //ferris servo
+    DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     DcMotorEx mtrVertical, leftRoller, rightRoller;
+    Servo rotationServo, ferrisServo, clawServo, foundationServo;
 
     double fwd, strafe, rotate;
 
@@ -33,9 +28,9 @@ public class TestingTeleop extends LinearOpMode {
         FIELD, CARTESIAN
     }
 
-    double[] speedSwitch = {0.375,1.5*0.375};
+    double[] speedSwitch = {0.05,0.375};
     boolean runFast = true, runSlow = false;
-    double modifier = speedSwitch[0];
+    double modifier = speedSwitch[1];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
 
     // Keep default as field or cartesian?
@@ -62,9 +57,6 @@ public class TestingTeleop extends LinearOpMode {
 
     int extake_position = 0; //-1 for in and 1 for out
 
-
-    double rotationServoBias = 28.8/270;
-
     StoneScorer ss = new StoneScorer(this);
     ElapsedTime clawTimer = new ElapsedTime();
 
@@ -81,7 +73,7 @@ public class TestingTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //mtrVertical.setPower(gamepad1.right_stick_y / 2);
+            mtrVertical.setPower(gamepad1.right_stick_y / 2);
 
             // x extends extake, y brings extake back in
             if(gamepad2.x) {
@@ -90,35 +82,26 @@ public class TestingTeleop extends LinearOpMode {
                 intake = 0;
 
                 clawTimer.reset();
-                clawServo.setPosition(0.643);
+                extake_position = 1;
+                clawServo.setPosition(0.62);
             }
             else if(gamepad2.y) {
                 clawTimer.reset();
                 extake_position = -1;
                 clawServo.setPosition(1);
-                ferrisServo.setPosition(0.92);
-                rotationServo.setPosition(0.643+rotationServoBias);
-            }
-            else if (gamepad2.a) {
-                extake_position = 1;
+                ferrisServo.setPosition(0.6989);
+                rotationServo.setPosition(0.66);
             }
 
-            if(extake_position == 1 && clawTimer.milliseconds() > 500) {
-                ferrisServo.setPosition(0.85);
-                rotationServo.setPosition(0.02+rotationServoBias);
+            if(extake_position == 1 && clawTimer.milliseconds() > 300) {
+                ferrisServo.setPosition(0.86);      //ferris servo has limits 0.577 and 0.0522
+                rotationServo.setPosition(0.00);  //rotation servo has limits 0.03 and 0.54
                 extake_position = 0;
             }
             if(extake_position == -1 && clawTimer.milliseconds() > 300) {
-                ferrisServo.setPosition(0.31);
+                ferrisServo.setPosition(0.32);
                 extake_position = 0;
             }
-            if(gamepad2.b) {
-                clawServo.setPosition(1); //open
-            }
-
-            //drop angle
-            //rotate 0.02
-            //ferris 0.795 then 0.92 for kick back
 
             // temporary servo control
             if(gamepad2.dpad_up) {
@@ -129,18 +112,16 @@ public class TestingTeleop extends LinearOpMode {
                 rotationServo.setPosition(rotationServo.getPosition() - 0.015);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
             }
-            if(gamepad2.right_trigger > 0.9) {
-                clawServo.setPosition(0.62); //close
+            if(gamepad2.dpad_right) {
+                clawServo.setPosition(0.62);
             }
             if(gamepad2.dpad_left) {
+                clawServo.setPosition(0.862);
+            }
+            if(gamepad2.a) {
                 ferrisServo.setPosition(ferrisServo.getPosition() + 0.005);
-                //clawServo.setPosition(clawServo.getPosition() - 0.005);
+                //clawServo.setPosition(clawServo.getPosition() + 0.005);
             }
-            if(gamepad2.dpad_right) {
-                ferrisServo.setPosition(ferrisServo.getPosition() - 0.005);
-                //clawServo.setPosition(clawServo.getPosition() - 0.005);
-            }
-
             if(gamepad2.b) {
                 ferrisServo.setPosition(ferrisServo.getPosition() - 0.005);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
@@ -148,15 +129,9 @@ public class TestingTeleop extends LinearOpMode {
 
             // foundation hook control
             if (gamepad1.dpad_up) {
-                foundationServo.setPosition(
-                        //foundationServo.getPosition() + 0.01
-                        0.65
-                );
+                foundationServo.setPosition(foundationServo.getPosition() + 0.005);
             } else if(gamepad1.dpad_down) {
-                foundationServo.setPosition(
-                        //foundationServo.getPosition() - 0.01
-                        0
-                );
+                foundationServo.setPosition(foundationServo.getPosition() - 0.005);
             }
 
             // intake control - right bumper IN, left bumper OUT
@@ -171,7 +146,6 @@ public class TestingTeleop extends LinearOpMode {
                     intake = 0;
                 }
                 release = false;
-                sleep(50);
             }
 
             if (release && gamepad2.left_bumper) {
@@ -185,19 +159,14 @@ public class TestingTeleop extends LinearOpMode {
                     intake = 0;
                 }
                 release = false;
-                sleep(50);
             }
-
-
 
             if (!gamepad1.right_bumper && !gamepad1.left_bumper) {
                 release = true;
             }
 
-            telemetry.addData("Controls", "x");
-
             // drivetrain control
-            if(gamepad1.dpad_left) {
+            if(gamepad1.dpad_up) {
                 //todo figure out reset angle
                 imuInit();
             }
@@ -207,17 +176,11 @@ public class TestingTeleop extends LinearOpMode {
             g1[2] = gamepad1.right_stick_x;
             g1[3] = -gamepad1.right_stick_y;
 
-            //needs to be before deadzoning & modifying
-            speedSwitch();
-
             for(int i = 0; i < g1.length; i++)
                 g1[i] = (Math.abs(g1[i]) > DEADZONE ? g1[i] : 0) * modifier;
 
             if(gamepad1.y) {
                 driveMode = DriveMode.CARTESIAN;
-            }
-            else if (gamepad1.a) {
-                driveMode = DriveMode.FIELD;
             }
 
             driverControl();
@@ -247,7 +210,6 @@ public class TestingTeleop extends LinearOpMode {
 //                mtrVertical.setPower(0);
 //            }
 
-            //TODO figure out what is going on here; is it flipped or not?
             if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
                 mtrVertical.setPower(gamepad2.right_stick_y / 3);
             } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
@@ -276,19 +238,11 @@ public class TestingTeleop extends LinearOpMode {
             telemetry.addData("IMU Angle", getHeading());
             telemetry.addData("Drive Mode", driveMode);
 
-            telemetry.addData("mtrFL pow", powFL);
-            telemetry.addData("mtrFR pow", powFR);
-            telemetry.addData("mtrBR pow", powBR);
-            telemetry.addData("mtrBL pow", powBL);
-
-
             telemetry.update();
 
             sleep(50);
         }
     }
-
-
 
     private void speedSwitch() {
         if(gamepad1.right_trigger>TRIGGER_DEADZONE){
@@ -380,10 +334,10 @@ public class TestingTeleop extends LinearOpMode {
         foundationServo = hardwareMap.get(Servo.class, "foundation_servo");
 
         // initialization points for servos
-        rotationServo.setPosition(0.643+rotationServoBias);
-        ferrisServo.setPosition(0.33);
+        rotationServo.setPosition(0.66);
+        ferrisServo.setPosition(0.32);
         clawServo.setPosition(1);
-        foundationServo.setPosition(0.6);
+        foundationServo.setPosition(0);
 
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);
@@ -409,8 +363,8 @@ public class TestingTeleop extends LinearOpMode {
         mtrFL.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrFR.setDirection(DcMotorSimple.Direction.FORWARD);
         //backleft and backright are switched
-        mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
-        mtrBR.setDirection(DcMotorSimple.Direction.FORWARD);
+        mtrBL.setDirection(DcMotorSimple.Direction.FORWARD);
+        mtrBR.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
 
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

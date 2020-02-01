@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import static java.lang.Thread.sleep;
+
 public class StoneScorer implements Subassembly {
     DcMotorEx mtrVertical, leftRoller, rightRoller;
     Servo rotationServo, ferrisServo, clawServo, foundationServo;
@@ -76,7 +78,7 @@ public class StoneScorer implements Subassembly {
     }
 
     // set intake motors to intakePower
-    public void intake(int intakePower) {
+    public void intake(double intakePower) {
         leftRoller.setPower(intakePower);
         rightRoller.setPower(intakePower);
     }
@@ -89,13 +91,23 @@ public class StoneScorer implements Subassembly {
 
         clawTimer.reset();
         extake_position = 1;
-        clawServo.setPosition(0.62);
+        clawServo.setPosition(0.643);
+        try {
+            sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        if(extake_position == 1 && clawTimer.milliseconds() > 300) {
-            ferrisServo.setPosition(0.86);      //ferris servo has limits 0.577 and 0.0522
-            rotationServo.setPosition(0.00);  //rotation servo has limits 0.03 and 0.54
+        if(extake_position == 1 //&& clawTimer.milliseconds() > 300
+        ) {
+            ferrisServo.setPosition(0.85);      //ferris servo has limits 0.577 and 0.0522
+            rotationServo.setPosition(0.02+(28.8/270));  //rotation servo has limits 0.03 and 0.54
             extake_position = 0;
         }
+    }
+
+    public void dropStone() {
+        clawServo.setPosition(1);
     }
 
     // pull extake in
@@ -103,11 +115,18 @@ public class StoneScorer implements Subassembly {
         clawTimer.reset();
         extake_position = -1;
         clawServo.setPosition(1);
-        ferrisServo.setPosition(0.6989);
-        rotationServo.setPosition(0.66);
+        ferrisServo.setPosition(0.92);
+        rotationServo.setPosition(0.643+(28.8/270));
 
-        if(extake_position == -1 && clawTimer.milliseconds() > 300) {
-            ferrisServo.setPosition(0.32);
+        try {
+            sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(extake_position == -1 //&& clawTimer.milliseconds() > 300
+        ) {
+            ferrisServo.setPosition(0.31);
             extake_position = 0;
         }
     }

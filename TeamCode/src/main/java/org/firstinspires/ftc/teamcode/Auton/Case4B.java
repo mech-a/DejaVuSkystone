@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.Auton;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -55,7 +56,7 @@ public class Case4B extends LinearOpMode {
         //parks away from wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .splineTo(new Pose2d(0, 37, 0), new ConstantInterpolator(0))
+                        .lineTo(new Vector2d(0, 25), new ConstantInterpolator(0))
                         .build()
         );
     }

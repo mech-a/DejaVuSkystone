@@ -55,7 +55,7 @@ public class Case4BRed extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                    .splineTo(new Pose2d(0, -37, 0), new ConstantInterpolator(0))
+                    .splineTo(new Pose2d(0, -25, 0), new ConstantInterpolator(0))
                     .build()
         );
     }

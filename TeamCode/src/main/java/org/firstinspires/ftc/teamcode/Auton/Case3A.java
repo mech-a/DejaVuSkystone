@@ -42,7 +42,7 @@ public class Case3A extends LinearOpMode {
         d.followTrajectorySync(
                 d.trajectoryBuilder()
                         .lineTo(new Vector2d(30, 35), new ConstantInterpolator(90))
-                        .lineTo(new Vector2d(60, 30), new ConstantInterpolator(90))
+                        .lineTo(new Vector2d(60, 28), new ConstantInterpolator(90))
                         .build()
         );
 
@@ -56,23 +56,17 @@ public class Case3A extends LinearOpMode {
         d.followTrajectorySync(
                 d.trajectoryBuilder()
                         .lineTo(new Vector2d(30, 42), new ConstantInterpolator(90))
-                        .splineTo(new Pose2d(30, 52, 180)//, new ConstantInterpolator(180)
-                        )
+                        .lineTo(new Vector2d(30, 52), new ConstantInterpolator(180))
                         .lineTo(new Vector2d(50, 52), new ConstantInterpolator(180))
                         .build()
         );
-    }}
-
-/*
-
         //lift up foundation hooks
-        ss.setBlock(-10, -10);
-
+    foundationServo.setPosition(0.65);
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                    .splineTo(new Pose2d(0, 60, 0))
+                    .lineTo(new Vector2d(0, 60), new ConstantInterpolator(180))
                     .build()
         );
     }
 }
-*/
+
