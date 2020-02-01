@@ -51,6 +51,7 @@ public class DrivetrainDirectTest extends LinearOpMode {
 
     // Declare OpMode members.
     Drivetrain d = new Drivetrain(this);
+    public static double power = 0.5, sleep = 500;
 
     @Override
     public void runOpMode() {
@@ -61,6 +62,21 @@ public class DrivetrainDirectTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            //straight
+            d.setPowers(power, power, power, power);
+            sleep((long) sleep);
+
+            //right
+            d.setPowers(power, -power, power, -power);
+            sleep((long) sleep);
+
+            //back
+            d.setPowers(-power, -power, -power, -power);
+            sleep((long) sleep);
+
+            //left
+            d.setPowers(-power, power, -power, power);
+            sleep((long) sleep);
 
         }
     }
