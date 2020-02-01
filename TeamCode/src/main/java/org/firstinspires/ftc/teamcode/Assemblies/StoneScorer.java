@@ -93,7 +93,7 @@ public class StoneScorer implements Subassembly {
         extake_position = 1;
         clawServo.setPosition(0.643);
         try {
-            sleep(300);
+            sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
