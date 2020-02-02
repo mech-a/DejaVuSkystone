@@ -16,6 +16,21 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInClawServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInFerrisServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInFerrisServo2;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInRotationServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutClawServoPosition;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutFerrisServoPosition;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutRotationServoPosition;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.foundationDown;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.foundationUp;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initClawServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFoundationServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRotationServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initferrisServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.mtrVerticalStop1;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.mtrVerticalStop2;
 
 public class StoneScorer //implements Subassembly
 {
@@ -114,16 +129,16 @@ public class StoneScorer //implements Subassembly
             temp.setDirection(Servo.Direction.FORWARD);
 
             if (i == 0) {
-                temp.setPosition(0.66);
+                temp.setPosition(initRotationServo);
             }
             else if (i == 1) {
-                temp.setPosition(0.32);
+                temp.setPosition(initferrisServo);
             }
             else if (i == 2) {
-                temp.setPosition(1);
+                temp.setPosition(initClawServo);
             }
             else
-                temp.setPosition(.65);
+                temp.setPosition(initFoundationServo);
 
             servos.add(temp);
         }
@@ -160,7 +175,7 @@ public class StoneScorer //implements Subassembly
 
         clawTimer.reset();
         extake_position = 1;
-        servos.get(2).setPosition(0.643);
+        servos.get(2).setPosition(extakeOutClawServoPosition);
         try {
             sleep(500);
         } catch (InterruptedException e) {
@@ -169,23 +184,23 @@ public class StoneScorer //implements Subassembly
 
         if(extake_position == 1 //&& clawTimer.milliseconds() > 300
         ) {
-            servos.get(1).setPosition(0.85);      //ferris servo has limits 0.577 and 0.0522
-            servos.get(0).setPosition(0.02+(28.8/270));  //rotation servo has limits 0.03 and 0.54
+            servos.get(1).setPosition(extakeOutFerrisServoPosition);      //ferris servo has limits 0.577 and 0.0522
+            servos.get(0).setPosition(extakeOutRotationServoPosition);  //rotation servo has limits 0.03 and 0.54
             extake_position = 0;
         }
     }
 
     public void dropStone() {
-        servos.get(2).setPosition(1);
+        servos.get(2).setPosition(extakeInClawServo);
     }
 
     // pull extake in
     public void extakeIn() {
         clawTimer.reset();
         extake_position = -1;
-        servos.get(2).setPosition(1);
-        servos.get(1).setPosition(0.92);
-        servos.get(0).setPosition(0.643+(28.8/270));
+        servos.get(2).setPosition(extakeInClawServo);
+        servos.get(1).setPosition(extakeInFerrisServo);
+        servos.get(0).setPosition(extakeInRotationServo);
 
         try {
             sleep(300);
@@ -195,7 +210,7 @@ public class StoneScorer //implements Subassembly
 
         if(extake_position == -1 //&& clawTimer.milliseconds() > 300
         ) {
-            servos.get(1).setPosition(0.31);
+            servos.get(1).setPosition(extakeInFerrisServo2);
             extake_position = 0;
         }
     }
@@ -203,14 +218,14 @@ public class StoneScorer //implements Subassembly
     // lower servo to hook foundation
     // TODO: FIND AND PUT IN CORRECT VALUES
     public void hookFoundation() {
-        servos.get(3).setPosition(0);
-        servos.get(4).setPosition(0);
+        servos.get(3).setPosition(foundationDown);
+        servos.get(4).setPosition(foundationDown);
     }
 
     // raise servo to unhook foundation
     public void unhookFoundation() {
-        servos.get(3).setPosition(.65);
-        servos.get(4).setPosition(.65);
+        servos.get(3).setPosition(foundationUp);
+        servos.get(4).setPosition(foundationUp);
     }
 
     // raise or lower vertical slide
@@ -220,11 +235,11 @@ public class StoneScorer //implements Subassembly
         dcMotors.get(0).setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (!caller.isStopRequested()) {
-            dcMotors.get(0).setPower(1);
+            dcMotors.get(0).setPower(mtrVerticalStop1);
         }
 
         if (!caller.isStopRequested()) {
-            dcMotors.get(0).setPower(0);
+            dcMotors.get(0).setPower(mtrVerticalStop2);
             dcMotors.get(0).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
