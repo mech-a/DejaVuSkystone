@@ -25,8 +25,10 @@ public class Constants {
     public static double extakeInFerrisServo2 = 0.31;
 
     // For foundation
-    public static double foundationDown = 0;
-    public static double foundationUp = 0.65;
+    public static double leftFoundationDown = 0.72;
+    public static double rightFoundationDown = 0.15;
+    public static double leftFoundationUp = 0.10;
+    public static double rightFoundationUp = 0.77;
 
     // For vertical motor powers
     public static double mtrVerticalStop1 = 1;
