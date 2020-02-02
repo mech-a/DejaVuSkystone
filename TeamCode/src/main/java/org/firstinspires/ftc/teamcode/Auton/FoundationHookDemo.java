@@ -33,8 +33,16 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
+import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
+
+import static org.firstinspires.ftc.teamcode.Assemblies.ConfigurationData.BLOCK_MANIPULATOR_SERVO_NAMES;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationDown;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationUp;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.rightFoundationDown;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.rightFoundationUp;
 
 
 /**
@@ -49,28 +57,58 @@ public class FoundationHookDemo extends LinearOpMode {
 
     // Declare OpMode members.
     Drivetrain d = new Drivetrain(this);
-    public static double power = 0.5, sleep = 500, numRuns = 4;
-    public static boolean zeroPowerAfter = false;
+    //StoneScorer ss = new StoneScorer(this);
 
-    private DcMotor fl, fr, br, bl;
+    Servo f1, f2;
+
+    public static double power = -0.5, sleep = 500, numRuns = 4;
+    public static boolean zeroPowerAfter = false;
 
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
         d.init(hardwareMap);
+        telemetry.addData("stat", "drivetrain init'd");
+        //ss.init(hardwareMap);
+        //ss.unhookFoundation();
+
+        f1 = hardwareMap.get(Servo.class, BLOCK_MANIPULATOR_SERVO_NAMES[3]);
+        f2 = hardwareMap.get(Servo.class, BLOCK_MANIPULATOR_SERVO_NAMES[4]);
+
+        f1.setPosition(leftFoundationUp);
+        f2.setPosition(rightFoundationUp);
 
 
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        //while (opModeIsActive()) {
             //straight
             d.setPowers(power, power, power, power);
             sleep((long) sleep);
 
-            
-        }
+            //ss.hookFoundation();
+            f1.setPosition(leftFoundationDown);
+            f2.setPosition(rightFoundationDown);
+            sleep((long) sleep);
+
+            d.setPowers(-power, -power, -power, -power);
+            sleep((long) sleep);
+
+            d.setPowers(-power, power, power, -power);
+            sleep((long) sleep);
+
+            d.setPowers(power, -power, -power, power);
+            sleep((long) sleep);
+
+            //ss.unhookFoundation();
+            f1.setPosition(leftFoundationUp);
+            f2.setPosition(rightFoundationUp);
+            sleep((long) sleep);
+
+
+        //}
     }
 }

@@ -86,7 +86,14 @@ public class StoneScorer //implements Subassembly
 
     ElapsedTime clawTimer = new ElapsedTime();
 
-    public void init(HardwareMap hwMap) {
+    @Deprecated
+    public void init() {
+
+    }
+
+
+    public void init(HardwareMap aHwMap) {
+        hwMap = aHwMap;
         if(hwMap == null)
             telemetry.addData("Stat", "Null HWMAP");
         telemetry.update();
@@ -119,6 +126,7 @@ public class StoneScorer //implements Subassembly
         }
 
         //FOR SERVOS
+        servos = new ArrayList<>();
         for(int i = 0; i<NUM_SERVOS; i++) {
             Servo temp = null;
 
