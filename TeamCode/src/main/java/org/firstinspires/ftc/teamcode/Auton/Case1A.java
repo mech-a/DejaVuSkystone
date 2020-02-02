@@ -43,7 +43,7 @@ public class Case1A extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
 
-        ss.init();
+        ss.init(hardwareMap);
         //s.init();
 
         waitForStart();
