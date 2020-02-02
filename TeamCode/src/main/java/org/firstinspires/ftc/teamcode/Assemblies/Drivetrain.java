@@ -34,17 +34,28 @@ public class Drivetrain {
 
     public enum MotorOrientation {
       // 0, 1, 2, 3
-        FL,FR,BR,BL
+        FL(0),FR(1),BR(2),BL(3);
+
+        private int order;
+
+        MotorOrientation(int anOrder) {
+            order = anOrder;
+        }
+
+        int getOrder() {
+            return order;
+        }
     }
 
     public Drivetrain(LinearOpMode aCaller) {
         this.caller = aCaller;
         hwMap = caller.hardwareMap;
         telemetry = caller.telemetry;
+
     }
 
-    public void init() {
-        //hwMap = aHwMap;
+    public void init(HardwareMap aHwMap) {
+        hwMap = aHwMap;
         if(hwMap == null)
             telemetry.addData("Stat", "Null HWMAP");
         telemetry.update();
@@ -82,21 +93,36 @@ public class Drivetrain {
 
     //TODO shift power normalization into this function, bad coding practice rn
     public void setPowers(double fl, double fr, double br, double bl) {
+        double[] motorPows = {fl, fr, br, bl};
+        for(int i = 0; i<motors.size(); i++)
+            motors.get(i).setPower(motorPows[i]);
+
 //        mtrFL.setPower(fl);
 //        mtrFR.setPower(fr);
 //        mtrBR.setPower(br);
 //        mtrBL.setPower(bl);
 
-        //TODO get rid of ordinals : ( maybe use smth else
-        motors.get(0).setPower(fl);
-        motors.get(1).setPower(fr);
-        motors.get(2).setPower(br);
-        motors.get(3).setPower(bl);
+        //TODO make a loop to do this, can fetch orientation from motor or smth
+//        motors.get(MotorOrientation.FL.getOrder()).setPower(fl);
+//        motors.get(MotorOrientation.FR.getOrder()).setPower(fr);
+//        motors.get(MotorOrientation.BR.getOrder()).setPower(br);
+//        motors.get(MotorOrientation.BL.getOrder()).setPower(bl);
+
+
     }
 
     public void setPowers(double[] powers) {
         for(int i = 0; i<powers.length; i++)
             motors.get(i).setPower(i);
+    }
+
+    public int[] getEncoderValues() {
+        int[] encoderValues = new int[4];
+        for(int i = 0; i<motors.size(); i++) {
+
+        }
+        return new int[]{0};
+
     }
 
 }

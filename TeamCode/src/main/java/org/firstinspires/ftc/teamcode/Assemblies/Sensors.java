@@ -18,18 +18,19 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.TFOD_MO
 import static org.firstinspires.ftc.teamcode.Assemblies.ConfigurationData.VUFORIA_KEY;
 
 public class Sensors implements Subassembly {
-    private List<Recognition> finalRecognitions = new ArrayList<>();
+    //private List<Recognition> finalRecognitions = new ArrayList<>();
     private List<Recognition> recognitions;
+
     private LinearOpMode caller;
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
 
-    private static final int LOWER_X_BOUNDARY = 0; //temporary values
-    private static final int UPPER_X_BOUNDARY = 300;
-    private static final int LOWER_Y_BOUNDARY = 250;
-    private static final int UPPER_Y_BOUNDARY = 390;
-    private static final int MIDDLE_BOUNDARY = 200;
-    private int left = 0, top = 0, right = 200, bottom = 0;
+    //    private static final int LOWER_X_BOUNDARY = 0; //temporary values
+//    private static final int UPPER_X_BOUNDARY = 300;
+//    private static final int LOWER_Y_BOUNDARY = 250;
+//    private static final int UPPER_Y_BOUNDARY = 390;
+    private static final int MID_BOUND = 200;
+    private static final int LEFT_BOUND = 0, TOP_BOUND = 0, RIGHT_BOUND = 200, BOTTOM_BOUND = 0;
 
     private SkyStoneLocation location;
 
@@ -44,39 +45,33 @@ public class Sensors implements Subassembly {
 
     @Override
     public void init() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-        hardwareMap = caller.hardwareMap;
+
+        //Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        //webcam name must be c310
-        parameters.cameraName = caller.hardwareMap.get(WebcamName.class, "C310");
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "C310"); //webcam name "C310"
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        //decrease conf o.8
+
         tfodParameters.minimumConfidence = 0.4;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-
-        //only detecting stones
 
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE//,
                 //LABEL_SECOND_ELEMENT
         );
 
-        tfod.setClippingMargins(left,top,right,bottom);
+        tfod.setClippingMargins(LEFT_BOUND, TOP_BOUND, RIGHT_BOUND, BOTTOM_BOUND);
 
         tfod.activate();
-        telemetry.addData("Subassembly", "Sensors initialized!");
+        telemetry.addData("Subassembly: ", "Sensors initialized!");
 
     }
 
@@ -86,78 +81,46 @@ public class Sensors implements Subassembly {
     }
 
     public SkyStoneLocation findSkystone() {
-        //tfod.activate();
+
         if (tfod != null) {
-            //poll recognitions 5 times with break in between for lighting
-            if (true //gamepad1.a
-            ) {
-                //TODO blocking out the pixels
-                //tfod.setClippingMargins(LOWER_X_BOUNDARY, UPPER_X_BOUNDARY, LOWER_Y_BOUNDARY, UPPER_Y_BOUNDARY);
-                for (int i = 0; i < 5; i++) {
-                    recognitions = tfod.getRecognitions();
-                    caller.sleep(100);
-                }
 
-                telemetry.addData("recognitions", recognitions.toString());
-                telemetry.update();
-
-                //This loop prunes recognitions that are outside of viewing window, which is limited
-                //to the area around the first two stones.
-                if (recognitions.size() != 0) {
-                    for (int i = 0; i<recognitions.size(); i++) {
-                        if ( true
-//                                !((recognitions.get(i).getLeft() > UPPER_X_BOUNDARY || recognitions.get(i).getLeft() < LOWER_X_BOUNDARY)
-//                                        && (recognitions.get(i).getBottom() > UPPER_Y_BOUNDARY || recognitions.get(i).getBottom() < LOWER_Y_BOUNDARY))
-//
-                        )
-                        {
-                            //recognitions.remove(recognition);
-                            finalRecognitions.add(recognitions.get(i));
-                        }
-                    }
-                }
-                else {
-                    //DEFAULT CASE
-                    return SkyStoneLocation.LEFT;
-                }
-
-
-
-                //If there is more than one stone recognized, the skystone must be on the right.
-                // s s k
-                if (finalRecognitions.size() > 1) {
-                    location = Sensors.SkyStoneLocation.RIGHT;
-                }
-                // s k s
-                // this must return center, as if the get left boundary is less than the middle,
-                // since we are detecting stones, it is center
-                //now we are using the average
-                else if ((finalRecognitions.get(0).getLeft() + finalRecognitions.get(0).getRight()) / 2 < MIDDLE_BOUNDARY) {
-                    location = Sensors.SkyStoneLocation.CENTER;
-                }
-                // k s s
-                else {
-                    location = Sensors.SkyStoneLocation.LEFT;
-                }
-                //TODO swap with return
-                switch (location) {
-                    case LEFT:
-                        telemetry.addData("SkyStone Location:", "LEFT");
-                        break;
-                    case RIGHT:
-                        telemetry.addData("SkyStone Location:", "RIGHT");
-                        break;
-                    case CENTER:
-                        telemetry.addData("SkyStone Location:", "CENTER");
-                        break;
-                }
+            //Poll recognitions 5 times with break in between for lighting.
+            //Each recognition is considered as a stone.
+            for (int i = 0; i < 5; i++) {
+                recognitions = tfod.getRecognitions();
+                caller.sleep(100);
             }
-            finalRecognitions.clear();
+
+            telemetry.addData("Recognitions: ", recognitions.toString());
             telemetry.update();
+
+
+            if (recognitions.size() == 0) {  //zero stones in sight-- this should never happen
+                location = SkyStoneLocation.LEFT; //default case
+            }
+
+            //If there is more than one stone recognized, the skystone must be on the right.
+            else if (recognitions.size() > 1) {  //two stones in sight s s k
+                location = Sensors.SkyStoneLocation.RIGHT;
+            }
+
+            else if ((recognitions.get(0).getLeft() + recognitions.get(0).getRight()) / 2 < MID_BOUND) {
+                location = Sensors.SkyStoneLocation.CENTER;  // s k s
+            }
+
+            else {
+                location = Sensors.SkyStoneLocation.LEFT;
+            }
         }
+
+        recognitions.clear();
+
+        telemetry.addData("SkyStone Location: ", location);
+        telemetry.update();
 
         return location;
     }
+
 
     public void shutdown() {
         tfod.shutdown();
@@ -170,5 +133,6 @@ public class Sensors implements Subassembly {
         CENTER,
 
         RIGHT
+
     }
 }
