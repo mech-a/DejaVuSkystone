@@ -75,7 +75,7 @@ public class Case1A extends LinearOpMode {
 
         // resetting extake so that it doesnt cause the stone to enter sideways
         ss.extakeOut();
-        sleep(200);
+        sleep(1000);
         ss.extakeIn();
 
         //intake
@@ -98,15 +98,19 @@ public class Case1A extends LinearOpMode {
         //pull out of area
         d.followTrajectorySync(
                 d.trajectoryBuilder()
+                        .reverse()
                         .splineTo(new Pose2d(pulloutX, pulloutY, pulloutHeading))
+                        //.back(distanceForwardToPickUpStone)
                         .build()
         );
+
+        telemetry.addData("stat", "after pullout");
 
         // move over to foundation side
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        //.lineTo(new Vector2d(25, 35), new ConstantInterpolator(-90))
-                        .strafeLeft(distanceStrafeLeftForFoundationSide)
+                        .lineTo(new Vector2d(25, pulloutY), new ConstantInterpolator(-90))
+                        //.strafeLeft(distanceStrafeLeftForFoundationSide)
                         .build()
         );
 
