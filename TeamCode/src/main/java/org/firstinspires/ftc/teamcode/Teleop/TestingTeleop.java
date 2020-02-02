@@ -33,7 +33,7 @@ public class TestingTeleop extends LinearOpMode {
         FIELD, CARTESIAN
     }
 
-    double[] speedSwitch = {0.375,1.5*0.375,2*0.375};
+    double[] speedSwitch = {0.375,1.5*0.375,2*0.375, 0.1};
     boolean runFast = true, runSlow = false;
     double modifier = speedSwitch[0];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
@@ -307,7 +307,9 @@ public class TestingTeleop extends LinearOpMode {
 //        }
 
         //speedswitch 0 = slow 1 = default 2 = fast
-        if(gamepad1.left_trigger>TRIGGER_DEADZONE)
+        if (gamepad1.left_trigger>TRIGGER_DEADZONE && gamepad1.right_trigger>TRIGGER_DEADZONE)
+            modifier = speedSwitch[3];
+        else if (gamepad1.left_trigger>TRIGGER_DEADZONE)
             modifier = speedSwitch[0];
         else if(gamepad1.right_trigger>TRIGGER_DEADZONE)
             modifier = speedSwitch[2];
