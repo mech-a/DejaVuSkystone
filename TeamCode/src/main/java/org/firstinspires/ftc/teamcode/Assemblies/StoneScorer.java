@@ -23,14 +23,16 @@ import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInRotati
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutClawServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutFerrisServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutRotationServoPosition;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.foundationDown;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.foundationUp;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initClawServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFoundationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRotationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initferrisServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationDown;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationUp;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.mtrVerticalStop1;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.mtrVerticalStop2;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.rightFoundationDown;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.rightFoundationUp;
 
 public class StoneScorer //implements Subassembly
 {
@@ -218,14 +220,14 @@ public class StoneScorer //implements Subassembly
     // lower servo to hook foundation
     // TODO: FIND AND PUT IN CORRECT VALUES
     public void hookFoundation() {
-        servos.get(3).setPosition(foundationDown);
-        servos.get(4).setPosition(foundationDown);
+        servos.get(3).setPosition(leftFoundationDown);
+        servos.get(4).setPosition(rightFoundationDown);
     }
 
     // raise servo to unhook foundation
     public void unhookFoundation() {
-        servos.get(3).setPosition(foundationUp);
-        servos.get(4).setPosition(foundationUp);
+        servos.get(3).setPosition(leftFoundationUp);
+        servos.get(4).setPosition(rightFoundationUp);
     }
 
     // raise or lower vertical slide
