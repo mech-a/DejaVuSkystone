@@ -53,8 +53,8 @@ public class Drivetrain {
         telemetry = caller.telemetry;
     }
 
-    public void init() {
-        //hwMap = aHwMap;
+    public void init(HardwareMap aHwMap) {
+        hwMap = aHwMap;
         if(hwMap == null)
             telemetry.addData("Stat", "Null HWMAP");
         telemetry.update();
@@ -113,6 +113,15 @@ public class Drivetrain {
     public void setPowers(double[] powers) {
         for(int i = 0; i<powers.length; i++)
             motors.get(i).setPower(i);
+    }
+
+    public int[] getEncoderValues() {
+        int[] encoderValues = new int[4];
+        for(int i = 0; i<motors.size(); i++) {
+
+        }
+        return new int[]{0};
+
     }
 
 }
