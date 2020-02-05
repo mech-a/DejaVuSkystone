@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
+import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -27,7 +28,7 @@ public class Case1A extends LinearOpMode {
     //Sensors s = new Sensors(this);
     Sensors.SkyStoneLocation skyStoneLocation;
 
-    public static double headingToWall = -90;
+    public static double standardHeading = -90;
     public static double startingX = -35, startingY = 60;
     public static double skystoneLeftX = -28, skystoneCenterX = -35, skystoneRightX = -45;
     public static double skystoneY = 30;
@@ -64,12 +65,13 @@ public class Case1A extends LinearOpMode {
         if (isStopRequested()) return;
 
         //starting at -35, 60
-        d.setPoseEstimate(new Pose2d(startingX, startingY, headingToWall));
+        d.setPoseEstimate(new Pose2d(startingX, startingY, standardHeading));
 
         //make a straight line strafe in front of skystone
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(skystonePositionX, skystoneY), new ConstantInterpolator(headingToWall))
+//                        .lineTo(new Vector2d(skystonePositionX, skystoneY), new ConstantInterpolator(standardHeading))
+                        .splineTo(new Pose2d(skystonePositionX, skystoneY, standardHeading))
                         .build() );
 
 
@@ -96,20 +98,34 @@ public class Case1A extends LinearOpMode {
 
         //TODO come up with better way to pull out, probably can go backwards, rn will interfere with blocks
         //pull out of area
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .reverse()
-                        .splineTo(new Pose2d(pulloutX, pulloutY, pulloutHeading))
-                        //.back(distanceForwardToPickUpStone)
-                        .build()
-        );
+//        d.followTrajectorySync(
+//                d.trajectoryBuilder()
+//                        .reverse()
+//                        .splineTo(new Pose2d(pulloutX, pulloutY, pulloutHeading))
+//                        //.back(distanceForwardToPickUpStone)
+//                        .build()
+//        );
 
         telemetry.addData("stat", "after pullout");
 
         // move over to foundation side
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(25, pulloutY), new ConstantInterpolator(-90))
+                        .reverse()
+                        .splineTo(new Pose2d(-5, 38, -179)//, new LinearInterpolator(-90, -180)
+                        )
+                        //.strafeLeft(distanceStrafeLeftForFoundationSide)
+                        .build()
+        );
+
+        telemetry.addData("Stat", "after something");
+        telemetry.update();
+        sleep(10000);
+
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                        .reverse()
+                        .splineTo(new Pose2d(30, 35, 90))
                         //.strafeLeft(distanceStrafeLeftForFoundationSide)
                         .build()
         );
