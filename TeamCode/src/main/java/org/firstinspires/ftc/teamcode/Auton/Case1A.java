@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 import org.yaml.snakeyaml.scanner.Constant;
 
 import java.util.Vector;
@@ -38,11 +39,13 @@ public class Case1A extends LinearOpMode {
     public static double headingForStoneDrop = 90;
     //public static double distanceBackToPark = 25;
 
+    public static double rotationBias = 9;
+
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
+        SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
 
         ss.init(hardwareMap);
         //s.init();
@@ -112,15 +115,36 @@ public class Case1A extends LinearOpMode {
         d.followTrajectorySync(
                 d.trajectoryBuilder()
                         .reverse()
-                        .splineTo(new Pose2d(-5, 38, -179)//, new LinearInterpolator(-90, -180)
-                        )
+                        //.splineTo(new Pose2d(-5, 38, -180), new LinearInterpolator(-90, -180))
                         //.strafeLeft(distanceStrafeLeftForFoundationSide)
+                        //.reverse()
+                        .lineTo(new Vector2d(skystonePositionX, 33))
+                        .build()
+        );
+
+
+
+
+
+        d.turnSync(Math.toRadians(-90-rotationBias));
+
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                        .reverse()
+                        .lineTo(new Vector2d(20, 40))
                         .build()
         );
 
         telemetry.addData("Stat", "after something");
+        telemetry.addData("Heading", d.getPoseEstimate().getHeading());
         telemetry.update();
+
+        //d.turnSync(Math.toRadians(180)-d.getPoseEstimate().getHeading());
+
         sleep(10000);
+
+        //d.getPoseEstimate().getHeading();
+
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
