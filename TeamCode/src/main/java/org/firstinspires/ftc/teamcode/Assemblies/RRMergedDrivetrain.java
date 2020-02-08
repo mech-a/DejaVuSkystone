@@ -14,6 +14,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import kotlin.Deprecated;
+
+/**
+ * DO NOT USE. DEPRECATED
+ */
+
+//@Deprecated
 public class RRMergedDrivetrain extends SampleMecanumDriveBase implements Subassembly {
     DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     LinearOpMode caller;
