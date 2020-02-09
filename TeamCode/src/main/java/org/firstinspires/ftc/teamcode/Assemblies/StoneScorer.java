@@ -3,10 +3,7 @@ package org.firstinspires.ftc.teamcode.Assemblies;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,17 +13,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInClawServo;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInFerrisServo;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInFerrisServo2;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeInRotationServo;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutClawServoPosition;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutFerrisServoPosition;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.extakeOutRotationServoPosition;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.unclampClawServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.intakeFerrisServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.frontRotationServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.clampClawServoPosition;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.placeFerrisServoPosition;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.backRotationServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initClawServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFoundationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRotationServo;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initferrisServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFerrisServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationDown;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationUp;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.mtrVerticalStop1;
@@ -142,13 +138,13 @@ public class StoneScorer //implements Subassembly
                 temp.setPosition(initRotationServo);
             }
             else if (i == 1) {
-                temp.setPosition(initferrisServo);
+                temp.setPosition(initFerrisServo);
             }
             else if (i == 2) {
                 temp.setPosition(initClawServo);
             }
             else
-                temp.setPosition(initFoundationServo);
+                temp.setPosition(initRightFoundationServo);
 
             servos.add(temp);
         }
@@ -185,7 +181,7 @@ public class StoneScorer //implements Subassembly
 
         clawTimer.reset();
         extake_position = 1;
-        servos.get(2).setPosition(extakeOutClawServoPosition);
+        servos.get(2).setPosition(clampClawServoPosition);
         try {
             sleep(500);
         } catch (InterruptedException e) {
@@ -194,23 +190,23 @@ public class StoneScorer //implements Subassembly
 
         if(extake_position == 1 //&& clawTimer.milliseconds() > 300
         ) {
-            servos.get(1).setPosition(extakeOutFerrisServoPosition);      //ferris servo has limits 0.577 and 0.0522
-            servos.get(0).setPosition(extakeOutRotationServoPosition);  //rotation servo has limits 0.03 and 0.54
+            servos.get(1).setPosition(placeFerrisServoPosition);      //ferris servo has limits 0.577 and 0.0522
+            servos.get(0).setPosition(backRotationServoPosition);  //rotation servo has limits 0.03 and 0.54
             extake_position = 0;
         }
     }
 
     public void dropStone() {
-        servos.get(2).setPosition(extakeInClawServo);
+        servos.get(2).setPosition(unclampClawServo);
     }
 
     // pull extake in
     public void extakeIn() {
         clawTimer.reset();
         extake_position = -1;
-        servos.get(2).setPosition(extakeInClawServo);
-        servos.get(1).setPosition(extakeInFerrisServo);
-        servos.get(0).setPosition(extakeInRotationServo);
+        servos.get(2).setPosition(unclampClawServo);
+        servos.get(1).setPosition(intakeFerrisServo);
+        servos.get(0).setPosition(frontRotationServo);
 
         try {
             sleep(300);
@@ -220,7 +216,7 @@ public class StoneScorer //implements Subassembly
 
         if(extake_position == -1 //&& clawTimer.milliseconds() > 300
         ) {
-            servos.get(1).setPosition(extakeInFerrisServo2);
+            servos.get(1).setPosition(intakeFerrisServo);
             extake_position = 0;
         }
     }

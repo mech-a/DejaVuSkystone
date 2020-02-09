@@ -9,23 +9,24 @@ public class Constants {
     //STONESCORER
     //Constants for init
     public static double initRotationServo = 0.66;
-    public static double initferrisServo = 0.32;
+    public static double initFerrisServo = 0.32;
     public static double initClawServo = 1;
-    public static double initFoundationServo = 0;
+    public static double initLeftFoundationServo = 0;
+    public static double initRightFoundationServo = 0;
 
     // Servo constants for extakeOut method
-    public static double extakeOutClawServoPosition = 0.643;
-    public static double extakeOutFerrisServoPosition = 0.85;
-    public static double extakeOutRotationServoPosition = 28.8/270 +.02;
+    public static double clampClawServoPosition = 0.643;
+    public static double placeFerrisServoPosition = 0.85;
+    public static double backRotationServoPosition = 28.8/270 +.02;
 
     // Constants for extakeIn
-    public static double extakeInClawServo = 1;
-    public static double extakeInFerrisServo = 0.92;
-    public static double extakeInRotationServo = 0.643+(28.8/270);
-    public static double extakeInFerrisServo2 = 0.31;
+    public static double unclampClawServo = 1;
+    public static double kickbackFerrisServo = 0.92;
+    public static double frontRotationServo = 0.643+(28.8/270);
+    public static double intakeFerrisServo = 0.31; 
 
     // For foundation
-    public static double leftFoundationDown = 0.72;
+    public static double leftFoundationDown = 0.72; //these are all probably old and useless
     public static double rightFoundationDown = 0.15;
     public static double leftFoundationUp = 0.10;
     public static double rightFoundationUp = 0.77;
