@@ -41,6 +41,7 @@ public class Case1A extends LinearOpMode {
 
     public static double rotationBias = 9;
 
+    public static long sleepFromExtakeOutToExtakeIn = 1000, sleepFromExtakeInToIntakeIn = 1000;
 
 
     @Override
@@ -80,8 +81,9 @@ public class Case1A extends LinearOpMode {
 
         // resetting extake so that it doesnt cause the stone to enter sideways
         ss.extakeOut();
-        sleep(1000);
+        sleep(sleepFromExtakeOutToExtakeIn);
         ss.extakeIn();
+        sleep(sleepFromExtakeInToIntakeIn);
 
         //intake
         ss.intake(0.75); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
