@@ -13,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initLeftFoundationServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRightFoundationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.unclampClawServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.intakeFerrisServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.frontRotationServo;
@@ -20,7 +22,7 @@ import static org.firstinspires.ftc.teamcode.Assemblies.Constants.clampClawServo
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.placeFerrisServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.backRotationServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initClawServo;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFoundationServo;
+//import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFoundationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRotationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFerrisServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationDown;
@@ -134,15 +136,14 @@ public class StoneScorer //implements Subassembly
 
             temp.setDirection(Servo.Direction.FORWARD);
 
-            if (i == 0) {
+            if (i == 0)
                 temp.setPosition(initRotationServo);
-            }
-            else if (i == 1) {
+            else if (i == 1)
                 temp.setPosition(initFerrisServo);
-            }
-            else if (i == 2) {
+            else if (i == 2)
                 temp.setPosition(initClawServo);
-            }
+            else if(i == 3)
+                temp.setPosition(initLeftFoundationServo);
             else
                 temp.setPosition(initRightFoundationServo);
 
