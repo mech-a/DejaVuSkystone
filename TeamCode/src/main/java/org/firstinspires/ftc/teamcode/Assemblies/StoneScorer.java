@@ -123,6 +123,7 @@ public class StoneScorer //implements Subassembly
 
         //FOR SERVOS
         servos = new ArrayList<>();
+
         for(int i = 0; i<NUM_SERVOS; i++) {
             Servo temp = null;
 
@@ -133,18 +134,22 @@ public class StoneScorer //implements Subassembly
             }
 
             temp.setDirection(Servo.Direction.FORWARD);
+//
+            temp.setPosition(ServoMotorOrientation.values()[i].getOrder());
 
-            if (i == 0) {
-                temp.setPosition(initRotationServo);
-            }
-            else if (i == 1) {
-                temp.setPosition(initFerrisServo);
-            }
-            else if (i == 2) {
-                temp.setPosition(initClawServo);
-            }
-            else
-                temp.setPosition(initRightFoundationServo);
+//            if (i == 0) {
+//                temp.setPosition(initRotationServo);
+//            }
+//            else if (i == 1) {
+//                temp.setPosition(initFerrisServo);
+//            }
+//            else if (i == 2) {
+//                temp.setPosition(initClawServo);
+//            }
+//            else
+//                temp.setPosition(initRightFoundationServo);
+
+
 
             servos.add(temp);
         }
