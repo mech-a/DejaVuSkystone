@@ -32,6 +32,7 @@ public class Constants {
     public static double rightFoundationUp = 0.77;
 
     // For vertical motor powers
+    //TODO
     public static double mtrVerticalStop1 = 1;
     public static double mtrVerticalStop2 = 0;
 }

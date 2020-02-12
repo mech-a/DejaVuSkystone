@@ -37,6 +37,7 @@ import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
 
 @Autonomous(name = "Test Case", group = "Auton")
+@Deprecated
 public class Testing extends LinearOpMode {
     int liftValueA = -5400;
     int extendValueA = 2260;

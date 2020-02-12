@@ -20,7 +20,7 @@ import kotlin.Deprecated;
  * DO NOT USE. DEPRECATED
  */
 
-//@Deprecated
+@Deprecated(message = "Kept for safety, factor out later")
 public class RRMergedDrivetrain extends SampleMecanumDriveBase implements Subassembly {
     DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     LinearOpMode caller;

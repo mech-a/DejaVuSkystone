@@ -46,8 +46,7 @@ import static org.firstinspires.ftc.teamcode.Assemblies.Constants.rightFoundatio
 
 
 /**
- * Directly powers the drive wheels with a constant power.
- * Cycle between RUN_USING_ENCODER and RUN_WITHOUT_ENCODER for more testing.
+ * Drops the foundation hooks and moves around
  */
 
 @Autonomous(group="Internal")

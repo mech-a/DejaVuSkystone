@@ -22,7 +22,6 @@ import static org.firstinspires.ftc.teamcode.Assemblies.Constants.clampClawServo
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.placeFerrisServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.backRotationServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initClawServo;
-//import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFoundationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRotationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFerrisServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationDown;
