@@ -30,16 +30,16 @@ public class Case1A extends LinearOpMode {
     Sensors.SkyStoneLocation skyStoneLocation;
 
     public static double standardHeading = -90;
-    public static double startingX = -35, startingY = 60;
-    public static double skystoneLeftX = -28, skystoneCenterX = -35, skystoneRightX = -45;
-    public static double skystoneY = 30;
+    public static double startingX = -32.75, startingY = 63.75;
+    public static double skystoneLeftX = -36, skystoneCenterX = -35, skystoneRightX = -45;
+    public static double skystoneY = 36;
     public static double distanceForwardToPickUpStone = 20;
     public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
     public static double distanceStrafeLeftForFoundationSide = 55;
     public static double headingForStoneDrop = 90;
     //public static double distanceBackToPark = 25;
 
-    public static double rotationBias = 9;
+    public static double rotationBias = 6.5;
 
     public static long sleepFromExtakeOutToExtakeIn = 1000, sleepFromExtakeInToIntakeIn = 1000;
 
@@ -74,9 +74,11 @@ public class Case1A extends LinearOpMode {
         //make a straight line strafe in front of skystone
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-//                        .lineTo(new Vector2d(skystonePositionX, skystoneY), new ConstantInterpolator(standardHeading))
-                        .splineTo(new Pose2d(skystonePositionX, skystoneY, standardHeading))
+                        .lineTo(new Vector2d(skystoneLeftX, skystoneY), new ConstantInterpolator(standardHeading))
+//                        .splineTo(new Pose2d(skystonePositionX, skystoneY, standardHeading))
                         .build() );
+
+        d.turnSync(Math.toRadians(-135));
 
 
         // resetting extake so that it doesnt cause the stone to enter sideways

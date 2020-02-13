@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Assemblies;
 public class ConfigurationData {
 
     //made to match configuration on phone, 1/21/20. Do not tamper with the order of
-    // DRIVETRAIN_MOTOR_NAMES
     public final static String[] DRIVETRAIN_MOTOR_NAMES = {"fl", "fr", "br", "bl"};
 
     public final static String[] BLOCK_MANIPULATOR_MOTOR_NAMES = {"vertical", "leftRoller", "rightRoller"};

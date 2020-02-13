@@ -51,7 +51,7 @@ public class DrivetrainDirectTest extends LinearOpMode {
 
     // Declare OpMode members.
     Drivetrain d = new Drivetrain(this);
-    public static double power = 0.5, sleep = 500, numRuns = 4;
+    public static double power = 0.5, sleepForDriving = 500, sleepAfterZero = 500, numRuns = 4;
     public static boolean zeroPowerAfter = false;
 
     private DcMotor fl, fr, br, bl;
@@ -71,27 +71,35 @@ public class DrivetrainDirectTest extends LinearOpMode {
             for(int i = 0; i<numRuns; i++) {
                 //straight
                 d.setPowers(power, power, power, power);
-                sleep((long) sleep);
-                if(zeroPowerAfter)
-                    d.setPowers(0,0,0,0);
+                sleep((long) sleepForDriving);
+                if(zeroPowerAfter) {
+                    d.setPowers(0, 0, 0, 0);
+                    sleep((long) sleepAfterZero);
+                }
 
                 //right
                 d.setPowers(power, -power, power, -power);
-                sleep((long) sleep);
-                if(zeroPowerAfter)
-                    d.setPowers(0,0,0,0);
+                sleep((long) sleepForDriving);
+                if(zeroPowerAfter) {
+                    d.setPowers(0, 0, 0, 0);
+                    sleep((long) sleepAfterZero);
+                }
 
                 //back
                 d.setPowers(-power, -power, -power, -power);
-                sleep((long) sleep);
-                if(zeroPowerAfter)
-                    d.setPowers(0,0,0,0);
+                sleep((long) sleepForDriving);
+                if(zeroPowerAfter) {
+                    d.setPowers(0, 0, 0, 0);
+                    sleep((long) sleepAfterZero);
+                }
 
                 //left
                 d.setPowers(-power, power, -power, power);
-                sleep((long) sleep);
-                if(zeroPowerAfter)
-                    d.setPowers(0,0,0,0);
+                sleep((long) sleepForDriving);
+                if(zeroPowerAfter) {
+                    d.setPowers(0, 0, 0, 0);
+                    sleep((long) sleepAfterZero);
+                }
 
             }
         }
