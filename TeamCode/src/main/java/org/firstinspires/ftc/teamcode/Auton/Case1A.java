@@ -143,33 +143,25 @@ public class Case1A extends LinearOpMode {
 
         //d.turnSync(Math.toRadians(180)-d.getPoseEstimate().getHeading());
 
-        sleep(10000);
+        sleep(1000);
 
         //d.getPoseEstimate().getHeading();
 
-
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .reverse()
-                        .splineTo(new Pose2d(30, 35, 90))
-                        //.strafeLeft(distanceStrafeLeftForFoundationSide)
-                        .build()
-        );
-
-        d.turnSync(Math.toRadians(headingForStoneDrop));
+        //d.turnSync(Math.toRadians(headingForStoneDrop));
 
         //TODO extake
         ss.extakeOut();
-        sleep(100);
+        sleep(500);
         ss.dropStone();
-        sleep(100);
+        sleep(500);
         ss.extakeIn();
-        sleep(100);
+        sleep(1000);
 
         //park under the bridge
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(0, pulloutY), new ConstantInterpolator(90))
+                        .lineTo(new Vector2d(0, pulloutY), new ConstantInterpolator(90)
+                        )
                         //.strafeLeft(25)
                         .build()
         );
