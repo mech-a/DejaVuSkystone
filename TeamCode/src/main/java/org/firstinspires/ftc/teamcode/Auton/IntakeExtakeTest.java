@@ -19,7 +19,7 @@ public class IntakeExtakeTest extends LinearOpMode {
 
     StoneScorer ss = new StoneScorer(this);
     Drivetrain d = new Drivetrain(this);
-    public static double distanceForwardToPickUpStone = 48;
+  //  public static double distanceForwardToPickUpStone = 48;
     public static double pow = 0.5;
     public static double timeBeforeStopping = 2000;
 
