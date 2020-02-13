@@ -31,7 +31,7 @@ public class Case1A extends LinearOpMode {
 
     public static double standardHeading = -90;
     public static double startingX = -32.75, startingY = 63.75;
-    public static double skystoneLeftX = -36, skystoneCenterX = -35, skystoneRightX = -45;
+    public static double skystoneLeftX = -12, skystoneCenterX = -35, skystoneRightX = -45;
     public static double skystoneY = 36;
     public static double distanceForwardToPickUpStone = 20;
     public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
@@ -78,12 +78,12 @@ public class Case1A extends LinearOpMode {
 //                        .splineTo(new Pose2d(skystonePositionX, skystoneY, standardHeading))
                         .build() );
 
-        d.turnSync(Math.toRadians(-135));
+        d.turnSync(Math.toRadians(-45));
 
 
         // resetting extake so that it doesnt cause the stone to enter sideways
-        ss.extakeOut();
-        sleep(sleepFromExtakeOutToExtakeIn);
+//        ss.extakeOut();
+//        sleep(sleepFromExtakeOutToExtakeIn);
         ss.extakeIn();
         sleep(sleepFromExtakeInToIntakeIn);
 
