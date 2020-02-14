@@ -29,12 +29,13 @@ public class Case1A extends LinearOpMode {
     //Sensors s = new Sensors(this);
     Sensors.SkyStoneLocation skyStoneLocation;
 
-    public static double standardHeading = -90;
-    public static double startingX = -32.75, startingY = 63.75;
-    public static double skystoneLeftX = -12, skystoneCenterX = -35, skystoneRightX = -45;
-    public static double skystoneY = 36;
-    public static double distanceForwardToPickUpStone = 20;
+    public static double standardHeading = 0;
+    public static double startingX = 0, startingY = 0;
+    public static double skystoneX = 28;
+    public static double skystoneLeftY = 24, skystoneCenterY, skystoneRightY;
+    public static double distanceForwardToPickUpStone = 18.5;
     public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
+    public static double angle = -45;
     public static double distanceStrafeLeftForFoundationSide = 55;
     public static double headingForStoneDrop = 90;
     //public static double distanceBackToPark = 25;
@@ -58,13 +59,13 @@ public class Case1A extends LinearOpMode {
         skyStoneLocation = Sensors.SkyStoneLocation.LEFT;
 
         //TODO just make enum value equal to the skystone location so no if loops reqd., check if roadrunner can still work w that
-        double skystonePositionX;
+        double skystonePositionY;
         if(skyStoneLocation == Sensors.SkyStoneLocation.LEFT)
-            skystonePositionX = skystoneLeftX;
+            skystonePositionY = skystoneLeftY;
         else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER)
-            skystonePositionX = skystoneCenterX;
+            skystonePositionY = skystoneCenterY;
         else
-            skystonePositionX = skystoneRightX;
+            skystonePositionY = skystoneRightY;
 
         if (isStopRequested()) return;
 
@@ -74,21 +75,20 @@ public class Case1A extends LinearOpMode {
         //make a straight line strafe in front of skystone
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(skystoneLeftX, skystoneY), new ConstantInterpolator(standardHeading))
+                        .lineTo(new Vector2d(skystoneX, strafeConvert(skystonePositionY)), new ConstantInterpolator(standardHeading))
 //                        .splineTo(new Pose2d(skystonePositionX, skystoneY, standardHeading))
                         .build() );
 
-        d.turnSync(Math.toRadians(-45));
+        d.turnSync(Math.toRadians(angle));
 
 
         // resetting extake so that it doesnt cause the stone to enter sideways
 //        ss.extakeOut();
 //        sleep(sleepFromExtakeOutToExtakeIn);
         ss.extakeIn();
-        sleep(sleepFromExtakeInToIntakeIn);
 
         //intake
-        ss.intake(0.75); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
+        ss.intake(-0.75); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
 
         //TODO i think this is wrong, it needs to move forward and then back (fixed)
         //drives forward to pick up
@@ -99,6 +99,8 @@ public class Case1A extends LinearOpMode {
                         .forward(distanceForwardToPickUpStone)
                         .build()
         );
+
+        sleep(2000);
 
         //block picked up
         ss.intake(0);
@@ -113,60 +115,62 @@ public class Case1A extends LinearOpMode {
 //                        .build()
 //        );
 
-        telemetry.addData("stat", "after pullout");
+//        telemetry.addData("stat", "after pullout");
+//
+//        // move over to foundation side
+//        d.followTrajectorySync(
+//                d.trajectoryBuilder()
+//                        .reverse()
+//                        //.splineTo(new Pose2d(-5, 38, -180), new LinearInterpolator(-90, -180))
+//                        //.strafeLeft(distanceStrafeLeftForFoundationSide)
+//                        //.reverse()
+//                        .lineTo(new Vector2d(skystonePositionX, 33))
+//                        .build()
+//        );
+//
+//
+//
+//
+//
+//        d.turnSync(Math.toRadians(-90-rotationBias));
+//
+//        d.followTrajectorySync(
+//                d.trajectoryBuilder()
+//                        .reverse()
+//                        .lineTo(new Vector2d(20, 40))
+//                        .build()
+//        );
+//
+//        telemetry.addData("Stat", "after something");
+//        telemetry.addData("Heading", d.getPoseEstimate().getHeading());
+//        telemetry.update();
+//
+//        //d.turnSync(Math.toRadians(180)-d.getPoseEstimate().getHeading());
+//
+//        sleep(1000);
+//
+//        //d.getPoseEstimate().getHeading();
+//
+//        //d.turnSync(Math.toRadians(headingForStoneDrop));
+//
+//        //TODO extake
+//        ss.extakeOut();
+//        sleep(500);
+//        ss.dropStone();
+//        sleep(500);
+//        ss.extakeIn();
+//        sleep(1000);
+//
+//        //park under the bridge
+//        d.followTrajectorySync(
+//                d.trajectoryBuilder()
+//                        .lineTo(new Vector2d(0, pulloutY), new ConstantInterpolator(90)
+//                        )
+//                        //.strafeLeft(25)
+//                        .build()
+//                        );
 
-        // move over to foundation side
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .reverse()
-                        //.splineTo(new Pose2d(-5, 38, -180), new LinearInterpolator(-90, -180))
-                        //.strafeLeft(distanceStrafeLeftForFoundationSide)
-                        //.reverse()
-                        .lineTo(new Vector2d(skystonePositionX, 33))
-                        .build()
-        );
 
-
-
-
-
-        d.turnSync(Math.toRadians(-90-rotationBias));
-
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .reverse()
-                        .lineTo(new Vector2d(20, 40))
-                        .build()
-        );
-
-        telemetry.addData("Stat", "after something");
-        telemetry.addData("Heading", d.getPoseEstimate().getHeading());
-        telemetry.update();
-
-        //d.turnSync(Math.toRadians(180)-d.getPoseEstimate().getHeading());
-
-        sleep(1000);
-
-        //d.getPoseEstimate().getHeading();
-
-        //d.turnSync(Math.toRadians(headingForStoneDrop));
-
-        //TODO extake
-        ss.extakeOut();
-        sleep(500);
-        ss.dropStone();
-        sleep(500);
-        ss.extakeIn();
-        sleep(1000);
-
-        //park under the bridge
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .lineTo(new Vector2d(0, pulloutY), new ConstantInterpolator(90)
-                        )
-                        //.strafeLeft(25)
-                        .build()
-        );
 
 
 
@@ -218,6 +222,10 @@ public class Case1A extends LinearOpMode {
 //                        .splineTo(new Pose2d(0, -60, 0))
 //                        .build()
 //        );
+    }
+
+    public static double strafeConvert(double distance) {
+        return (1.2 * distance + 3.53);
     }
 }
 
