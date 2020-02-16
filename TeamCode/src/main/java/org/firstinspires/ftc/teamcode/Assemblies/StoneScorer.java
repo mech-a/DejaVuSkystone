@@ -13,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initLeftFoundationServo;
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRightFoundationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.unclampClawServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.intakeFerrisServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.frontRotationServo;
@@ -20,7 +22,6 @@ import static org.firstinspires.ftc.teamcode.Assemblies.Constants.clampClawServo
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.placeFerrisServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.backRotationServoPosition;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initClawServo;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFoundationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRotationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initFerrisServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.leftFoundationDown;
@@ -62,15 +63,18 @@ public class StoneScorer //implements Subassembly
 
     public enum ServoMotorOrientation {
         // 0, 1, 2, 3
-        rotationServo(0),ferrisServo(1),clawServo(2), leftFoundationServo(3), rightFoundationServo(4);
+        rotationServo(initRotationServo),ferrisServo(initFerrisServo),clawServo(initClawServo), leftFoundationServo(initLeftFoundationServo), rightFoundationServo(initRightFoundationServo);
 
         private int order;
+        private double position;
 
-        ServoMotorOrientation(int anOrder) {
-            order = anOrder;
+
+        ServoMotorOrientation(double position, int order) {
+            this.order = order;
+            this.position = position;
         }
 
-        int getOrder() {
+        double getOrder() {
             return order;
         }
     }
@@ -149,7 +153,16 @@ public class StoneScorer //implements Subassembly
 //            else
 //                temp.setPosition(initRightFoundationServo);
 
-
+            if (i == 0)
+                temp.setPosition(initRotationServo);
+            else if (i == 1)
+                temp.setPosition(initFerrisServo);
+            else if (i == 2)
+                temp.setPosition(initClawServo);
+            else if(i == 3)
+                temp.setPosition(initLeftFoundationServo);
+            else
+                temp.setPosition(initRightFoundationServo);
 
             servos.add(temp);
         }

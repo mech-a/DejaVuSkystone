@@ -47,12 +47,13 @@ import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 @Autonomous(group="Internal")
 //@Disabled
 @Config
-public class DrivetrainDirectTest extends LinearOpMode {
+public class DrivetrainDirect extends LinearOpMode {
 
     // Declare OpMode members.
     Drivetrain d = new Drivetrain(this);
-    public static double power = 0.5, sleepForDriving = 500, sleepAfterZero = 500, numRuns = 4;
+    public static double power = 0.5, sleep = 500, numRuns = 4;
     public static boolean zeroPowerAfter = false;
+    public static boolean forwardBackward = true;
 
     private DcMotor fl, fr, br, bl;
 
@@ -68,39 +69,30 @@ public class DrivetrainDirectTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            for(int i = 0; i<numRuns; i++) {
+            if (forwardBackward) {
                 //straight
                 d.setPowers(power, power, power, power);
-                sleep((long) sleepForDriving);
-                if(zeroPowerAfter) {
+                sleep((long) sleep);
+                if (zeroPowerAfter)
                     d.setPowers(0, 0, 0, 0);
-                    sleep((long) sleepAfterZero);
-                }
-
-                //right
-                d.setPowers(power, -power, power, -power);
-                sleep((long) sleepForDriving);
-                if(zeroPowerAfter) {
-                    d.setPowers(0, 0, 0, 0);
-                    sleep((long) sleepAfterZero);
-                }
 
                 //back
                 d.setPowers(-power, -power, -power, -power);
-                sleep((long) sleepForDriving);
-                if(zeroPowerAfter) {
+                sleep((long) sleep);
+                if (zeroPowerAfter)
                     d.setPowers(0, 0, 0, 0);
-                    sleep((long) sleepAfterZero);
-                }
+            } else {
+                //right
+                d.setPowers(power, -power, power, -power);
+                sleep((long) sleep);
+                if(zeroPowerAfter)
+                    d.setPowers(0,0,0,0);
 
                 //left
                 d.setPowers(-power, power, -power, power);
-                sleep((long) sleepForDriving);
-                if(zeroPowerAfter) {
-                    d.setPowers(0, 0, 0, 0);
-                    sleep((long) sleepAfterZero);
-                }
-
+                sleep((long) sleep);
+                if(zeroPowerAfter)
+                    d.setPowers(0,0,0,0);
             }
         }
     }
