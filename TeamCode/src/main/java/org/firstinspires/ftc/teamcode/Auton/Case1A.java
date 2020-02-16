@@ -31,11 +31,14 @@ public class Case1A extends LinearOpMode {
 
     public static double standardHeading = 0;
     public static double startingX = 0, startingY = 0;
-    public static double skystoneX = 28;
-    public static double skystoneLeftY = 24, skystoneCenterY, skystoneRightY;
-    public static double distanceForwardToPickUpStone = 18.5;
+    public static double skystoneLeftX = 28, skystoneCenterX, skystoneRightX = 46;
+    public static double skystoneLeftY = 23, skystoneCenterY = 14, skystoneRightY = 1;
+    public static double skystoneRightX2 = 28, skystoneRightY2 = 5;
+    public static double distanceForwardToPickUpStone = 17.5;
+    public static double distanceForwardToPickUpStoneRight = 7;
     public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
     public static double angle = -45;
+    public static double caseRightAngle = -90;
     public static double distanceStrafeLeftForFoundationSide = 55;
     public static double headingForStoneDrop = 90;
     //public static double distanceBackToPark = 25;
@@ -56,54 +59,111 @@ public class Case1A extends LinearOpMode {
 
         //TODO reimpl.
         //skyStoneLocation = s.findSkystone();
-        skyStoneLocation = Sensors.SkyStoneLocation.LEFT;
-
-        //TODO just make enum value equal to the skystone location so no if loops reqd., check if roadrunner can still work w that
-        double skystonePositionY;
-        if(skyStoneLocation == Sensors.SkyStoneLocation.LEFT)
-            skystonePositionY = skystoneLeftY;
-        else if (skyStoneLocation == Sensors.SkyStoneLocation.CENTER)
-            skystonePositionY = skystoneCenterY;
-        else
-            skystonePositionY = skystoneRightY;
+        skyStoneLocation = Sensors.SkyStoneLocation.RIGHT;
 
         if (isStopRequested()) return;
 
         //starting at -35, 60
         d.setPoseEstimate(new Pose2d(startingX, startingY, standardHeading));
 
-        //make a straight line strafe in front of skystone
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .lineTo(new Vector2d(skystoneX, strafeConvert(skystonePositionY)), new ConstantInterpolator(standardHeading))
-//                        .splineTo(new Pose2d(skystonePositionX, skystoneY, standardHeading))
-                        .build() );
+        switch(skyStoneLocation) {
+            case LEFT:
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .lineTo(new Vector2d(skystoneLeftX, strafeConvert(skystoneLeftY)),
+                                        new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(angle)))
+                                .build());
 
-        d.turnSync(Math.toRadians(angle));
+                ss.extakeIn();
+
+                //intake
+                ss.intake(-0.75);
+
+                //drives forward to pick up
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(distanceForwardToPickUpStone)
+                                .build()
+                );
+
+                sleep(1000);
+
+                //block picked up
+                ss.intake(0);
 
 
-        // resetting extake so that it doesnt cause the stone to enter sideways
-//        ss.extakeOut();
-//        sleep(sleepFromExtakeOutToExtakeIn);
-        ss.extakeIn();
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                //y used to be 50, too far
+                                //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
+                                .back(distanceForwardToPickUpStone)
+                                .build()
+                );
 
-        //intake
-        ss.intake(-0.75); //TODO: ALL STONE SCORER FUNCTIONS NEED TO BE CHANGED
+                break;
+            case CENTER:
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .lineTo(new Vector2d(skystoneCenterX, strafeConvert(skystoneCenterY)),
+                                        new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(angle)))
+                                .build());
 
-        //TODO i think this is wrong, it needs to move forward and then back (fixed)
-        //drives forward to pick up
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        //y used to be 50, too far
-                        //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
-                        .forward(distanceForwardToPickUpStone)
-                        .build()
-        );
+                ss.extakeIn();
 
-        sleep(2000);
+                ss.intake(-0.75);
 
-        //block picked up
-        ss.intake(0);
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(distanceForwardToPickUpStone)
+                                .build()
+                );
+
+                sleep(1000);
+
+                //block picked up
+                ss.intake(0);
+
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                //y used to be 50, too far
+                                //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
+                                .back(distanceForwardToPickUpStone)
+                                .build()
+                );
+
+                break;
+            case RIGHT:
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .lineTo(new Vector2d(skystoneRightX, strafeConvert(skystoneRightY)),
+                                        new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(caseRightAngle)))
+                                .build());
+
+                ss.extakeIn();
+
+                ss.intake(-0.75);
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(distanceForwardToPickUpStoneRight)
+                                .build()
+                );
+
+                sleep(1000);
+
+                //block picked up
+                ss.intake(0);
+
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                //y used to be 50, too far
+                                //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
+                                .back(distanceForwardToPickUpStoneRight)
+                                .build());
+        }
+
 
         //TODO come up with better way to pull out, probably can go backwards, rn will interfere with blocks
         //pull out of area
