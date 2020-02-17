@@ -63,10 +63,10 @@ public class StoneScorer //implements Subassembly
 
     public enum ServoMotorOrientation {
         // 0, 1, 2, 3
-        rotationServo(initRotationServo),ferrisServo(initFerrisServo),clawServo(initClawServo), leftFoundationServo(initLeftFoundationServo), rightFoundationServo(initRightFoundationServo);
+        rotationServo(initRotationServo, 0),ferrisServo(initFerrisServo, 1),clawServo(initClawServo, 2), leftFoundationServo(initLeftFoundationServo, 3), rightFoundationServo(initRightFoundationServo, 4);
 
-        private int order;
         private double position;
+        private int order;
 
 
         ServoMotorOrientation(double position, int order) {
@@ -76,6 +76,10 @@ public class StoneScorer //implements Subassembly
 
         double getOrder() {
             return order;
+        }
+
+        double getPosition() {
+            return position;
         }
     }
 
@@ -139,8 +143,6 @@ public class StoneScorer //implements Subassembly
 
             temp.setDirection(Servo.Direction.FORWARD);
 //
-            temp.setPosition(ServoMotorOrientation.values()[i].getOrder());
-
 //            if (i == 0) {
 //                temp.setPosition(initRotationServo);
 //            }
@@ -153,17 +155,7 @@ public class StoneScorer //implements Subassembly
 //            else
 //                temp.setPosition(initRightFoundationServo);
 
-            if (i == 0)
-                temp.setPosition(initRotationServo);
-            else if (i == 1)
-                temp.setPosition(initFerrisServo);
-            else if (i == 2)
-                temp.setPosition(initClawServo);
-            else if(i == 3)
-                temp.setPosition(initLeftFoundationServo);
-            else
-                temp.setPosition(initRightFoundationServo);
-
+            temp.setPosition(ServoMotorOrientation.values()[i].getPosition());
             servos.add(temp);
         }
         isInitialized = true;
