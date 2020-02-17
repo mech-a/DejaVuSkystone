@@ -29,79 +29,69 @@
 
 package org.firstinspires.ftc.teamcode.Auton;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
-
+@Config
 @Autonomous(name = "Test Case", group = "Auton")
-@Deprecated
 public class Testing extends LinearOpMode {
-    int liftValueA = -5400;
-    int extendValueA = 2260;
-    int i = 1;
-
-    RRMergedDrivetrain d = new RRMergedDrivetrain(this);
     StoneScorer ss = new StoneScorer(this);
 
+    public static double foundationRightX = 12;
+    public static double foundationRightY = 28;
+    public static double foundationHeading = 90;
+
     @Override
-    public void runOpMode() {
-        d.init();
-        ss.init();
+    public void runOpMode() throws InterruptedException{
+        SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
+        ss.init(hardwareMap);
+        sleep(3000);
+        ss.clampStone();
+
+        d.setPoseEstimate(new Pose2d(0, 0, 0));
 
         waitForStart();
 
-        d.translate(RRMergedDrivetrain.Direction.FWD, 24, 0.25);
-        // first
-        if (i == 1) {
-            d.translate(RRMergedDrivetrain.Direction.LEFT, 5, 0.25);
-        } else if (i == 2) {
-            d.translate(RRMergedDrivetrain.Direction.RIGHT, 6, 0.25);
-        } else if (i == 3) {
-            d.translate(RRMergedDrivetrain.Direction.RIGHT, 12, 0.25);
-        }
+        //strafe right and cross under bridge
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                        .reverse()
+                        .splineTo(new Pose2d(-81, 9, Math.toRadians(-90)))
+                        .build()
+        );
 
-        // getting block
-        d.translate(RRMergedDrivetrain.Direction.BACK, 10, 0.15);
-        d.translate(RRMergedDrivetrain.Direction.LEFT, 2, 0.15);
-        d.translate(RRMergedDrivetrain.Direction.BACK, 6, 0.25);
+        ss.hookFoundation();
 
-        // translate over to other side
-        d.translate(RRMergedDrivetrain.Direction.LEFT, 44, 0.25);
-        d.translate(RRMergedDrivetrain.Direction.RIGHT, 64, 0.25);
-        d.translate(RRMergedDrivetrain.Direction.FWD, 18,0.25);
+        d.setPoseEstimate(new Pose2d(0, 0, 0));
 
-        // getting block
-        d.translate(RRMergedDrivetrain.Direction.BACK, 10, 0.15);
-        d.translate(RRMergedDrivetrain.Direction.LEFT, 2, 0.15);
-        d.translate(RRMergedDrivetrain.Direction.BACK, 6, 0.25);
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                        .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading)))
+                        .build()
+        );
 
-        //ss.intake(1, 1);
-        d.translate(RRMergedDrivetrain.Direction.LEFT, 60, 0.25);
-        //ss.extake(1,1);
+        ss.extakeOut();
+        sleep(500);
+        ss.dropStone();
+        sleep(500);
+        ss.extakeIn();
+        sleep(1000);
 
-        // translate left to align with foundation, 4th nub
-        d.translate(RRMergedDrivetrain.Direction.LEFT, 20, 0.25);
-        d.translate(RRMergedDrivetrain.Direction.FWD, 2, 0.25);
+        ss.unhookFoundation();
 
-        // hook onto foundation
-        //ss.hookFoundation(1, 2400);
-        //ss.extendH(-300);
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                .forward(12)
+                .build()
+        );
 
-        // drag foundation back
-        d.translate(RRMergedDrivetrain.Direction.BACK, 27, 0.25);
-
-
-        // unhook the foundation
-        //ss.hookFoundation(0, 2200);
-
-        // CASE A: translate right park to under bridge
-        d.translate(RRMergedDrivetrain.Direction.RIGHT, 27, 0.25);
-        d.translate(RRMergedDrivetrain.Direction.FWD, 24, 0.25);
-        d.translate(RRMergedDrivetrain.Direction.RIGHT, 27, 0.25);
-
-        //d.translate(RRMergedDrivetrain.Direction.RIGHT, 54, 0.25);
     }
 }

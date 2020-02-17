@@ -22,6 +22,7 @@ import java.util.Vector;
  */
 
 // CASE A: Next to wall
+//PLEASE CONVERT TO RADIANS!!!!!!!!!
 @Config
 @Autonomous(group = "drive")
 public class Case1A extends LinearOpMode {
@@ -44,6 +45,10 @@ public class Case1A extends LinearOpMode {
     //public static double distanceBackToPark = 25;
 
     public static double rotationBias = 6.5;
+
+    public static double foundationRightX = -88;
+    public static double foundationRightY = 9;
+    public static double foundationHeading = -90;
 
     public static long sleepFromExtakeOutToExtakeIn = 1000, sleepFromExtakeInToIntakeIn = 1000;
 
@@ -91,6 +96,7 @@ public class Case1A extends LinearOpMode {
                 //block picked up
                 ss.intake(0);
 
+                ss.clampStone();
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
@@ -161,7 +167,18 @@ public class Case1A extends LinearOpMode {
                                 //y used to be 50, too far
                                 //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
                                 .back(distanceForwardToPickUpStoneRight)
+                                .strafeRight(24)
                                 .build());
+
+                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                //strafe right and cross under bridge
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .reverse()
+                                .splineTo(new Pose2d(foundationRightX, foundationRightY, Math.toRadians(foundationHeading)))
+                                .build()
+                );
         }
 
 
@@ -229,19 +246,6 @@ public class Case1A extends LinearOpMode {
 //                        //.strafeLeft(25)
 //                        .build()
 //                        );
-
-
-
-
-
-
-
-
-
-
-
-
-
 //        //extake
 //        //TODO ext.
 //        ss.setBlock(-10, -10);

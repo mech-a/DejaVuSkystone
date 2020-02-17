@@ -11,8 +11,8 @@ public class Constants {
     public static double initRotationServo = 0.66;
     public static double initFerrisServo = 0.32;
     public static double initClawServo = 1;
-    public static double initLeftFoundationServo = 0;
-    public static double initRightFoundationServo = 0;
+  //  public static double initLeftFoundationServo = 0.10;
+    //public static double initRightFoundationServo = 0.77;
 
     // Servo constants for extakeOut method
     public static double clampClawServoPosition = 0.643;

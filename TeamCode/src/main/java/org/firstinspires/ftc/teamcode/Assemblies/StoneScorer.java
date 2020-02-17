@@ -13,8 +13,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initLeftFoundationServo;
-import static org.firstinspires.ftc.teamcode.Assemblies.Constants.initRightFoundationServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.unclampClawServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.intakeFerrisServo;
 import static org.firstinspires.ftc.teamcode.Assemblies.Constants.frontRotationServo;
@@ -142,9 +140,9 @@ public class StoneScorer //implements Subassembly
             else if (i == 2)
                 temp.setPosition(initClawServo);
             else if(i == 3)
-                temp.setPosition(initLeftFoundationServo);
+                temp.setPosition(leftFoundationUp);
             else
-                temp.setPosition(initRightFoundationServo);
+                temp.setPosition(rightFoundationUp);
 
             servos.add(temp);
         }
@@ -199,6 +197,8 @@ public class StoneScorer //implements Subassembly
     public void dropStone() {
         servos.get(2).setPosition(unclampClawServo);
     }
+
+    public void clampStone() { servos.get(2).setPosition(clampClawServoPosition);}
 
     // pull extake in
     public void extakeIn() {
