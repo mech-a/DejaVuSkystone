@@ -34,8 +34,8 @@ public class TestingTeleop extends LinearOpMode {
     public enum DriveMode {
         FIELD, CARTESIAN
     }
-
-    double[] speedSwitch = {0.375,1.5*0.375,2*0.375};
+    //1 1.5 2 x 0.375
+    double[] speedSwitch = {0.2,0.4,0.75};
     boolean runFast = true, runSlow = false;
     double modifier = speedSwitch[0];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
@@ -56,8 +56,10 @@ public class TestingTeleop extends LinearOpMode {
     double intakeSpeed = 0.75;
     // top is -2700
     // bottom is starting, which is 0
-    final double VERTICAL_MIN = -5000;
-    final double VERTICAL_MAX = 5000;
+
+    //TODO find bounds
+    final double VERTICAL_MIN = -9000;
+    final double VERTICAL_MAX = 9000;
 
     int intake = 0;
     boolean release = true;
@@ -251,9 +253,19 @@ public class TestingTeleop extends LinearOpMode {
 //            }
 
             //TODO figure out what is going on here; is it flipped or not?
-            if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
+//            if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
+//                mtrVertical.setPower(gamepad2.right_stick_y / 3);
+//            } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
+//                mtrVertical.setPower(gamepad2.right_stick_y / 3);
+//            } else {
+//                mtrVertical.setPower(0);
+//            }
+
+            // pushing upwards, goes upwards only until less than max
+            if(-gamepad2.right_stick_y > DEADZONE && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
                 mtrVertical.setPower(gamepad2.right_stick_y / 3);
-            } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
+            // pushing downwards, goes downwards only until greater than min
+            } else if (-gamepad2.right_stick_y < -DEADZONE && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
                 mtrVertical.setPower(gamepad2.right_stick_y / 3);
             } else {
                 mtrVertical.setPower(0);
@@ -428,7 +440,8 @@ public class TestingTeleop extends LinearOpMode {
         //backleft and backright are switched
         mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrBR.setDirection(DcMotorSimple.Direction.FORWARD);
-        mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+        //mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrVertical.setDirection(DcMotorSimple.Direction.FORWARD);
 
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

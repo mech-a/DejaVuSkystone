@@ -75,6 +75,8 @@ public class DriveConstants {
     );
     //public static DriveConstraints NEW_CONSTRAINTS = new DriveConstraints()
 
+    public static double LATERAL_MULTIPLIER = 1.0;
+
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / MOTOR_CONFIG.getTicksPerRev();
