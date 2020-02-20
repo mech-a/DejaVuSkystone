@@ -32,7 +32,7 @@ public class StrafeTest extends LinearOpMode {
         //make a straight line strafe in front of skystone
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(goalX, strafeConvert(goalY)), new ConstantInterpolator(standardHeading))
+                        .lineTo(new Vector2d(goalX, goalY), new ConstantInterpolator(standardHeading))
 //                        .splineTo(new Pose2d(skystonePositionX, skystoneY, standardHeading))
                         .build());
 
