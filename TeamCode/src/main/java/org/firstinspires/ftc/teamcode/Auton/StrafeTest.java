@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
+import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -20,6 +21,10 @@ public class StrafeTest extends LinearOpMode {
     public static double angle = 45;
 
 
+
+    //instruct 48, 36; 36, 26.5; 60, 48
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
@@ -32,11 +37,11 @@ public class StrafeTest extends LinearOpMode {
         //make a straight line strafe in front of skystone
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(goalX, strafeConvert(goalY)), new ConstantInterpolator(standardHeading))
+                        .lineTo(new Vector2d(goalX, goalY), new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(angle))
+                        )
 //                        .splineTo(new Pose2d(skystonePositionX, skystoneY, standardHeading))
                         .build());
 
-        d.turnSync(Math.toRadians(angle));
     }
 
     public static double strafeConvert(double distance) {
