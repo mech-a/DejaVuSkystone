@@ -34,7 +34,6 @@ public class Case1A extends LinearOpMode {
     public static double startingX = 0, startingY = 0;
     public static double skystoneLeftX = 28, skystoneCenterX, skystoneRightX = 50;
     public static double skystoneLeftY = 23, skystoneCenterY = 14, skystoneRightY = 2;
-    public static double skystoneRightX2 = 28, skystoneRightY2 = 5;
     public static double distanceForwardToPickUpStone = 17.5;
     public static double distanceForwardToPickUpStoneRight = 7;
     public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
@@ -206,6 +205,8 @@ public class Case1A extends LinearOpMode {
                                 .forward(12)
                                 .build()
                 );
+
+
 
         }
     }

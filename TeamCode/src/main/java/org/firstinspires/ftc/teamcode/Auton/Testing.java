@@ -45,9 +45,12 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 public class Testing extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
 
-    public static double foundationRightX = 12;
-    public static double foundationRightY = 28;
-    public static double foundationHeading = 90;
+    public static double foundationRightX = -81;
+    public static double foundationRightY = 9;
+
+    public static double pullfoundationRightX = 12;
+    public static double pullfoundationRightY = 28;
+    public static double pullfoundationHeading = 90;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -64,7 +67,7 @@ public class Testing extends LinearOpMode {
         d.followTrajectorySync(
                 d.trajectoryBuilder()
                         .reverse()
-                        .splineTo(new Pose2d(-81, 9, Math.toRadians(-90)))
+                        .splineTo(new Pose2d(foundationRightX, foundationRightY, Math.toRadians(-90)))
                         .build()
         );
 
@@ -74,7 +77,7 @@ public class Testing extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading)))
+                        .lineTo(new Vector2d(pullfoundationRightX, pullfoundationRightY), new LinearInterpolator(0, Math.toRadians(pullfoundationHeading)))
                         .build()
         );
 
@@ -87,11 +90,7 @@ public class Testing extends LinearOpMode {
 
         ss.unhookFoundation();
 
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                .forward(12)
-                .build()
-        );
+
 
     }
 }

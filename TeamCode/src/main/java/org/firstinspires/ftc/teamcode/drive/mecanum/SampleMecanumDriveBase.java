@@ -56,7 +56,7 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
     private MotionProfile turnProfile;
     private double turnStart;
 
-    private DriveConstraints constraints;
+    public DriveConstraints constraints;
     private TrajectoryFollower follower;
 
     private List<Double> lastWheelPositions;
