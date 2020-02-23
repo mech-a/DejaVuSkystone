@@ -27,9 +27,9 @@ public class Constants {
 
     // For foundation
     public static double leftFoundationDown = 0.72; //these are all probably old and useless
-    public static double rightFoundationDown = 0.15;
+    public static double rightFoundationDown = 0.0;
     public static double leftFoundationUp = 0.10;
-    public static double rightFoundationUp = 0.77;
+    public static double rightFoundationUp = 0.45;
 
     // For vertical motor powers
     //TODO

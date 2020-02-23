@@ -17,6 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 
+import static org.firstinspires.ftc.teamcode.Assemblies.Constants.*;
+
 @Config
 @TeleOp(name="Final Teleop", group="Functionality")
 public class TestingTeleop extends LinearOpMode {
@@ -151,15 +153,11 @@ public class TestingTeleop extends LinearOpMode {
             //TODO add both servo functionality
             // foundation hook control
             if (gamepad1.dpad_up) {
-                leftFoundationServo.setPosition(
-                        //foundationServo.getPosition() + 0.01
-                        0.65
-                );
+                leftFoundationServo.setPosition(leftFoundationUp);
+                rightFoundationServo.setPosition(rightFoundationUp);
             } else if(gamepad1.dpad_down) {
-                leftFoundationServo.setPosition(
-                        //foundationServo.getPosition() - 0.01
-                        0
-                );
+                leftFoundationServo.setPosition(leftFoundationDown);
+                rightFoundationServo.setPosition(rightFoundationDown);
             }
 
             // intake control - right bumper IN, left bumper OUT
@@ -394,11 +392,14 @@ public class TestingTeleop extends LinearOpMode {
         rightFoundationServo = hardwareMap.get(Servo.class, "leftFoundation_servo");
 
         // initialization points for servos
-        rotationServo.setPosition(0.643+rotationServoBias);
-        ferrisServo.setPosition(0.33);
-        clawServo.setPosition(1);
-        leftFoundationServo.setPosition(0.6);
-        leftFoundationServo.setPosition(1-0.6);
+        rotationServo.setPosition(initRotationServo);
+        ferrisServo.setPosition(initFerrisServo);
+        clawServo.setPosition(initClawServo);
+        leftFoundationServo.setPosition(leftFoundationUp);
+        rightFoundationServo.setPosition(rightFoundationUp);
+
+        sleep(500);
+        ss.extakeIn();
 
         //TODO properly set up rightFoundationServos
         rotationServo.setDirection(Servo.Direction.FORWARD);
