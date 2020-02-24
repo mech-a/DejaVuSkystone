@@ -60,7 +60,7 @@ public class FoundationHookDemo extends LinearOpMode {
 
     Servo f1, f2;
 
-    public static double power = -0.5, sleep = 500, numRuns = 4;
+    public static double power = -0.5, sleep = 1000, numRuns = 4;
     public static boolean zeroPowerAfter = false;
 
 
