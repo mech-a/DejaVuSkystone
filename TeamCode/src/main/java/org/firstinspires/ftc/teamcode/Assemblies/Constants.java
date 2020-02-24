@@ -22,8 +22,8 @@ public class Constants {
     // Constants for extakeIn
     public static double unclampClawServo = 1;
     public static double kickbackFerrisServo = 0.92;
-    public static double frontRotationServo = 0.643+(28.8/270);
-    public static double intakeFerrisServo = 0.31; 
+    public static double frontRotationServo = 0.72; //0.750
+    public static double intakeFerrisServo = 0.32;
 
     // For foundation
     public static double leftFoundationDown = 0.72; //these are all probably old and useless

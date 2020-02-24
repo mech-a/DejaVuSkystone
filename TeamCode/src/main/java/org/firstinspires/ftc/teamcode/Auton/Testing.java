@@ -66,6 +66,23 @@ public class Testing extends LinearOpMode {
         //strafe right and cross under bridge
         d.followTrajectorySync(
                 d.trajectoryBuilder()
+                        .strafeLeft(strafeConvert(8))
+                        .forward(94)
+                        .strafeLeft(strafeConvert(16))
+                        .build()
+        );
+
+        ss.extakeIn();
+
+        ss.intake(-0.75);
+
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                        .forward(8)
+                        .build()
+        );
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
                         .reverse()
                         .splineTo(new Pose2d(foundationRightX, foundationRightY, Math.toRadians(-90)))
                         .build()
@@ -77,20 +94,30 @@ public class Testing extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
+                        .strafeRight(strafeConvert(14))
+                        .back(94)
                         .lineTo(new Vector2d(pullfoundationRightX, pullfoundationRightY), new LinearInterpolator(0, Math.toRadians(pullfoundationHeading)))
                         .build()
         );
 
         ss.extakeOut();
-        sleep(500);
+        sleep(1000);
         ss.dropStone();
         sleep(500);
         ss.extakeIn();
         sleep(1000);
 
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                        .back(36)
+                        .build()
+        );
         ss.unhookFoundation();
+    }
 
-
-
+    public static double strafeConvert(double distance) {
+        return (1.2 * distance + 3.53);
     }
 }
+
+

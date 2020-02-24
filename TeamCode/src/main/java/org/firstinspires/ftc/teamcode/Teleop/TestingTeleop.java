@@ -94,30 +94,30 @@ public class TestingTeleop extends LinearOpMode {
                 intake = 0;
 
                 clawTimer.reset();
-                clawServo.setPosition(0.643);
+                clawServo.setPosition(clampClawServoPosition);
             }
             else if(gamepad2.y) {
                 clawTimer.reset();
                 extake_position = -1;
                 clawServo.setPosition(1);
-                ferrisServo.setPosition(0.92);
-                rotationServo.setPosition(0.643+rotationServoBias);
+                ferrisServo.setPosition(kickbackFerrisServo);
+                rotationServo.setPosition(frontRotationServo);
             }
             else if (gamepad2.a) {
                 extake_position = 1;
             }
 
             if(extake_position == 1 && clawTimer.milliseconds() > 500) {
-                ferrisServo.setPosition(0.85);
-                rotationServo.setPosition(0.02+rotationServoBias);
+                ferrisServo.setPosition(placeFerrisServoPosition);
+                rotationServo.setPosition(backRotationServoPosition);
                 extake_position = 0;
             }
             if(extake_position == -1 && clawTimer.milliseconds() > 300) {
-                ferrisServo.setPosition(0.31);
+                ferrisServo.setPosition(intakeFerrisServo);
                 extake_position = 0;
             }
             if(gamepad2.b) {
-                clawServo.setPosition(1); //open
+                clawServo.setPosition(unclampClawServo); //open
             }
 
             //drop angle
@@ -397,9 +397,6 @@ public class TestingTeleop extends LinearOpMode {
         clawServo.setPosition(initClawServo);
         leftFoundationServo.setPosition(leftFoundationUp);
         rightFoundationServo.setPosition(rightFoundationUp);
-
-        sleep(500);
-        ss.extakeIn();
 
         //TODO properly set up rightFoundationServos
         rotationServo.setDirection(Servo.Direction.FORWARD);
