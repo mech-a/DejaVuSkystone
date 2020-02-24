@@ -32,8 +32,8 @@ public class Case1A extends LinearOpMode {
 
     public static double standardHeading = 0;
     public static double startingX = 0, startingY = 0;
-    public static double skystoneLeftX = 28, skystoneCenterX, skystoneRightX = 50;
-    public static double skystoneLeftY = 23, skystoneCenterY = 14, skystoneRightY = 2;
+    public static double skystoneLeftX = 28, skystoneCenterX, skystoneRightX = 46;
+    public static double skystoneLeftY = 23, skystoneCenterY = 14, skystoneRightY = 1;
     public static double distanceForwardToPickUpStone = 17.5;
     public static double distanceForwardToPickUpStoneRight = 7;
     public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
@@ -47,7 +47,7 @@ public class Case1A extends LinearOpMode {
 
     public static double foundationRightX = 12;
     public static double foundationRightY = 28;
-    public static double foundationHeading = 90;
+    public static double foundationHeading = 100;
 
     public static long sleepFromExtakeOutToExtakeIn = 1000, sleepFromExtakeInToIntakeIn = 1000;
 
@@ -168,26 +168,44 @@ public class Case1A extends LinearOpMode {
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .strafeRight(strafeConvert(12.0))
+                                .back(89)
                             .build()
 
                 );
-                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                d.turnSync(Math.toRadians(-90));
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                        .back(12)
+                        .build()
+                );
+
+                // d.setPoseEstimate(new Pose2d(0, 0, 0));
 
                 //strafe right and cross under bridge
-                d.followTrajectorySync(
+              /*  d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .reverse()
                                 .splineTo(new Pose2d(-81, 9, Math.toRadians(-90)))
                                 .build()
-                );
+                );*/
 
                 ss.hookFoundation();
-
+                sleep((long) 500);
                 d.setPoseEstimate(new Pose2d(0, 0, 0));
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading)))
+                                .build()
+                );
+
+                ss.unhookFoundation();
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(15.0)
                                 .build()
                 );
 
@@ -197,17 +215,6 @@ public class Case1A extends LinearOpMode {
                 sleep(500);
                 ss.extakeIn();
                 sleep(1000);
-
-                ss.unhookFoundation();
-
-                d.followTrajectorySync(
-                        d.trajectoryBuilder()
-                                .forward(12)
-                                .build()
-                );
-
-
-
         }
     }
 

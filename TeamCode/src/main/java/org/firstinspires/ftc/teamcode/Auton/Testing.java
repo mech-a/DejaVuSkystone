@@ -45,40 +45,61 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 public class Testing extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
 
-    public static double foundationRightX = -81;
+  /*  public static double foundationRightX = -81;
     public static double foundationRightY = 9;
 
     public static double pullfoundationRightX = 12;
     public static double pullfoundationRightY = 28;
-    public static double pullfoundationHeading = 90;
+    public static double pullfoundationHeading = 90; */
+
+    public static double secondStoneX = 12;
+    public static double secondStoneY = 28;
+    public static double secondStoneHeading = 90;
 
     @Override
     public void runOpMode() throws InterruptedException{
         SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
-        ss.init(hardwareMap);
-        sleep(3000);
-        ss.clampStone();
+       // ss.init(hardwareMap);
+        //sleep(3000);
+        // ss.clampStone();
 
         d.setPoseEstimate(new Pose2d(0, 0, 0));
 
         waitForStart();
 
         //strafe right and cross under bridge
-        d.followTrajectorySync(
+       d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .reverse()
-                        .splineTo(new Pose2d(foundationRightX, foundationRightY, Math.toRadians(-90)))
+                        .forward(38)
+                        .strafeLeft(34)
                         .build()
         );
 
-        ss.hookFoundation();
+        ss.extakeIn();
+
+        ss.intake(-0.75);
+
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                        .forward(10)
+                        .build()
+        );
+
+        sleep(1000);
+
+        //block picked up
+        ss.intake(0);
+
+        ss.clampStone();
 
         d.setPoseEstimate(new Pose2d(0, 0, 0));
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(pullfoundationRightX, pullfoundationRightY), new LinearInterpolator(0, Math.toRadians(pullfoundationHeading)))
-                        .build()
+                    .strafeRight(30)
+                        .reverse()
+                        .lineTo(new Vector2d(-75, 0))
+                .build()
         );
 
         ss.extakeOut();
@@ -88,9 +109,13 @@ public class Testing extends LinearOpMode {
         ss.extakeIn();
         sleep(1000);
 
-        ss.unhookFoundation();
+        d.setPoseEstimate(new Pose2d(0, 0, 0));
 
-
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                .forward(16)
+                .build()
+        );
 
     }
 }
