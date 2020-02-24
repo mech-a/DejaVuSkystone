@@ -66,9 +66,9 @@ public class Testing extends LinearOpMode {
         //strafe right and cross under bridge
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .strafeLeft(strafeConvert(8))
-                        .forward(94)
-                        .strafeLeft(strafeConvert(16))
+                        //.strafeLeft(strafeConvert(2))
+                        .forward(95)
+                        .strafeLeft(strafeConvert(20))
                         .build()
         );
 
@@ -78,25 +78,21 @@ public class Testing extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .forward(8)
-                        .build()
-        );
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .reverse()
-                        .splineTo(new Pose2d(foundationRightX, foundationRightY, Math.toRadians(-90)))
+                        .forward(6)
                         .build()
         );
 
-        ss.hookFoundation();
+        sleep(1000);
 
-        d.setPoseEstimate(new Pose2d(0, 0, 0));
+        //block picked up
+        ss.intake(0);
+
+        ss.clampStone();
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .strafeRight(strafeConvert(14))
-                        .back(94)
-                        .lineTo(new Vector2d(pullfoundationRightX, pullfoundationRightY), new LinearInterpolator(0, Math.toRadians(pullfoundationHeading)))
+                        .strafeRight(strafeConvert(13))
+                        .back(97)
                         .build()
         );
 
@@ -109,10 +105,10 @@ public class Testing extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .back(36)
+                        .forward(36)
                         .build()
         );
-        ss.unhookFoundation();
+
     }
 
     public static double strafeConvert(double distance) {

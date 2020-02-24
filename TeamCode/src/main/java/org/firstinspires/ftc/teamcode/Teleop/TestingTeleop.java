@@ -58,8 +58,8 @@ public class TestingTeleop extends LinearOpMode {
     double intakeSpeed = 0.75;
     // top is -2700
     // bottom is starting, which is 0
-    final double VERTICAL_MIN = -5000;
-    final double VERTICAL_MAX = 5000;
+    final double VERTICAL_MIN = 10;
+    //final double VERTICAL_MAX = -10;
 
     int intake = 0;
     boolean release = true;
@@ -160,6 +160,14 @@ public class TestingTeleop extends LinearOpMode {
                 rightFoundationServo.setPosition(rightFoundationDown);
             }
 
+            if (gamepad1.x) {
+                rightFoundationServo.setPosition(rightFoundationServo.getPosition() - 0.005);
+            } else if (gamepad1.b) {
+                rightFoundationServo.setPosition(rightFoundationServo.getPosition() + 0.005);
+            }
+
+
+
             // intake control - right bumper IN, left bumper OUT
             if (release && gamepad2.right_bumper) {
                 if (intake == 0) {
@@ -249,10 +257,8 @@ public class TestingTeleop extends LinearOpMode {
 //            }
 
             //TODO figure out what is going on here; is it flipped or not?
-            if (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() < VERTICAL_MAX) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 3);
-            } else if (gamepad2.right_stick_y < -0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN) {
-                mtrVertical.setPower(gamepad2.right_stick_y / 3);
+            if (gamepad2.right_stick_y < -0.1 || (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN)) {
+                mtrVertical.setPower(-gamepad2.right_stick_y / 1.5);
             } else {
                 mtrVertical.setPower(0);
             }
@@ -389,7 +395,7 @@ public class TestingTeleop extends LinearOpMode {
         ferrisServo = hardwareMap.get(Servo.class, "ferris_servo");
         clawServo = hardwareMap.get(Servo.class, "claw_servo");
         leftFoundationServo = hardwareMap.get(Servo.class, "leftFoundation_servo");
-        rightFoundationServo = hardwareMap.get(Servo.class, "leftFoundation_servo");
+        rightFoundationServo = hardwareMap.get(Servo.class, "rightFoundation_servo");
 
         // initialization points for servos
         rotationServo.setPosition(initRotationServo);
@@ -402,7 +408,7 @@ public class TestingTeleop extends LinearOpMode {
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);
         leftFoundationServo.setDirection(Servo.Direction.FORWARD);
-        rightFoundationServo.setDirection(Servo.Direction.REVERSE);
+        rightFoundationServo.setDirection(Servo.Direction.FORWARD);
         clawServo.setDirection(Servo.Direction.FORWARD);
     }
 
@@ -426,7 +432,7 @@ public class TestingTeleop extends LinearOpMode {
         //backleft and backright are switched
         mtrBL.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrBR.setDirection(DcMotorSimple.Direction.FORWARD);
-        mtrVertical.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrVertical.setDirection(DcMotorSimple.Direction.FORWARD);
 
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

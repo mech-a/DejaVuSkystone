@@ -15,21 +15,21 @@ public class Constants {
     //public static double initRightFoundationServo = 0.77;
 
     // Servo constants for extakeOut method
-    public static double clampClawServoPosition = 0.643;
+    public static double clampClawServoPosition = 0.6;
     public static double placeFerrisServoPosition = 0.85;
     public static double backRotationServoPosition = 28.8/270 +.02;
 
     // Constants for extakeIn
     public static double unclampClawServo = 1;
     public static double kickbackFerrisServo = 0.92;
-    public static double frontRotationServo = 0.72; //0.750
+    public static double frontRotationServo = 0.73; //0.750
     public static double intakeFerrisServo = 0.32;
 
     // For foundation
     public static double leftFoundationDown = 0.72; //these are all probably old and useless
-    public static double rightFoundationDown = 0.0;
+    public static double rightFoundationDown = 0.08;
     public static double leftFoundationUp = 0.10;
-    public static double rightFoundationUp = 0.45;
+    public static double rightFoundationUp = 0.515;
 
     // For vertical motor powers
     //TODO
