@@ -3,19 +3,13 @@ package org.firstinspires.ftc.teamcode.Auton;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
-import org.yaml.snakeyaml.scanner.Constant;
-
-import java.util.Vector;
 
 /*
  * This is an example of a more complex path to really test the tuning.
@@ -25,7 +19,7 @@ import java.util.Vector;
 //PLEASE CONVERT TO RADIANS!!!!!!!!!
 @Config
 @Autonomous(group = "drive")
-public class Case1A extends LinearOpMode {
+public class TwoStoneBlue extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
     //Sensors s = new Sensors(this);
     Sensors.SkyStoneLocation skyStoneLocation;

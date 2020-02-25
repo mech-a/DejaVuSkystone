@@ -22,7 +22,7 @@ public class Constants {
     // Constants for extakeIn
     public static double unclampClawServo = 1;
     public static double kickbackFerrisServo = 0.92;
-    public static double frontRotationServo = 0.73; //0.750
+    public static double frontRotationServo = 0.745;
     public static double intakeFerrisServo = 0.32;
 
     // For foundation

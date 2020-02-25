@@ -3,14 +3,12 @@ package org.firstinspires.ftc.teamcode.Auton;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Drivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
-import static org.firstinspires.ftc.teamcode.Auton.Case1A.sleepFromExtakeInToIntakeIn;
-import static org.firstinspires.ftc.teamcode.Auton.Case1A.sleepFromExtakeOutToExtakeIn;
+import static org.firstinspires.ftc.teamcode.Auton.OneStoneBlue.sleepFromExtakeInToIntakeIn;
+import static org.firstinspires.ftc.teamcode.Auton.OneStoneBlue.sleepFromExtakeOutToExtakeIn;
 
 
 @Autonomous(group="test")
