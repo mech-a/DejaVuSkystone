@@ -37,7 +37,9 @@ public class TestingTeleop extends LinearOpMode {
         FIELD, CARTESIAN
     }
 
-    double[] speedSwitch = {0.375,1.5*0.375,2*0.375};
+    static double superSlowSpeed = 0.1;
+
+    double[] speedSwitch = {0.375,1.5*0.375,2*0.375,superSlowSpeed};
     boolean runFast = true, runSlow = false;
     double modifier = speedSwitch[0];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
@@ -257,11 +259,13 @@ public class TestingTeleop extends LinearOpMode {
 //            }
 
             //TODO figure out what is going on here; is it flipped or not?
-            if (gamepad2.right_stick_y < -0.1 || (gamepad2.right_stick_y > 0.1 && mtrVertical.getCurrentPosition() > VERTICAL_MIN)) {
+            if (gamepad2.right_stick_y < -DEADZONE || (gamepad2.right_stick_y > DEADZONE && mtrVertical.getCurrentPosition() > VERTICAL_MIN)) {
                 mtrVertical.setPower(-gamepad2.right_stick_y / 1.5);
             } else {
                 mtrVertical.setPower(0);
             }
+
+
 
             //3 fl
             //2 fr
@@ -315,12 +319,15 @@ public class TestingTeleop extends LinearOpMode {
 //        }
 
         //speedswitch 0 = slow 1 = default 2 = fast
+        if(gamepad1.left_trigger>TRIGGER_DEADZONE && gamepad1.right_trigger>TRIGGER_DEADZONE)
+            modifier = speedSwitch[3];
         if(gamepad1.left_trigger>TRIGGER_DEADZONE)
             modifier = speedSwitch[0];
         else if(gamepad1.right_trigger>TRIGGER_DEADZONE)
             modifier = speedSwitch[2];
         else
             modifier = speedSwitch[1];
+
 
     }
 
@@ -418,6 +425,9 @@ public class TestingTeleop extends LinearOpMode {
 
         leftRoller.setDirection(DcMotorSimple.Direction.FORWARD);
         rightRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftRoller.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRoller.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 

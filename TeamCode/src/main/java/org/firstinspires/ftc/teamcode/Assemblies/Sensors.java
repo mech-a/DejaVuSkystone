@@ -17,7 +17,8 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.LABEL_S
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.TFOD_MODEL_ASSET;
 import static org.firstinspires.ftc.teamcode.Assemblies.ConfigurationData.VUFORIA_KEY;
 
-public class Sensors implements Subassembly {
+public class Sensors //implements Subassembly
+        {
     //private List<Recognition> finalRecognitions = new ArrayList<>();
     private List<Recognition> recognitions;
 
@@ -43,8 +44,9 @@ public class Sensors implements Subassembly {
         hardwareMap = caller.hardwareMap;
     }
 
-    @Override
-    public void init() {
+    //@Override
+    public void init(HardwareMap hwMap) {
+        hardwareMap = hwMap;
 
         //Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
 
@@ -75,7 +77,7 @@ public class Sensors implements Subassembly {
 
     }
 
-    @Override
+    //@Override
     public void status() {
 
     }

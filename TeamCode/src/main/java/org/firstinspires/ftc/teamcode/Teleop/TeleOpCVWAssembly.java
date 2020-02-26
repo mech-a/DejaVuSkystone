@@ -12,7 +12,7 @@ public class TeleOpCVWAssembly extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        s.init();
+        s.init(hardwareMap);
         telemetry.update();
         waitForStart();
         while(opModeIsActive()){
