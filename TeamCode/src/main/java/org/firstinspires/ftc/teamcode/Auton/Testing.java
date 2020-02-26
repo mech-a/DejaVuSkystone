@@ -56,8 +56,6 @@ public class Testing extends LinearOpMode {
     public void runOpMode() throws InterruptedException{
         SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
         ss.init(hardwareMap);
-        sleep(3000);
-        ss.clampStone();
 
         d.setPoseEstimate(new Pose2d(0, 0, 0));
 
@@ -67,8 +65,8 @@ public class Testing extends LinearOpMode {
         d.followTrajectorySync(
                 d.trajectoryBuilder()
                         //.strafeLeft(strafeConvert(2))
-                        .forward(95)
-                        .strafeLeft(strafeConvert(20))
+                        .forward(88)
+                        .strafeLeft(strafeConvert(25))
                         .build()
         );
 
@@ -82,7 +80,7 @@ public class Testing extends LinearOpMode {
                         .build()
         );
 
-        sleep(1000);
+        sleep(500);
 
         //block picked up
         ss.intake(0);
@@ -92,7 +90,7 @@ public class Testing extends LinearOpMode {
         d.followTrajectorySync(
                 d.trajectoryBuilder()
                         .strafeRight(strafeConvert(13))
-                        .back(97)
+                        .back(100)
                         .build()
         );
 
@@ -105,7 +103,7 @@ public class Testing extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .forward(36)
+                        .forward(38)
                         .build()
         );
 

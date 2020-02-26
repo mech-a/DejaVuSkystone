@@ -15,11 +15,9 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
  * This is an example of a more complex path to really test the tuning.
  */
 
-// CASE A: Next to wall
-//PLEASE CONVERT TO RADIANS!!!!!!!!!
 @Config
 @Autonomous(group = "drive")
-public class TwoStoneBlue extends LinearOpMode {
+public class TwoStoneBlueMT extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
     //Sensors s = new Sensors(this);
     Sensors.SkyStoneLocation skyStoneLocation;
@@ -57,14 +55,17 @@ public class TwoStoneBlue extends LinearOpMode {
 
         //TODO reimpl.
         //skyStoneLocation = s.findSkystone();
-        skyStoneLocation = Sensors.SkyStoneLocation.CENTER;
+        ExtakeThread et = new ExtakeThread();
+        et.start();
+
+        skyStoneLocation = Sensors.SkyStoneLocation.RIGHT;
 
         if (isStopRequested()) return;
 
         //starting at -35, 60
         d.setPoseEstimate(new Pose2d(startingX, startingY, standardHeading));
 
-        switch(skyStoneLocation) {
+        switch (skyStoneLocation) {
             case LEFT:
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
@@ -106,7 +107,6 @@ public class TwoStoneBlue extends LinearOpMode {
                         d.trajectoryBuilder()
                                 .lineTo(new Vector2d(skystoneCenterX, strafeConvert(skystoneCenterY)),
                                         new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(angle)))
-                                .strafeLeft(strafeConvert(24))
                                 .build());
 
                 ss.extakeIn();
@@ -129,12 +129,9 @@ public class TwoStoneBlue extends LinearOpMode {
                         d.trajectoryBuilder()
                                 //y used to be 50, too far
                                 //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
-                                .back(9)
+                                .back(distanceForwardToPickUpStone)
                                 .build()
                 );
-
-                d.setPoseEstimate(new Pose2d(0, 0, 0));
-                d.turnSync(Math.toRadians(-45));
 
                 break;
 
@@ -145,9 +142,10 @@ public class TwoStoneBlue extends LinearOpMode {
                                         new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(caseRightAngle)))
                                 .build());
 
-                ss.extakeIn();
+//                ss.extakeIn();
+//
+//                ss.intake(-0.75);
 
-                ss.intake(-0.75);
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
@@ -155,19 +153,17 @@ public class TwoStoneBlue extends LinearOpMode {
                                 .build()
                 );
 
-                sleep(1000);
-
                 //block picked up
-                ss.intake(0);
-
-                ss.clampStone();
+//                ss.intake(0);
+//
+//                ss.clampStone();
 
                 //moving block to foundation side
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .strafeRight(strafeConvert(12.0))
                                 .back(86)
-                            .build()
+                                .build()
 
                 );
 
@@ -199,12 +195,12 @@ public class TwoStoneBlue extends LinearOpMode {
                                 .build()
                 );
 
-                ss.extakeOutPartial();
-                sleep(500);
-                ss.dropStone();
-                sleep(500);
-                ss.extakeIn();
-                sleep(1000);
+//                ss.extakeOutPartial();
+//                sleep(500);
+//                ss.dropStone();
+//                sleep(500);
+//                ss.extakeIn();
+//                sleep(1000);
 
                 //testing starts
 
@@ -218,9 +214,9 @@ public class TwoStoneBlue extends LinearOpMode {
                                 .build()
                 );
 
-                ss.extakeIn();
-
-                ss.intake(-0.75);
+//                ss.extakeIn();
+//
+//                ss.intake(-0.75);
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
@@ -228,12 +224,11 @@ public class TwoStoneBlue extends LinearOpMode {
                                 .build()
                 );
 
-                sleep(500);
 
                 //block picked up
-                ss.intake(0);
-
-                ss.clampStone();
+//                ss.intake(0);
+//
+//                ss.clampStone();
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
@@ -242,12 +237,12 @@ public class TwoStoneBlue extends LinearOpMode {
                                 .build()
                 );
 
-                ss.extakeOutPartial();
-                sleep(1000);
-                ss.dropStone();
-                sleep(500);
-                ss.extakeIn();
-                sleep(1000);
+//                ss.extakeOutPartial();
+//                sleep(1000);
+//                ss.dropStone();
+//                sleep(500);
+//                ss.extakeIn();
+//                sleep(1000);
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
@@ -255,11 +250,70 @@ public class TwoStoneBlue extends LinearOpMode {
                                 .build()
                 );
 
+                et.interrupt();
         }
     }
 
     public static double strafeConvert(double distance) {
         return (1.2 * distance + 3.53);
     }
-}
 
+    private class ExtakeThread extends Thread {
+        public ExtakeThread() {
+            this.setName("ExtakeThread");
+        }
+
+        public void run() {
+            try
+            {
+                while(!isInterrupted()) {
+                    // spline to first skystone
+                    sleep(2500);
+                    ss.extakeIn();
+                    ss.intake(-0.75);
+                    sleep(1000);
+
+                    // sleep, currently in the main thread
+                    ss.intake(0);
+                    ss.clampStone();
+
+                    sleep(7000);
+                    // hook foundation
+                    // turn foundation
+                    // sleep(1000);
+                    // unhook foundation
+
+                    ss.extakeOutPartial();
+                    sleep(1500);
+                    ss.dropStone();
+                    sleep(200);
+                    ss.extakeIn();
+                    sleep(500);
+
+                    // go to get second block
+                    sleep(3000);
+
+                    ss.intake(-0.75);
+                    sleep(1000);
+                    ss.intake(0);
+
+                    // go back to foundation
+                    sleep(2000);
+
+                    ss.extakeOutPartial();
+                    sleep(500);
+                    ss.dropStone();
+                    sleep(200);
+                    ss.extakeIn();
+                    sleep(500);
+                    // park
+                }
+            }
+            catch (InterruptedException e)
+            {
+                ss.intake(0);
+                ss.extakeIn();
+            }
+        }
+    }
+}

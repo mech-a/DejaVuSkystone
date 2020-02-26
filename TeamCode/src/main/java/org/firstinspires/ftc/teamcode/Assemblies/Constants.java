@@ -17,7 +17,7 @@ public class Constants {
     // Servo constants for extakeOut method
     public static double clampClawServoPosition = 0.6;
     public static double placeFerrisServoPosition = 0.85;
-    public static double backRotationServoPosition = 28.8/270 +.02;
+    public static double backRotationServoPosition = 28.8/270 +.02; //0.1267
 
     // Constants for extakeIn
     public static double unclampClawServo = 1;
