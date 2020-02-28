@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 
 @Config
 @Autonomous(group = "drive")
-public class TwoStoneBlueMT extends LinearOpMode {
+public class TwoStoneBlueMTSepThreads extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
     //Sensors s = new Sensors(this);
     Sensors.SkyStoneLocation skyStoneLocation;
@@ -55,8 +55,6 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
         //TODO reimpl.
         //skyStoneLocation = s.findSkystone();
-        ExtakeThread et = new ExtakeThread();
-        et.start();
 
         skyStoneLocation = Sensors.SkyStoneLocation.RIGHT;
 
@@ -142,16 +140,15 @@ public class TwoStoneBlueMT extends LinearOpMode {
                                         new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(caseRightAngle)))
                                 .build());
 
-//                ss.extakeIn();
-//
-//                ss.intake(-0.75);
-
+                FirstStoneIntake fsIntake = new FirstStoneIntake();
+                fsIntake.start();
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .forward(distanceForwardToPickUpStoneRight)
                                 .build()
                 );
+
 
                 //block picked up
 //                ss.intake(0);
@@ -166,6 +163,11 @@ public class TwoStoneBlueMT extends LinearOpMode {
                                 .build()
 
                 );
+
+                fsIntake.interrupt();
+
+                FirstStoneExtakeOut fsExOut = new FirstStoneExtakeOut();
+                fsExOut.start();
 
                 d.turnSync(Math.toRadians(-90));
                 //strafe right and cross under bridge
@@ -189,6 +191,11 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
                 ss.unhookFoundation();
 
+                fsExOut.interrupt();
+
+                FirstStoneRelease fsRelease = new FirstStoneRelease();
+                fsRelease.start();
+
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .back(20)
@@ -203,6 +210,11 @@ public class TwoStoneBlueMT extends LinearOpMode {
 //                sleep(1000);
 
                 //testing starts
+
+                fsRelease.interrupt();
+
+                SecondStoneRelease ssRelease = new SecondStoneRelease();
+                ssRelease.start();
 
                 d.setPoseEstimate(new Pose2d(0, 0, 0));
 
@@ -237,6 +249,8 @@ public class TwoStoneBlueMT extends LinearOpMode {
                                 .build()
                 );
 
+                ssRelease.interrupt();
+
 //                ss.extakeOutPartial();
 //                sleep(1000);
 //                ss.dropStone();
@@ -244,13 +258,13 @@ public class TwoStoneBlueMT extends LinearOpMode {
 //                ss.extakeIn();
 //                sleep(1000);
 
+
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .forward(40)
                                 .build()
                 );
 
-                et.interrupt();
         }
     }
 
@@ -258,7 +272,118 @@ public class TwoStoneBlueMT extends LinearOpMode {
         return (1.2 * distance + 3.53);
     }
 
+    private class FirstStoneIntake extends Thread {
+
+        public FirstStoneIntake() {
+            this.setName("FirstStoneIntake");
+        }
+
+        public void run() {
+            try
+            {
+                while(!isInterrupted()) {
+                    // spline to first skystone
+                    sleep(2500);
+                    ss.extakeIn();
+                    ss.intake(-0.75);
+                    sleep(1000);
+                    ss.intake(0);
+                    ss.clampStone();
+                    sleep(7000);
+                }
+            }
+            catch (InterruptedException e)
+            {
+                ss.intake(0);
+                ss.extakeIn();
+                ss.clampStone();
+            }
+        }
+    }
+
+    private class FirstStoneExtakeOut extends Thread {
+
+        public FirstStoneExtakeOut() {
+            this.setName("FirstStoneExtakeOut");
+        }
+
+        public void run() {
+            try
+            {
+                while(!isInterrupted()) {
+                    // before this, grip foundation
+                    ss.extakeOutPartial();
+                    sleep(1500);
+                }
+            }
+            catch (InterruptedException e)
+            {
+                ss.intake(0);
+                ss.extakeIn();
+            }
+        }
+    }
+
+    private class FirstStoneRelease extends Thread {
+
+        public FirstStoneRelease() { this.setName("FirstStoneRelease"); }
+
+        public void run() {
+            try
+            {
+                while(!isInterrupted()) {
+                    // before this, release foundation
+                    ss.dropStone();
+                    sleep(200);
+                    ss.extakeIn();
+                    sleep(500);
+                }
+            }
+            catch (InterruptedException e)
+            {
+                ss.intake(0);
+                ss.extakeIn();
+            }
+        }
+    }
+
+    private class SecondStoneRelease extends Thread {
+
+        public SecondStoneRelease() { this.setName("SecondStoneRelease"); }
+
+        public void run() {
+            try
+            {
+                while(!isInterrupted()) {
+                    // before this, go forward to second block
+                    ss.intake(-0.75);
+                    sleep(1000);
+                    ss.intake(0);
+
+                    // go back to foundation
+                    sleep(2000);
+
+                    ss.extakeOutPartial();
+                    sleep(500);
+                    ss.dropStone();
+                    sleep(200);
+                    ss.extakeIn();
+                    sleep(500);
+                    // park
+                }
+            }
+            catch (InterruptedException e)
+            {
+                ss.intake(0);
+                ss.extakeIn();
+            }
+        }
+    }
+
+
+
     private class ExtakeThread extends Thread {
+
         public ExtakeThread() {
             this.setName("ExtakeThread");
         }
