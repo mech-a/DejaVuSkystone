@@ -26,12 +26,12 @@ public class TwoStoneBlue extends LinearOpMode {
 
     public static double standardHeading = 0;
     public static double startingX = 0, startingY = 0;
-    public static double skystoneLeftX = 49, skystoneCenterX = 40, skystoneRightX = 47.5;
-    public static double skystoneLeftY = -9, skystoneCenterY = 7, skystoneRightY = 1;
+    public static double skystoneLeftX = 40, skystoneCenterX = 40, skystoneRightX = 47.5;
+    public static double skystoneLeftY = -12, skystoneCenterY = 7, skystoneRightY = 1;
     public static double distanceForwardToPickUpStone = 17.5;
     public static double distanceForwardToPickUpStoneRight = 7;
     public static double distanceForwardToPickUpStoneCenter = 6;
-    public static double distanceForwardToPickUpStoneLeft = 9;
+    public static double distanceForwardToPickUpStoneLeft = 10;
     public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
     public static double centerAngle = -45;
     public static double leftAngle = 45;
@@ -71,10 +71,8 @@ public class TwoStoneBlue extends LinearOpMode {
             case LEFT:
                 d.followTrajectorySync(
                         d.trajectoryBuilder().lineTo(new Vector2d(skystoneLeftX, strafeConvert(skystoneLeftY)),
-                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(leftAngle+20)))
+                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(leftAngle+25)))
                                 .build());
-
-                d.turnSync(Math.toRadians(25));
 
                 ss.extakeIn();
 
@@ -93,11 +91,104 @@ public class TwoStoneBlue extends LinearOpMode {
 
                 ss.clampStone();
 
+                d.turnSync(Math.toRadians(27.5));
+
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 //y used to be 50, too far
                                 //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
-                                .strafeRight(strafeConvert(24))
+                                .strafeLeft(strafeConvert(12))
+                                .build()
+
+                );
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(74.5)
+                                .build()
+                );
+
+                d.turnSync(Math.toRadians(90));
+                //strafe right and cross under bridge
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(12)
+                                .build()
+                );
+
+                ss.hookFoundation();
+
+                sleep(500);
+
+                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias)))
+                                .build()
+                );
+
+                ss.unhookFoundation();
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(23)
+                                .build()
+                );
+
+                ss.extakeOutPartial();
+                sleep(500);
+                ss.dropStone();
+                sleep(500);
+                ss.extakeIn();
+                sleep(1000);
+
+                //testing starts
+
+                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                //.strafeLeft(strafeConvert(2))
+                                .forward(72)
+                                .strafeLeft(strafeConvert(25))
+                                .build()
+                );
+
+                ss.extakeIn();
+
+                ss.intake(-0.75);
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(6.5)
+                                .build()
+                );
+
+                sleep(1000);
+
+                //block picked up
+                ss.intake(0);
+
+                ss.clampStone();
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .strafeRight(strafeConvert(13))
+                                .back(86)
+                                .build()
+                );
+
+                ss.extakeOutPartial();
+                sleep(1000);
+                ss.dropStone();
+                sleep(500);
+                ss.extakeIn();
+                sleep(1000);
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(40)
                                 .build()
                 );
 
