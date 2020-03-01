@@ -210,7 +210,7 @@ public class StoneScorer //implements Subassembly
 
         if(extake_position == 1 //&& clawTimer.milliseconds() > 300
         ) {
-            servos.get(1).setPosition(1);   //.85   //ferris servo has limits 0.577 and 0.0522
+            servos.get(1).setPosition(.9);   //.85   //ferris servo has limits 0.577 and 0.0522
             servos.get(0).setPosition(.3);  //28.8/270 +.02 //rotation servo has limits 0.03 and 0.54
             extake_position = 0;
         }

@@ -57,15 +57,16 @@ public class Testing extends LinearOpMode {
         SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
         ss.init(hardwareMap);
 
-        d.setPoseEstimate(new Pose2d(0, 0, 0));
 
         waitForStart();
 
         //strafe right and cross under bridge
+        d.setPoseEstimate(new Pose2d(0, 0, 0));
+
         d.followTrajectorySync(
                 d.trajectoryBuilder()
                         //.strafeLeft(strafeConvert(2))
-                        .forward(88)
+                        .forward(80)
                         .strafeLeft(strafeConvert(25))
                         .build()
         );
@@ -89,12 +90,12 @@ public class Testing extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .strafeRight(strafeConvert(13))
-                        .back(100)
+                        .strafeRight(strafeConvert(10))
+                        .back(94)
                         .build()
         );
 
-        ss.extakeOut();
+        ss.extakeOutPartial();
         sleep(1000);
         ss.dropStone();
         sleep(500);
@@ -103,7 +104,7 @@ public class Testing extends LinearOpMode {
 
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .forward(38)
+                        .forward(40)
                         .build()
         );
 

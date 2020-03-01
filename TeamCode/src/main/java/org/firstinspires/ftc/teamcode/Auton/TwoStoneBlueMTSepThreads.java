@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
@@ -15,7 +16,8 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
  * This is an example of a more complex path to really test the tuning.
  */
 
-@Config
+
+@Disabled
 @Autonomous(group = "drive")
 public class TwoStoneBlueMTSepThreads extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
@@ -283,7 +285,6 @@ public class TwoStoneBlueMTSepThreads extends LinearOpMode {
             {
                 while(!isInterrupted()) {
                     // spline to first skystone
-                    sleep(2500);
                     ss.extakeIn();
                     ss.intake(-0.75);
                     sleep(1000);
