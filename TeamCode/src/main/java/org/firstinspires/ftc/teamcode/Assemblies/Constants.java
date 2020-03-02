@@ -8,7 +8,7 @@ public class Constants {
 
     //STONESCORER
     //Constants for init
-    public static double initRotationServo = 0.66;
+    public static double initRotationServo = 0.70; //0.66
     public static double initFerrisServo = 0.32;
     public static double initClawServo = 1;
   //  public static double initLeftFoundationServo = 0.10;

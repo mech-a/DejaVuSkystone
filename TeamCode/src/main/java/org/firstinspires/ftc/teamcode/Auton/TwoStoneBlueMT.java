@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
  * This is an example of a more complex path to really test the tuning.
  */
 
+// CASE A: Next to wall
+//PLEASE CONVERT TO RADIANS!!!!!!!!!
 @Config
 @Autonomous(group = "drive")
 public class TwoStoneBlueMT extends LinearOpMode {
@@ -24,20 +26,23 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
     public static double standardHeading = 0;
     public static double startingX = 0, startingY = 0;
-    public static double skystoneLeftX = 28, skystoneCenterX, skystoneRightX = 47.5;
-    public static double skystoneLeftY = 23, skystoneCenterY = 14, skystoneRightY = 1;
+    public static double skystoneLeftX = 40, skystoneCenterX = 40, skystoneRightX = 47.5;
+    public static double skystoneLeftY = -12, skystoneCenterY = 7, skystoneRightY = 1;
     public static double distanceForwardToPickUpStone = 17.5;
     public static double distanceForwardToPickUpStoneRight = 7;
+    public static double distanceForwardToPickUpStoneCenter = 6;
+    public static double distanceForwardToPickUpStoneLeft = 10;
     public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
-    public static double angle = -45;
+    public static double centerAngle = -45;
+    public static double leftAngle = 45;
     public static double caseRightAngle = -90;
     public static double distanceStrafeLeftForFoundationSide = 55;
     public static double headingForStoneDrop = 90;
     //public static double distanceBackToPark = 25;
 
-    public static double rotationBias = 6.5;
+    public static double rotationBias = 12;
 
-    public static double foundationRightX = 12;
+    public static double foundationRightX = 8;
     public static double foundationRightY = 28;
     public static double foundationHeading = 100;
 
@@ -55,87 +60,305 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
         //TODO reimpl.
         //skyStoneLocation = s.findSkystone();
-        ExtakeThread et = new ExtakeThread();
-        et.start();
-
-        skyStoneLocation = Sensors.SkyStoneLocation.RIGHT;
+        skyStoneLocation = Sensors.SkyStoneLocation.CENTER;
 
         if (isStopRequested()) return;
 
         //starting at -35, 60
         d.setPoseEstimate(new Pose2d(startingX, startingY, standardHeading));
 
-        switch (skyStoneLocation) {
+        switch(skyStoneLocation) {
             case LEFT:
+
+                ExtakeThreadLeft etl = new ExtakeThreadLeft();
+                etl.start();
+
+                // spline to first left stone
                 d.followTrajectorySync(
-                        d.trajectoryBuilder()
-                                .lineTo(new Vector2d(skystoneLeftX, strafeConvert(skystoneLeftY)),
-                                        new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(angle)))
+                        d.trajectoryBuilder().lineTo(new Vector2d(skystoneLeftX, strafeConvert(skystoneLeftY)),
+                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(leftAngle+25)))
                                 .build());
 
-                ss.extakeIn();
+//                ss.extakeIn();
+//                ss.intake(-0.75);
 
-                //intake
-                ss.intake(-0.75);
-
-                //drives forward to pick up
+                // go forward to pick up left stone
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(distanceForwardToPickUpStone)
+                                .forward(distanceForwardToPickUpStoneLeft)
+                                .build()
+                );
+
+//                ss.intake(0);
+//                ss.clampStone();
+
+                // rotate to straighten out robot
+                d.turnSync(Math.toRadians(24));//27.5
+
+                // strafe to the left to avoid bridge
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .strafeLeft(strafeConvert(14.5))//12
+                                .build()
+                );
+
+                // travel forward to foundation
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(72.5)
+                                .build()
+                );
+
+                // rotate 90 to face foundation
+                d.turnSync(Math.toRadians(91));
+
+                // back up against foundation
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(6.5)
+                                .build()
+                );
+
+                // hook foundation
+                ss.hookFoundation();
+                sleep(500);
+
+                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                // spline to turn foundation
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias)))
+                                .build()
+                );
+
+                // unhook foundation
+                ss.unhookFoundation();
+
+                // push foundation back into wall
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(24)
+                                .build()
+                );
+
+//                ss.extakeOutPartial();
+//                sleep(500);
+//                ss.dropStone();
+//                sleep(500);
+//                ss.extakeIn();
+//                sleep(1000);
+
+                // path for getting second stone begins
+
+                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                // travel forward to second stone
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(80)// used to be 72
+                                .build()
+                );
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .strafeLeft(strafeConvert(21))
+                                .build()
+                );
+
+//                ss.extakeIn();
+//                ss.intake(-0.75);
+
+                // move forward to intake stone
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(8)//6.5
+                                .build()
+                );
+
+//                sleep(1000);
+//                ss.intake(0);
+//                ss.clampStone();
+
+                // strafe right to avoid bridge, back to get to foundation
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .strafeRight(strafeConvert(18))
+                                .build()
+                );
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(87)//86
+                                .build()
+                );
+
+//                ss.extakeOutPartial();
+//                sleep(1000);
+//                ss.dropStone();
+//                sleep(500);
+//                ss.extakeIn();
+//                sleep(1000);
+
+                // park under bridge
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(40)
+                                .build()
+                );
+
+                etl.interrupt();
+
+                break;
+
+            case CENTER:
+
+                ExtakeThreadCenter etc = new ExtakeThreadCenter();
+                etc.start();
+
+                // spline to first center stone
+                d.followTrajectorySync(
+                        d.trajectoryBuilder().lineTo(new Vector2d(skystoneCenterX, strafeConvert(skystoneCenterY)),
+                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(centerAngle-20)))
+                                .build());
+
+//                ss.extakeIn();
+//                ss.intake(-0.75);
+
+                // move forward to intake block
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(distanceForwardToPickUpStoneCenter)
+                                .build()
+                );
+
+//                ss.intake(0);
+//                ss.clampStone();
+
+                // strafe right to avoid bridge
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .strafeRight(20)
+                                .build()
+                );
+
+                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                // turn 30 degrees to straighten out the robot
+                d.turnSync(Math.toRadians(-30));
+
+                // back up to the foundation
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(78.5)
+                                .build()
+                );
+
+                // turn 90 degrees to face foundation
+                d.turnSync(Math.toRadians(-90));
+
+                // back up to prepare to hook foundation
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(6.5)
+                                .build()
+                );
+
+                // hook foundation
+                ss.hookFoundation();
+
+                sleep(500);
+
+                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                // spline to turn foundation
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias-4)))
+                                .build()
+                );
+
+                // unhook foundation
+                ss.unhookFoundation();
+
+                // push foundation into the wall
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(24)
+                                .build()
+                );
+
+//                ss.extakeOutPartial();
+//                sleep(500);
+//                ss.dropStone();
+//                sleep(500);
+//                ss.extakeIn();
+//                sleep(1000);
+
+                // second stone process starts
+
+                d.setPoseEstimate(new Pose2d(0, 0, 0));
+
+                // move forward to the stones
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(82)
+                                .strafeLeft(strafeConvert(22))
+                                .build()
+                );
+
+//                ss.extakeIn();
+//                ss.intake(-0.75);
+
+                // move forward to intake second stone
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .forward(8)
                                 .build()
                 );
 
                 sleep(500);
 
-                //block picked up
-                ss.intake(0);
+//                ss.intake(0);
+//                ss.clampStone();
 
-                ss.clampStone();
-
+                // strafe right to avoid bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                //y used to be 50, too far
-                                //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
-                                .back(distanceForwardToPickUpStone)
+                                .strafeRight(strafeConvert(15))
                                 .build()
                 );
 
-                break;
-
-            case CENTER:
+                // move back to foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .lineTo(new Vector2d(skystoneCenterX, strafeConvert(skystoneCenterY)),
-                                        new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(angle)))
-                                .build());
-
-                ss.extakeIn();
-
-                ss.intake(-0.75);
-
-                d.followTrajectorySync(
-                        d.trajectoryBuilder()
-                                .forward(distanceForwardToPickUpStone)
+                                .back(93)
                                 .build()
                 );
 
-                sleep(1000);
+//                ss.extakeOutPartial();
+//                sleep(1000);
+//                ss.dropStone();
+//                sleep(500);
+//                ss.extakeIn();
+//                sleep(1000);
 
-                //block picked up
-                ss.intake(0);
-
-
+                // move forward to park under bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                //y used to be 50, too far
-                                //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
-                                .back(distanceForwardToPickUpStone)
+                                .forward(40)
                                 .build()
                 );
+
+                etc.interrupt();
 
                 break;
 
             case RIGHT:
+
+                ExtakeThreadRight etr = new ExtakeThreadRight();
+                etr.start();
+
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .lineTo(new Vector2d(skystoneRightX, strafeConvert(skystoneRightY)),
@@ -250,7 +473,9 @@ public class TwoStoneBlueMT extends LinearOpMode {
                                 .build()
                 );
 
-                et.interrupt();
+                etr.interrupt();
+
+                break;
         }
     }
 
@@ -258,9 +483,9 @@ public class TwoStoneBlueMT extends LinearOpMode {
         return (1.2 * distance + 3.53);
     }
 
-    private class ExtakeThread extends Thread {
-        public ExtakeThread() {
-            this.setName("ExtakeThread");
+    private class ExtakeThreadLeft extends Thread {
+        public ExtakeThreadLeft() {
+            this.setName("ExtakeThreadLeft");
         }
 
         public void run() {
@@ -268,21 +493,84 @@ public class TwoStoneBlueMT extends LinearOpMode {
             {
                 while(!isInterrupted()) {
                     // spline to first skystone
-                    sleep(2500);
+                    sleep(2000);
+                    // go forward to intake first block
                     ss.extakeIn();
                     ss.intake(-0.75);
                     sleep(1000);
-
-                    // sleep, currently in the main thread
                     ss.intake(0);
                     ss.clampStone();
-
-                    sleep(7000);
+                    // back up to foundation side of field
+                    // rotate 90 to face foundation
+                    sleep(9000);
                     // hook foundation
                     // turn foundation
-                    // sleep(1000);
                     // unhook foundation
 
+                    // drop first stone onto foundation
+                    ss.extakeOutPartial();
+                    sleep(1500);
+                    ss.dropStone();
+                    sleep(200);
+                    ss.extakeIn();
+                    sleep(500);
+
+                    // go to get second block
+                    sleep(4000);
+
+                    // go forward to intake second block
+                    ss.intake(-0.75);
+                    sleep(2000);
+                    ss.intake(0);
+
+                    // go back to foundation
+                    sleep(2000);
+
+                    // drop second stone onto foundation
+                    ss.extakeOutPartial();
+                    sleep(500);
+                    ss.dropStone();
+                    sleep(200);
+                    ss.extakeIn();
+                    sleep(500);
+
+                    // park under the bridge
+                }
+            }
+            catch (InterruptedException e)
+            {
+                ss.intake(0);
+                ss.extakeIn();
+            }
+
+        }
+    }
+
+    private class ExtakeThreadCenter extends Thread {
+        public ExtakeThreadCenter() {
+            this.setName("ExtakeThreadCenter");
+        }
+
+        public void run() {
+            try
+            {
+                while(!isInterrupted()) {
+                    // spline to first skystone
+                    sleep(2000);
+                    // go forward to intake first block
+                    ss.extakeIn();
+                    ss.intake(-0.75);
+                    sleep(1500);
+                    ss.intake(0);
+                    ss.clampStone();
+                    // back up to foundation side of field
+                    // rotate 90 to face foundation
+                    sleep(7500);
+                    // hook foundation
+                    // turn foundation
+                    // unhook foundation
+
+                    // drop first stone onto foundation
                     ss.extakeOutPartial();
                     sleep(1500);
                     ss.dropStone();
@@ -293,20 +581,85 @@ public class TwoStoneBlueMT extends LinearOpMode {
                     // go to get second block
                     sleep(3500);
 
+                    // go forward to intake second block
                     ss.intake(-0.75);
                     sleep(1000);
                     ss.intake(0);
 
                     // go back to foundation
-                    sleep(2000);
+                    sleep(4000);
 
+                    // drop second stone onto foundation
                     ss.extakeOutPartial();
                     sleep(500);
                     ss.dropStone();
                     sleep(200);
                     ss.extakeIn();
                     sleep(500);
-                    // park
+
+                    // park under the bridge
+                }
+            }
+            catch (InterruptedException e)
+            {
+                ss.intake(0);
+                ss.extakeIn();
+            }
+        }
+    }
+
+    private class ExtakeThreadRight extends Thread {
+        public ExtakeThreadRight() {
+            this.setName("ExtakeThreadRight");
+        }
+
+        public void run() {
+            try
+            {
+                while(!isInterrupted()) {
+                    // spline to first skystone
+                    sleep(2500);
+                    // go forward to intake first block
+                    ss.extakeIn();
+                    ss.intake(-0.75);
+                    sleep(1000);
+                    ss.intake(0);
+                    ss.clampStone();
+                    // back up to foundation side of field
+                    // rotate 90 to face foundation
+                    sleep(7000);
+                    // hook foundation
+                    // turn foundation
+                    // unhook foundation
+
+                    // drop first stone onto foundation
+                    ss.extakeOutPartial();
+                    sleep(1500);
+                    ss.dropStone();
+                    sleep(200);
+                    ss.extakeIn();
+                    sleep(500);
+
+                    // go to get second block
+                    sleep(3500);
+
+                    // go forward to intake second block
+                    ss.intake(-0.75);
+                    sleep(1000);
+                    ss.intake(0);
+
+                    // go back to foundation
+                    sleep(1500);
+
+                    // drop second stone onto foundation
+                    ss.extakeOutPartial();
+                    sleep(1000);
+                    ss.dropStone();
+                    sleep(200);
+                    ss.extakeIn();
+                    sleep(500);
+
+                    // park under the bridge
                 }
             }
             catch (InterruptedException e)
