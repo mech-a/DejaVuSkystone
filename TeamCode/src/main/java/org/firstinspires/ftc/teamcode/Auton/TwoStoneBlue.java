@@ -26,8 +26,8 @@ public class TwoStoneBlue extends LinearOpMode {
 
     public static double standardHeading = 0;
     public static double startingX = 0, startingY = 0;
-    public static double skystoneLeftX = 40, skystoneCenterX = 40, skystoneRightX = 47.5;
-    public static double skystoneLeftY = -12, skystoneCenterY = 7, skystoneRightY = 1;
+    public static double skystoneLeftX = 41, skystoneCenterX = 40, skystoneRightX = 47.5;
+    public static double skystoneLeftY = -11, skystoneCenterY = 7, skystoneRightY = 1;
     public static double distanceForwardToPickUpStone = 17.5;
     public static double distanceForwardToPickUpStoneRight = 7;
     public static double distanceForwardToPickUpStoneCenter = 6;
@@ -91,24 +91,24 @@ public class TwoStoneBlue extends LinearOpMode {
 
                 ss.clampStone();
 
-                d.turnSync(Math.toRadians(27.5));
+                d.turnSync(Math.toRadians(23));
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 //y used to be 50, too far
                                 //.lineTo(new Vector2d(skystonePositionX, 10), new ConstantInterpolator(-90))
-                                .strafeLeft(strafeConvert(12))
+                                .strafeLeft(strafeConvert(15.75))
                                 .build()
 
                 );
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(74.5)
+                                .forward(70.5)
                                 .build()
                 );
 
-                d.turnSync(Math.toRadians(90));
+                d.turnSync(Math.toRadians(91));
                 //strafe right and cross under bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
@@ -150,8 +150,8 @@ public class TwoStoneBlue extends LinearOpMode {
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 //.strafeLeft(strafeConvert(2))
-                                .forward(72)
-                                .strafeLeft(strafeConvert(25))
+                                .forward(71)
+                                .strafeLeft(strafeConvert(24))
                                 .build()
                 );
 
@@ -161,7 +161,7 @@ public class TwoStoneBlue extends LinearOpMode {
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(6.5)
+                                .forward(8)
                                 .build()
                 );
 
@@ -175,7 +175,12 @@ public class TwoStoneBlue extends LinearOpMode {
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .strafeRight(strafeConvert(13))
-                                .back(86)
+                                .build()
+                );
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .back(87)
                                 .build()
                 );
 
