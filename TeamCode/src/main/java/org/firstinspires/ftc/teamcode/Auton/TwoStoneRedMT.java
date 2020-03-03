@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 //PLEASE CONVERT TO RADIANS!!!!!!!!!
 @Config
 @Autonomous(group = "drive")
-public class TwoStoneBlueMT extends LinearOpMode {
+public class TwoStoneRedMT extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
     //Sensors s = new Sensors(this);
 
@@ -444,7 +444,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 //.strafeLeft(strafeConvert(2))
-                                .strafeLeft(strafeConvert(19))
+                                .strafeLeft(strafeConvert(17))
                                 .build()
                 );
 
@@ -454,7 +454,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(9)
+                                .forward(6)
                                 .build()
                 );
 
@@ -485,7 +485,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(43)
+                                .forward(40)
                                 .build()
                 );
 
@@ -657,15 +657,15 @@ public class TwoStoneBlueMT extends LinearOpMode {
                     sleep(500);
 
                     // go to get second block
-                    sleep(5500);
+                    sleep(5000);
 
                     // go forward to intake second block
                     ss.intake(-0.75);
-                    sleep(1750);
+                    sleep(1000);
                     ss.intake(0);
 
                     // go back to foundation
-                    sleep(2600);
+                    sleep(3000);
 
                     // drop second stone onto foundation
                     ss.extakeOutPartial();
