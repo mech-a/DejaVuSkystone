@@ -11,10 +11,6 @@ import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
-/*
- * This is an example of a more complex path to really test the tuning.
- */
-
 // CASE A: Next to wall
 //PLEASE CONVERT TO RADIANS!!!!!!!!!
 @Config
