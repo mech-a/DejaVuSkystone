@@ -30,7 +30,7 @@ public class Sensors //implements Subassembly
 //    private static final int UPPER_X_BOUNDARY = 300;
 //    private static final int LOWER_Y_BOUNDARY = 250;
 //    private static final int UPPER_Y_BOUNDARY = 390;
-    private static final int MID_BOUND = 400;
+    private static final int MID_BOUND = 200;
     private static final int LEFT_BOUND = 0, TOP_BOUND = 0, RIGHT_BOUND = 200, BOTTOM_BOUND = 0;
 
     private SkyStoneLocation location;
@@ -63,7 +63,7 @@ public class Sensors //implements Subassembly
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
 
-        tfodParameters.minimumConfidence = 0.7;
+        tfodParameters.minimumConfidence = 0.5;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_STONE//,
@@ -95,7 +95,6 @@ public class Sensors //implements Subassembly
 
             recognitions = tfod.getRecognitions();
             telemetry.addData("Recognitions: ", recognitions.toString());
-            telemetry.update();
 
             if (recognitions.size() == 0) {  //zero stones in sight-- this should never happen
                 location = SkyStoneLocation.LEFT; //default case
@@ -120,7 +119,7 @@ public class Sensors //implements Subassembly
 
 
         telemetry.addData("SkyStone Location: ", location);
-        //telemetry.update();
+        telemetry.update();
 
         return location;
     }

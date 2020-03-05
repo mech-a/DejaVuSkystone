@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 @Autonomous(group = "drive")
 public class TwoStoneBlueMT extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
-    //Sensors s = new Sensors(this);
+    Sensors s = new Sensors(this);
 
     Sensors.SkyStoneLocation skyStoneLocation;
 
@@ -51,15 +51,13 @@ public class TwoStoneBlueMT extends LinearOpMode {
         SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
 
         ss.init(hardwareMap);
-        //s.init(hardwareMap);
-
-        //skyStoneLocation = s.findSkystone();
+        s.init(hardwareMap);
 
         waitForStart();
 
         //TODO reimpl.
-        skyStoneLocation = Sensors.SkyStoneLocation.RIGHT;
-
+        skyStoneLocation = s.findSkystone();
+        sleep(750);
 
         if (isStopRequested()) return;
 
