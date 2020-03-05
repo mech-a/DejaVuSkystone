@@ -24,7 +24,7 @@ public class TwoStoneRedMT extends LinearOpMode {
     public static double standardHeading = 0;
     public static double startingX = 0, startingY = 0;
     public static double skystoneLeftX = 47.5, skystoneCenterX = 40, skystoneRightX = 40;
-    public static double skystoneLeftY = -1, skystoneCenterY = -8, skystoneRightY = 12;
+    public static double skystoneLeftY = -6, skystoneCenterY = -8, skystoneRightY = 12;
 
     public static double distanceForwardToPickUpStoneRight = 10;
     public static double distanceForwardToPickUpStoneCenter = 6;
@@ -42,7 +42,7 @@ public class TwoStoneRedMT extends LinearOpMode {
 
     public static double foundationTurnX = 8;
     public static double foundationTurnY = -28;
-    public static double foundationHeading = 100;
+    public static double foundationHeading = -100;
 
     public static long sleepFromExtakeOutToExtakeIn = 1000, sleepFromExtakeInToIntakeIn = 1000;
 
@@ -59,7 +59,7 @@ public class TwoStoneRedMT extends LinearOpMode {
         waitForStart();
 
         //TODO reimpl.
-        skyStoneLocation = Sensors.SkyStoneLocation.RIGHT;
+        skyStoneLocation = Sensors.SkyStoneLocation.LEFT;
 
 
         if (isStopRequested()) return;
@@ -159,7 +159,7 @@ public class TwoStoneRedMT extends LinearOpMode {
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeRight(strafeConvert(21))
+                                .strafeRight(strafeConvert(19))
                                 .build()
                 );
 
@@ -355,8 +355,8 @@ public class TwoStoneRedMT extends LinearOpMode {
 
                 // spline to get first right stone
                 d.followTrajectorySync(
-                        d.trajectoryBuilder().lineTo(new Vector2d(skystoneLeftX, strafeConvert(skystoneLeftY)),
-                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(leftAngle+25)))
+                        d.trajectoryBuilder().lineTo(new Vector2d(skystoneRightX, strafeConvert(skystoneRightY)),
+                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(caseRightAngle-25)))
                                 .build());
 
 //                ss.extakeIn();
@@ -373,7 +373,7 @@ public class TwoStoneRedMT extends LinearOpMode {
 //                ss.clampStone();
 
                 // rotate to straighten out robot
-                d.turnSync(Math.toRadians(24));//27.5
+                d.turnSync(Math.toRadians(-24));//27.5
 
                 // strafe to the right to avoid bridge
                 d.followTrajectorySync(
@@ -507,16 +507,16 @@ public class TwoStoneRedMT extends LinearOpMode {
             {
                 while(!isInterrupted()) {
                     // spline to first skystone
-                    sleep(2000);
+                    sleep(2500);
                     // go forward to intake first block
                     ss.extakeIn();
                     ss.intake(-0.75);
-                    sleep(1000);
+                    sleep(1500);
                     ss.intake(0);
                     ss.clampStone();
                     // back up to foundation side of field
                     // rotate 90 to face foundation
-                    sleep(9000);
+                    sleep(8000);
                     // hook foundation
                     // turn foundation
                     // unhook foundation

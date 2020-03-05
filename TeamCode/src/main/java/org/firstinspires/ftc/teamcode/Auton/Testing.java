@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
+import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
@@ -45,66 +46,100 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 public class Testing extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
 
-    public static double foundationRightX = -81;
-    public static double foundationRightY = 9;
+    public static double standardHeading = 0;
+    public static double startingX = 0, startingY = 0;
+    public static double skystoneLeftX = 47.5, skystoneCenterX = 40, skystoneRightX = 40;
+    public static double skystoneLeftY = -6, skystoneCenterY = -8, skystoneRightY = 12;
 
-    public static double pullfoundationRightX = 12;
-    public static double pullfoundationRightY = 28;
-    public static double pullfoundationHeading = 90;
+    public static double distanceForwardToPickUpStoneRight = 10;
+    public static double distanceForwardToPickUpStoneCenter = 6;
+    public static double distanceForwardToPickUpStoneLeft = 7;
+
+    public static double centerAngle = 65;
+    public static double leftAngle = 90;
+    public static double caseRightAngle = -45;
+
+    public static double distanceStrafeLeftForFoundationSide = 55;
+    public static double headingForStoneDrop = 90;
+    //public static double distanceBackToPark = 25;
+
+    public static double rotationBias = 12;
+
+    public static double foundationTurnX = 8;
+    public static double foundationTurnY = -28;
+    public static double foundationHeading = 100;
+
+    public static long sleepFromExtakeOutToExtakeIn = 1000, sleepFromExtakeInToIntakeIn = 1000;
+
 
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
         SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
-        ss.init(hardwareMap);
 
+        ss.init(hardwareMap);
+        //s.init(hardwareMap);
+
+        //skyStoneLocation = s.findSkystone();
 
         waitForStart();
 
-        //strafe right and cross under bridge
-        d.setPoseEstimate(new Pose2d(0, 0, 0));
+        //TODO reimpl.
 
+        if (isStopRequested()) return;
+
+        //starting at -35, 60
+        d.setPoseEstimate(new Pose2d(startingX, startingY, standardHeading));
+
+      /*  d.followTrajectorySync(
+                d.trajectoryBuilder().lineTo(new Vector2d(skystoneRightX, strafeConvert(skystoneRightY)),
+                        new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(caseRightAngle-25)))
+                        .build());
+
+                ss.extakeIn();
+                ss.intake(-0.75);
+
+        // go forward to pick up right stone
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        //.strafeLeft(strafeConvert(2))
-                        .forward(80)
-                        .strafeLeft(strafeConvert(25))
+                        .forward(distanceForwardToPickUpStoneRight)
                         .build()
         );
 
-        ss.extakeIn();
+                ss.intake(0);
+                ss.clampStone();
 
-        ss.intake(-0.75);
+        // rotate to straighten out robot
+        d.turnSync(Math.toRadians(-24));//27.5
 
+        // strafe to the right to avoid bridge
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .forward(6)
+                        .strafeRight(strafeConvert(14.5))//12
+                        .build()
+        ); */
+
+        d.followTrajectorySync(
+                d.trajectoryBuilder().lineTo(new Vector2d(skystoneLeftX, strafeConvert(skystoneLeftY)),
+                        new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(leftAngle)))
+                        .build());
+
+                ss.extakeIn();
+                ss.intake(-0.75);
+
+        // go forward to pick up left stone
+        d.followTrajectorySync(
+                d.trajectoryBuilder()
+                        .forward(distanceForwardToPickUpStoneLeft)
                         .build()
         );
 
-        sleep(500);
+                ss.intake(0);
+                ss.clampStone();
 
-        //block picked up
-        ss.intake(0);
-
-        ss.clampStone();
-
+        // strafe to the left to avoid bridge
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .strafeRight(strafeConvert(10))
-                        .back(94)
-                        .build()
-        );
-
-        ss.extakeOutPartial();
-        sleep(1000);
-        ss.dropStone();
-        sleep(500);
-        ss.extakeIn();
-        sleep(1000);
-
-        d.followTrajectorySync(
-                d.trajectoryBuilder()
-                        .forward(40)
+                        .strafeLeft(strafeConvert(16))
                         .build()
         );
 

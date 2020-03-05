@@ -39,9 +39,9 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
     public static double rotationBias = 12;
 
-    public static double foundationRightX = -8;
-    public static double foundationRightY = -28;
-    public static double foundationHeading = -100;
+    public static double foundationRightX = 8;
+    public static double foundationRightY = 28;
+    public static double foundationHeading = 100;
 
     public static long sleepFromExtakeOutToExtakeIn = 1000, sleepFromExtakeInToIntakeIn = 1000;
 
@@ -92,7 +92,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
 //                ss.clampStone();
 
                 // rotate to straighten out robot
-                d.turnSync(Math.toRadians(-24));//27.5
+                d.turnSync(Math.toRadians(24));//27.5
 
                 // strafe to the left to avoid bridge
                 d.followTrajectorySync(
