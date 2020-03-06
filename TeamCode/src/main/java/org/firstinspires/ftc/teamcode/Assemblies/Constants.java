@@ -26,7 +26,7 @@ public class Constants {
     public static double intakeFerrisServo = 0.34;
 
     // For foundation
-    public static double leftFoundationDown = 0.72; //these are all probably old and useless
+    public static double leftFoundationDown = 0.470; //these are all probably old and useless
     public static double rightFoundationDown = 0.08;
     public static double leftFoundationUp = 0.10;
     public static double rightFoundationUp = 0.515;
