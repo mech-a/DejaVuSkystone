@@ -25,7 +25,7 @@ public class TwoStoneRedMT extends LinearOpMode {
     public static double standardHeading = 0;
     public static double startingX = 0, startingY = 0;
     public static double skystoneLeftX = 47.5, skystoneCenterX = 40, skystoneRightX = 43;
-    public static double skystoneLeftY = -6, skystoneCenterY = -12, skystoneRightY = 6.5;
+    public static double skystoneLeftY = -8, skystoneCenterY = -13, skystoneRightY = 6.5;
 
     public static double distanceForwardToPickUpStoneRight = 10;
     public static double distanceForwardToPickUpStoneCenter = 6;
@@ -53,12 +53,15 @@ public class TwoStoneRedMT extends LinearOpMode {
         SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
 
         ss.init(hardwareMap);
-        s.init(hardwareMap);
+      //  s.init(hardwareMap);
+
+        //skyStoneLocation = s.findSkystoneRed();
+
+        //sleep(10000);
+
+        skyStoneLocation = Sensors.SkyStoneLocation.RIGHT;
 
         waitForStart();
-
-        skyStoneLocation = s.findSkystoneRed();
-        sleep(750);
 
         if (isStopRequested()) return;
 
@@ -67,7 +70,7 @@ public class TwoStoneRedMT extends LinearOpMode {
 
         switch(skyStoneLocation) {
             case LEFT:
-                s.shutdown();
+              //  s.shutdown();
 
                 ExtakeThreadLeft etl = new ExtakeThreadLeft();
                 etl.start();
@@ -134,7 +137,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                 // push foundation into the wall
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(20)// used to be 26
+                                .back(24)// used to be 26
                                 .build()
                 );
 
@@ -158,7 +161,7 @@ public class TwoStoneRedMT extends LinearOpMode {
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeRight(strafeConvert(19))
+                                .strafeRight(strafeConvert(14.5))
                                 .build()
                 );
 
@@ -185,7 +188,7 @@ public class TwoStoneRedMT extends LinearOpMode {
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(96)//86
+                                .back(100)//86
                                 .build()
                 );
 
@@ -208,7 +211,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                 break;
 
             case CENTER:
-                s.shutdown();
+              //  s.shutdown();
 
                 ExtakeThreadCenter etc = new ExtakeThreadCenter();
                 etc.start();
@@ -278,7 +281,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                 // push foundation into the wall
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(20)// used to be 26
+                                .back(22)// used to be 26
                                 .build()
                 );
 
@@ -296,8 +299,13 @@ public class TwoStoneRedMT extends LinearOpMode {
                 // move forward to the stones
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(78)
-                                .strafeRight(strafeConvert(24))
+                                .forward(88)//78
+                                .build()
+                );
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .strafeRight(strafeConvert(17))
                                 .build()
                 );
 
@@ -319,7 +327,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                 // strafe right to avoid bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeLeft(strafeConvert(15))
+                                .strafeLeft(strafeConvert(18))
                                 .build()
                 );
 
@@ -349,7 +357,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                 break;
 
             case RIGHT:
-                s.shutdown();
+              //  s.shutdown();
 
                 ExtakeThreadRight etr = new ExtakeThreadRight();
                 etr.start();
@@ -374,12 +382,12 @@ public class TwoStoneRedMT extends LinearOpMode {
 //                ss.clampStone();
 
                 // rotate to straighten out robot
-                d.turnSync(Math.toRadians(-25.5));//27.5
+                d.turnSync(Math.toRadians(-24.25));//27.5
 
                 // strafe to the right to avoid bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeRight(strafeConvert(14.5))//12
+                                .strafeRight(strafeConvert(13.25))//12
                                 .build()
                 );
 
@@ -396,7 +404,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                 // back up against foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(9)
+                                .back(11)
                                 .build()
                 );
 
@@ -419,7 +427,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                 // push foundation into the wall
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(20)// used to be 26
+                                .back(25)// used to be 26
                                 .build()
                 );
 
@@ -531,7 +539,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                     sleep(500);
 
                     // go to get second block
-                    sleep(3000);
+                    sleep(4500);
 
                     // go forward to intake second block
                     ss.intake(-0.75);
@@ -539,7 +547,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                     ss.intake(0);
 
                     // go back to foundation
-                    sleep(3500);
+                    sleep(3000);
 
                     // drop second stone onto foundation
                     ss.extakeOutPartial();
@@ -594,7 +602,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                     sleep(500);
 
                     // go to get second block
-                    sleep(4000);
+                    sleep(5000);
 
                     // go forward to intake second block
                     ss.intake(-0.75);
@@ -665,7 +673,7 @@ public class TwoStoneRedMT extends LinearOpMode {
                     ss.clampStone();
 
                     // go back to foundation
-                    sleep(2750);
+                    sleep(2550);
 
                     // drop second stone onto foundation
                     ss.extakeOutPartial();
