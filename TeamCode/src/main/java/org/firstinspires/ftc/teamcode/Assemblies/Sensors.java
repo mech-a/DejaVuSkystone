@@ -114,9 +114,7 @@ public class Sensors //implements Subassembly
             }
         }
 
-
         recognitions.clear();
-
 
         telemetry.addData("SkyStone Location: ", location);
         telemetry.update();
