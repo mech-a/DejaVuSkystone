@@ -57,7 +57,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
         waitForStart();
 
         //TODO reimpl.
-        skyStoneLocation = s.findSkystone();
+        skyStoneLocation = s.findSkystoneBlue();
         sleep(750);
 
         if (isStopRequested()) return;

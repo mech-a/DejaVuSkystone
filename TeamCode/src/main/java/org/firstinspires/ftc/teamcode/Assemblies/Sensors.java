@@ -18,7 +18,7 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.TFOD_MO
 import static org.firstinspires.ftc.teamcode.Assemblies.ConfigurationData.VUFORIA_KEY;
 
 public class Sensors //implements Subassembly
-        {
+{
     //private List<Recognition> finalRecognitions = new ArrayList<>();
     private List<Recognition> recognitions;
 
@@ -82,7 +82,7 @@ public class Sensors //implements Subassembly
 
     }
 
-    public SkyStoneLocation findSkystone() {
+    public SkyStoneLocation findSkystoneBlue() {
 
         if (tfod != null) {
 
@@ -103,14 +103,46 @@ public class Sensors //implements Subassembly
             //If there is more than one stone recognized, the skystone must be on the right.
             else if (recognitions.size() > 1) {  //two stones in sight s s k
                 location = Sensors.SkyStoneLocation.RIGHT;
-            }
-
-            else if ((recognitions.get(0).getLeft() + recognitions.get(0).getRight()) / 2 < MID_BOUND) {
+            } else if ((recognitions.get(0).getLeft() + recognitions.get(0).getRight()) / 2 < MID_BOUND) {
                 location = Sensors.SkyStoneLocation.CENTER;  // s k s
+            } else {
+                location = Sensors.SkyStoneLocation.LEFT;
+            }
+        }
+
+        recognitions.clear();
+
+        telemetry.addData("SkyStone Location: ", location);
+        telemetry.update();
+
+        return location;
+    }
+
+    public SkyStoneLocation findSkystoneRed() {
+
+        if (tfod != null) {
+
+            //Poll recognitions 5 times with break in between for lighting.
+            //Each recognition is considered as a stone.
+//            for (int i = 0; i < 5; i++) {
+//                recognitions = tfod.getRecognitions();
+//                caller.sleep(100);
+//            }
+
+            recognitions = tfod.getRecognitions();
+            telemetry.addData("Recognitions: ", recognitions.toString());
+
+            if (recognitions.size() == 0) {  //zero stones in sight-- this should never happen
+                location = SkyStoneLocation.LEFT; //default case
             }
 
-            else {
+            //If there is more than one stone recognized, the skystone must be on the right.
+            else if (recognitions.size() > 1) {  //two stones in sight s s k
                 location = Sensors.SkyStoneLocation.LEFT;
+            } else if ((recognitions.get(0).getLeft() + recognitions.get(0).getRight()) / 2 < MID_BOUND) {
+                location = Sensors.SkyStoneLocation.RIGHT;  // s k s
+            } else {
+                location = Sensors.SkyStoneLocation.CENTER;
             }
         }
 

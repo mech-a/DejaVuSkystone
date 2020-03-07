@@ -17,7 +17,7 @@ public class TeleOpCVWAssembly extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             if(gamepad1.a) {
-                Sensors.SkyStoneLocation x = s.findSkystone();
+                Sensors.SkyStoneLocation x = s.findSkystoneBlue();
             }
             sleep(200);
         }
