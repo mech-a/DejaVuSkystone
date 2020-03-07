@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
 /*
@@ -48,7 +49,7 @@ public class TwoStoneBlueMTSepThreads extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
+        SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
 
         ss.init(hardwareMap);
         //s.init();
