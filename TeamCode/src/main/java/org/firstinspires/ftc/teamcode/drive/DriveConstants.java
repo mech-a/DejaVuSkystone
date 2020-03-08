@@ -49,7 +49,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 2;
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 14.39; //Track Width may need to be retuned
+    public static double TRACK_WIDTH = 14.01; //Track Width may need to be retuned
     //14.2 on our tiles
 
     /*
