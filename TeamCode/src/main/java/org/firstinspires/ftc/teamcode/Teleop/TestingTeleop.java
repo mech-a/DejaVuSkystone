@@ -24,7 +24,7 @@ import static org.firstinspires.ftc.teamcode.Assemblies.Constants.*;
 public class TestingTeleop extends LinearOpMode {
 
     DcMotor mtrFL,mtrFR,mtrBL,mtrBR;
-    Servo rotationServo, ferrisServo, clawServo, leftFoundationServo, rightFoundationServo;
+    Servo rotationServo, ferrisServo, clawServo, leftFoundationServo, rightFoundationServo, capServo;
     //rotation servo - towards back of bot (-) ccw
     //foundation servo - towards back ccw (-)
     //claw servo
@@ -134,9 +134,6 @@ public class TestingTeleop extends LinearOpMode {
             if(gamepad2.dpad_down) {
                 rotationServo.setPosition(rotationServo.getPosition() - 0.015);
                 //clawServo.setPosition(clawServo.getPosition() - 0.005);
-            }
-            if(gamepad2.right_trigger > 0.9) {
-                clawServo.setPosition(0.62); //close
             }
             if(gamepad2.dpad_left) {
                 ferrisServo.setPosition(ferrisServo.getPosition() + 0.005);
@@ -271,6 +268,18 @@ public class TestingTeleop extends LinearOpMode {
             //2 fr
             //1 bl
             //0 br
+            capServo.setPosition(0.5);
+            if (gamepad2.left_trigger>DEADZONE) {
+                capServo.setPosition(.475);
+            }
+            if(gamepad2.right_trigger>DEADZONE) {
+                capServo.setPosition(0.525);
+            }
+
+            if (gamepad2.right_stick_button) {
+                rotationServo.setPosition(0.7);
+                ferrisServo.setPosition(0.42);
+            }
 
             telemetry.addData("Left Foundation: ", leftFoundationServo.getPosition());
             telemetry.addData("Right Foundation: ", rightFoundationServo.getPosition());
@@ -403,7 +412,7 @@ public class TestingTeleop extends LinearOpMode {
         clawServo = hardwareMap.get(Servo.class, "claw_servo");
         leftFoundationServo = hardwareMap.get(Servo.class, "leftFoundation_servo");
         rightFoundationServo = hardwareMap.get(Servo.class, "rightFoundation_servo");
-
+        capServo = hardwareMap.get(Servo.class, "cap_servo");
         // initialization points for servos
         rotationServo.setPosition(initRotationServo);
         ferrisServo.setPosition(initFerrisServo);
