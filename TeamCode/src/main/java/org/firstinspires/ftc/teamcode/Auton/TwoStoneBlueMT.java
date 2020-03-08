@@ -68,6 +68,8 @@ public class TwoStoneBlueMT extends LinearOpMode {
         switch(skyStoneLocation) {
             case LEFT:
 
+                s.shutdown();
+
                 ExtakeThreadLeft etl = new ExtakeThreadLeft();
                 etl.start();
 
@@ -211,6 +213,8 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
             case CENTER:
 
+                s.shutdown();
+
                 ExtakeThreadCenter etc = new ExtakeThreadCenter();
                 etc.start();
 
@@ -245,7 +249,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 // back up to the foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(78.5)
+                                .back(84.5)
                                 .build()
                 );
 
@@ -350,6 +354,8 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 break;
 
             case RIGHT:
+
+                s.shutdown();
 
                 ExtakeThreadRight etr = new ExtakeThreadRight();
                 etr.start();
