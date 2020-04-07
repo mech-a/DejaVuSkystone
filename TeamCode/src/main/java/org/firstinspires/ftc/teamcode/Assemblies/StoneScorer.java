@@ -131,7 +131,14 @@ public class StoneScorer //implements Subassembly
                 Log.d("NPE", "DRIVETRAIN MOTOR ACCESS FAILED");
             }
 
-            temp.setDirection(Servo.Direction.FORWARD);
+
+
+            if (i == 4) {
+                temp.setDirection(Servo.Direction.REVERSE);
+
+            } else {
+                temp.setDirection(Servo.Direction.FORWARD);
+            }
 
             if (i == 0)
                 temp.setPosition(initRotationServo);

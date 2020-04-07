@@ -43,8 +43,8 @@ import java.util.Vector;
 
 //face foundation hooks towards bridge
 //drives forward
-@Autonomous(name = "Case 4 A", group = "Auton")
-public class Case4A extends LinearOpMode {
+@Autonomous(name = "Park", group = "Auton")
+public class Park extends LinearOpMode {
 
     StoneScorer ss = new StoneScorer(this);
 
@@ -61,7 +61,7 @@ public class Case4A extends LinearOpMode {
         //parks next to wall
         d.followTrajectorySync(
                 d.trajectoryBuilder()
-                        .lineTo(new Vector2d(10, 0), new ConstantInterpolator(0))
+                        .forward(10)
                         .build()
         );
     }

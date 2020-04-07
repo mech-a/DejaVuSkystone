@@ -68,6 +68,8 @@ public class TestingTeleop extends LinearOpMode {
 
     int extake_position = 0; //-1 for in and 1 for out
 
+    int autonEndBias = 90;
+
 
     double rotationServoBias = 28.8/270;
 
@@ -373,7 +375,7 @@ public class TestingTeleop extends LinearOpMode {
 
     public void driverControl() {
         if(driveMode == DriveMode.FIELD) {
-            double heading = getHeading();
+            double heading = getHeading() + autonEndBias;
             telemetry.addData("Heading", heading);
 
             heading = Math.toRadians(heading);
@@ -424,7 +426,7 @@ public class TestingTeleop extends LinearOpMode {
         rotationServo.setDirection(Servo.Direction.FORWARD);
         ferrisServo.setDirection(Servo.Direction.FORWARD);
         leftFoundationServo.setDirection(Servo.Direction.FORWARD);
-        rightFoundationServo.setDirection(Servo.Direction.FORWARD);
+        rightFoundationServo.setDirection(Servo.Direction.REVERSE);
         clawServo.setDirection(Servo.Direction.FORWARD);
     }
 

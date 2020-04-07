@@ -38,7 +38,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
     public static double headingForStoneDrop = 90;
     //public static double distanceBackToPark = 25;
 
-    public static double rotationBias = 12;
+    public static double rotationBias = 14;
 
     public static double foundationRightX = 8;
     public static double foundationRightY = 28;
@@ -60,6 +60,8 @@ public class TwoStoneBlueMT extends LinearOpMode {
         skyStoneLocation = s.findSkystoneBlue();
         sleep(750);
 
+        s.shutdown();
+
         if (isStopRequested()) return;
 
         //starting at -35, 60
@@ -74,7 +76,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 // spline to first left stone
                 d.followTrajectorySync(
                         d.trajectoryBuilder().lineTo(new Vector2d(skystoneLeftX, strafeConvert(skystoneLeftY)),
-                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(leftAngle+25)))
+                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(70)))
                                 .build());
 
 //                ss.extakeIn();
@@ -91,7 +93,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
 //                ss.clampStone();
 
                 // rotate to straighten out robot
-                d.turnSync(Math.toRadians(24));//27.5
+                d.turnSync(Math.toRadians(20 + 3));//27.5
 
                 // strafe to the left to avoid bridge
                 d.followTrajectorySync(
@@ -108,7 +110,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 );
 
                 // rotate 90 to face foundation
-                d.turnSync(Math.toRadians(91));
+                d.turnSync(Math.toRadians(90));
 
                 // back up against foundation
                 d.followTrajectorySync(
@@ -126,7 +128,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 // spline to turn foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias-2.5)))
+                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias)))
                                 .build()
                 );
 
@@ -160,7 +162,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeLeft(strafeConvert(21))
+                                .strafeLeft(strafeConvert(16.5))
                                 .build()
                 );
 
@@ -181,7 +183,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 // strafe right to avoid bridge, back to get to foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeRight(strafeConvert(18))
+                                .strafeRight(strafeConvert(17))
                                 .build()
                 );
 
@@ -269,7 +271,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 // spline to turn foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias-2.5)))
+                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias)))
                                 .build()
                 );
 
@@ -298,9 +300,15 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .forward(82)
-                                .strafeLeft(strafeConvert(22))
                                 .build()
                 );
+
+                d.followTrajectorySync(
+                        d.trajectoryBuilder()
+                                .strafeLeft(strafeConvert(16.5))//22
+                                .build()
+                );
+
 
 //                ss.extakeIn();
 //                ss.intake(-0.75);
@@ -320,7 +328,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
                 // strafe right to avoid bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeRight(strafeConvert(15))
+                                .strafeRight(strafeConvert(16))
                                 .build()
                 );
 
@@ -406,7 +414,7 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias-2.5)))
+                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias)))
                                 .build()
                 );
 
@@ -508,12 +516,12 @@ public class TwoStoneBlueMT extends LinearOpMode {
                     // go forward to intake first block
                     ss.extakeIn();
                     ss.intake(-0.75);
-                    sleep(1000);
+                    sleep(3000);
                     ss.intake(0);
                     ss.clampStone();
                     // back up to foundation side of field
                     // rotate 90 to face foundation
-                    sleep(9000);
+                    sleep(7000);
                     // hook foundation
                     // turn foundation
                     // unhook foundation
@@ -531,11 +539,11 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
                     // go forward to intake second block
                     ss.intake(-0.75);
-                    sleep(2000);
+                    sleep(3000);
                     ss.intake(0);
 
                     // go back to foundation
-                    sleep(2000);
+                    sleep(1000);
 
                     // drop second stone onto foundation
                     ss.extakeOutPartial();
@@ -571,12 +579,12 @@ public class TwoStoneBlueMT extends LinearOpMode {
                     // go forward to intake first block
                     ss.extakeIn();
                     ss.intake(-0.75);
-                    sleep(1500);
+                    sleep(3000);
                     ss.intake(0);
                     ss.clampStone();
                     // back up to foundation side of field
                     // rotate 90 to face foundation
-                    sleep(7500);
+                    sleep(6000);
                     // hook foundation
                     // turn foundation
                     // unhook foundation
@@ -594,11 +602,11 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
                     // go forward to intake second block
                     ss.intake(-0.75);
-                    sleep(1000);
+                    sleep(3000);
                     ss.intake(0);
 
                     // go back to foundation
-                    sleep(3500);
+                    sleep(1500);
 
                     // drop second stone onto foundation
                     ss.extakeOutPartial();
@@ -633,12 +641,12 @@ public class TwoStoneBlueMT extends LinearOpMode {
                     // go forward to intake first block
                     ss.extakeIn();
                     ss.intake(-0.75);
-                    sleep(1000);
+                    sleep(3000);
                     ss.intake(0);
                     ss.clampStone();
                     // back up to foundation side of field
                     // rotate 90 to face foundation
-                    sleep(7000);
+                    sleep(5000);
                     // hook foundation
                     // turn foundation
                     // unhook foundation
@@ -656,11 +664,11 @@ public class TwoStoneBlueMT extends LinearOpMode {
 
                     // go forward to intake second block
                     ss.intake(-0.75);
-                    sleep(1750);
+                    sleep(3000);
                     ss.intake(0);
 
                     // go back to foundation
-                    sleep(2500);
+                    sleep(1250);
 
                     // drop second stone onto foundation
                     ss.extakeOutPartial();

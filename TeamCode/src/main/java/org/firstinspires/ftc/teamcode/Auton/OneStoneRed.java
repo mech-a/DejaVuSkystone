@@ -3,68 +3,64 @@ package org.firstinspires.ftc.teamcode.Auton;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Assemblies.RRMergedDrivetrain;
 import org.firstinspires.ftc.teamcode.Assemblies.Sensors;
 import org.firstinspires.ftc.teamcode.Assemblies.StoneScorer;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
-import org.yaml.snakeyaml.scanner.Constant;
-
-import java.util.Vector;
-
-/*
- * This is an example of a more complex path to really test the tuning.
- */
 
 // CASE A: Next to wall
 //PLEASE CONVERT TO RADIANS!!!!!!!!!
 @Config
 @Autonomous(group = "drive")
-public class OneStoneBlue extends LinearOpMode {
+public class OneStoneRed extends LinearOpMode {
     StoneScorer ss = new StoneScorer(this);
     Sensors s = new Sensors(this);
+
     Sensors.SkyStoneLocation skyStoneLocation;
 
     public static double standardHeading = 0;
     public static double startingX = 0, startingY = 0;
-    public static double skystoneLeftX = 40, skystoneCenterX = 40, skystoneRightX = 47.5;
-    public static double skystoneLeftY = -12, skystoneCenterY = 8, skystoneRightY = 1;
-    public static double distanceForwardToPickUpStone = 17.5;
-    public static double distanceForwardToPickUpStoneRight = 7;
+    public static double skystoneLeftX = 47.5, skystoneCenterX = 40, skystoneRightX = 43;
+    public static double skystoneLeftY = -8, skystoneCenterY = -13, skystoneRightY = 6.5;
+
+    public static double distanceForwardToPickUpStoneRight = 10;
     public static double distanceForwardToPickUpStoneCenter = 6;
-    public static double distanceForwardToPickUpStoneLeft = 10;
-    public static double pulloutX = -30, pulloutY = 35, pulloutHeading = -90;
-    public static double centerAngle = -45;
-    public static double leftAngle = 45;
-    public static double caseRightAngle = -90;
+    public static double distanceForwardToPickUpStoneLeft = 8;
+
+    public static double centerAngle = 65;
+    public static double leftAngle = 90;
+    public static double caseRightAngle = -45;
+
     public static double distanceStrafeLeftForFoundationSide = 55;
     public static double headingForStoneDrop = 90;
     //public static double distanceBackToPark = 25;
 
-    public static double rotationBias = 14;
+    public static double rotationBias = 10;
 
-    public static double foundationRightX = 8;
-    public static double foundationRightY = 28;
-    public static double foundationHeading = 100;
+    public static double foundationTurnX = 8;
+    public static double foundationTurnY = -28;
+    public static double foundationHeading = -100;
+
+    public static long sleepFromExtakeOutToExtakeIn = 1000, sleepFromExtakeInToIntakeIn = 1000;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDriveREVOptimized d = new SampleMecanumDriveREVOptimized(hardwareMap);
+        SampleMecanumDriveREV d = new SampleMecanumDriveREV(hardwareMap);
 
         ss.init(hardwareMap);
         s.init(hardwareMap);
 
-        waitForStart();
+        skyStoneLocation = skyStoneLocation.LEFT;
 
-        //TODO reimpl.
-        skyStoneLocation = s.findSkystoneBlue();
-        //skyStoneLocation = Sensors.SkyStoneLocation.RIGHT;
+        sleep(750);
+
+
+        waitForStart();
 
         if (isStopRequested()) return;
 
@@ -73,14 +69,17 @@ public class OneStoneBlue extends LinearOpMode {
 
         switch(skyStoneLocation) {
             case LEFT:
-                s.shutdown();
+                //s.shutdown();
+
+                // spline to first left stone
                 d.followTrajectorySync(
                         d.trajectoryBuilder().lineTo(new Vector2d(skystoneLeftX, strafeConvert(skystoneLeftY)),
-                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(70)))
+                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(leftAngle)))
                                 .build());
 
-//                ss.extakeIn();
-//                ss.intake(-0.75);
+                ss.extakeIn();
+                ss.intake(-0.75);
+
 
                 // go forward to pick up left stone
                 d.followTrajectorySync(
@@ -89,23 +88,22 @@ public class OneStoneBlue extends LinearOpMode {
                                 .build()
                 );
 
-//                ss.intake(0);
-//                ss.clampStone();
+                sleep(1000);
 
-                // rotate to straighten out robot
-                d.turnSync(Math.toRadians(20 + 3));//27.5
+                ss.intake(0);
+                ss.clampStone();
 
                 // strafe to the left to avoid bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeLeft(strafeConvert(14.5))//12
+                                .strafeLeft(strafeConvert(16.5))
                                 .build()
                 );
 
-                // travel forward to foundation
+                // travel backwards to foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(72.5)
+                                .back(83)
                                 .build()
                 );
 
@@ -115,7 +113,7 @@ public class OneStoneBlue extends LinearOpMode {
                 // back up against foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(7.5)
+                                .back(9.5)
                                 .build()
                 );
 
@@ -128,41 +126,44 @@ public class OneStoneBlue extends LinearOpMode {
                 // spline to turn foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias)))
+                                .lineTo(new Vector2d(foundationTurnX, foundationTurnY), new LinearInterpolator(0, Math.toRadians(foundationHeading - rotationBias)))
                                 .build()
                 );
 
                 // unhook foundation
                 ss.unhookFoundation();
 
-                // push foundation back into wall
+                // push foundation into the wall
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(24)
+                                .back(24)// used to be 26
                                 .build()
                 );
 
-               ss.extakeOutPartial();
+                ss.extakeOutPartial();
                 sleep(500);
                 ss.dropStone();
                 sleep(500);
                 ss.extakeIn();
                 sleep(1000);
 
+                // park under bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(45)
+                                .forward(40)
                                 .build()
                 );
+
 
                 break;
 
             case CENTER:
                 s.shutdown();
 
+                // spline to first center stone
                 d.followTrajectorySync(
                         d.trajectoryBuilder().lineTo(new Vector2d(skystoneCenterX, strafeConvert(skystoneCenterY)),
-                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(centerAngle-20)))
+                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(centerAngle)))
                                 .build());
 
                 // move forward to intake block
@@ -178,29 +179,29 @@ public class OneStoneBlue extends LinearOpMode {
                 // strafe right to avoid bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeRight(21)
+                                .strafeLeft(18)
                                 .build()
                 );
 
                 d.setPoseEstimate(new Pose2d(0, 0, 0));
 
-                // turn 30 degrees to straighten out the robot
-                d.turnSync(Math.toRadians(-27));
+                // turn to straighten out the robot
+                d.turnSync(Math.toRadians(30));
 
                 // back up to the foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(78.5)
+                                .back(82.5)
                                 .build()
                 );
 
                 // turn 90 degrees to face foundation
-                d.turnSync(Math.toRadians(-90));
+                d.turnSync(Math.toRadians(90));
 
                 // back up to prepare to hook foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(6.5)
+                                .back(9.5)
                                 .build()
                 );
 
@@ -214,7 +215,7 @@ public class OneStoneBlue extends LinearOpMode {
                 // spline to turn foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias)))
+                                .lineTo(new Vector2d(foundationTurnX, foundationTurnY), new LinearInterpolator(0, Math.toRadians(foundationHeading - rotationBias)))
                                 .build()
                 );
 
@@ -224,7 +225,7 @@ public class OneStoneBlue extends LinearOpMode {
                 // push foundation into the wall
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(24)
+                                .back(22)// used to be 26
                                 .build()
                 );
 
@@ -233,80 +234,87 @@ public class OneStoneBlue extends LinearOpMode {
                 ss.dropStone();
                 sleep(500);
                 ss.extakeIn();
-                sleep(1000);
 
+                // move forward to park under bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .forward(45)
+                                .forward(40)
                                 .build()
                 );
+
 
                 break;
 
             case RIGHT:
                 s.shutdown();
 
+
+                // spline to get first right stone
                 d.followTrajectorySync(
-                        d.trajectoryBuilder()
-                                .lineTo(new Vector2d(skystoneRightX, strafeConvert(skystoneRightY)),
-                                        new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(caseRightAngle)))
+                        d.trajectoryBuilder().lineTo(new Vector2d(skystoneRightX, strafeConvert(skystoneRightY)),
+                                new LinearInterpolator(Math.toRadians(standardHeading), Math.toRadians(-70)))
                                 .build());
 
-//                ss.extakeIn();
-//
-//                ss.intake(-0.75);
+                ss.extakeIn();
+                ss.intake(-0.75);
 
-
+                // go forward to pick up right stone
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
                                 .forward(distanceForwardToPickUpStoneRight)
                                 .build()
                 );
 
-                //block picked up
-//                ss.intake(0);
-//
-//                ss.clampStone();
+                ss.intake(0);
+                ss.clampStone();
 
-                //moving block to foundation side
+                // rotate to straighten out robot
+                d.turnSync(Math.toRadians(- 20 - 3));//27.5
+
+                // strafe to the right to avoid bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .strafeRight(strafeConvert(16))
+                                .strafeRight(strafeConvert(13.25))//12
                                 .build()
                 );
 
+                // travel forward to foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(79)
+                                .forward(70)// 74.5
                                 .build()
                 );
 
+                // rotate 90 to face foundation
+                d.turnSync(Math.toRadians(-90)); //-93
 
-                d.turnSync(Math.toRadians(-90));
-                //strafe right and cross under bridge
+                // back up against foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(7)
+                                .back(11)
                                 .build()
                 );
 
+                // hook foundation
                 ss.hookFoundation();
-
                 sleep(500);
 
                 d.setPoseEstimate(new Pose2d(0, 0, 0));
 
+                // spline to turn foundation
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .lineTo(new Vector2d(foundationRightX, foundationRightY), new LinearInterpolator(0, Math.toRadians(foundationHeading + rotationBias)))
+                                .lineTo(new Vector2d(foundationTurnX, foundationTurnY), new LinearInterpolator(0, Math.toRadians(foundationHeading-rotationBias)))
                                 .build()
                 );
 
+                // unhook foundation
                 ss.unhookFoundation();
 
+                // push foundation into the wall
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                                .back(24)
+                                .back(25)// used to be 26
                                 .build()
                 );
 
@@ -317,12 +325,14 @@ public class OneStoneBlue extends LinearOpMode {
                 ss.extakeIn();
                 sleep(1000);
 
+                // park under bridge
                 d.followTrajectorySync(
                         d.trajectoryBuilder()
-                            .forward(45)
-                            .build()
+                                .forward(40)
+                                .build()
                 );
 
+                break;
         }
     }
 
@@ -330,4 +340,3 @@ public class OneStoneBlue extends LinearOpMode {
         return (1.2 * distance + 3.53);
     }
 }
-
